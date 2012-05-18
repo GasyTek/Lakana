@@ -220,11 +220,11 @@
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition />
                         </Grid.ColumnDefinitions>
-                        <Image Source="{Binding UiMetadata.Icon, TargetNullValue={StaticResource noIcon}, FallbackValue={StaticResource noIcon}}"
+                        <Image Source="{Binding UIMetadata.Icon, TargetNullValue={StaticResource noIcon}, FallbackValue={StaticResource noIcon}}"
                                Width="32"
                                Height="32" />
                         <TextBlock Grid.Column="1"
-                                   Text="{Binding UiMetadata.Label}"
+                                   Text="{Binding UIMetadata.Label}"
                                    Margin="5,0,0,0"
                                    VerticalAlignment="Center"
                                    TextTrimming="CharacterEllipsis" />

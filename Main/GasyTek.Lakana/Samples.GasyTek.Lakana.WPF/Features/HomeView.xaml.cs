@@ -8,16 +8,16 @@ namespace Samples.GasyTek.Lakana.WPF.Features
     /// </summary>
     public partial class HomeView : IPresentable
     {
-        private readonly IUiMetadata _uiMetadata;
+        private readonly IUIMetadata _uiMetadata;
 
         public HomeView()
         {
             InitializeComponent();
 
-            _uiMetadata = new UiMetadata {LabelProvider = () => "Home"};
+            _uiMetadata = new UIMetadata {LabelProvider = () => "Home"};
         }
 
-        public IUiMetadata UiMetadata
+        public IUIMetadata UIMetadata
         {
             get { return _uiMetadata; }
         }

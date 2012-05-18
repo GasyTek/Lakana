@@ -30,7 +30,7 @@
                         <ControlTemplate TargetType="UserControl">
                             <DockPanel>
                                 <TextBlock DockPanel.Dock="Top"
-                                           Text="{Binding UiMetadata.Label}"
+                                           Text="{Binding UIMetadata.Label}"
                                            FontSize="40"
                                            Margin="20,10,10,10" />
                                 <ContentPresenter ContentSource="Content"
@@ -49,7 +49,7 @@
                         <ControlTemplate TargetType="UserControl">
                             <DockPanel>
                                 <TextBlock DockPanel.Dock="Top"
-                                           Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=UiMetadata.Label}"
+                                           Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=UIMetadata.Label}"
                                            FontSize="40"
                                            Margin="20,10,10,10" />
                                 <ContentPresenter ContentSource="Content"
