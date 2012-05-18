@@ -79,11 +79,11 @@ namespace GasyTek.Lakana.WPF.Services
             var view = new TView();
 
             return navigationInfo.HasParentKey ?
-                NavigateToInternal(navigationInfo.ViewKey, navigationInfo.ParentViewKey, view, navigationInfo.ViewModel, false, navigationInfo.IsOpenedView)
-                : NavigateToInternal(navigationInfo.ViewKey, view, navigationInfo.ViewModel, navigationInfo.IsOpenedView);
+                NavigateToInternal(navigationInfo.ViewKey, navigationInfo.ParentViewKey, view, navigationInfo.ViewModel, false, navigationInfo.ShowAsOpenedView)
+                : NavigateToInternal(navigationInfo.ViewKey, view, navigationInfo.ViewModel, navigationInfo.ShowAsOpenedView);
         }
 
-        private ViewInfo NavigateToInternal(string viewKey, string parentViewKey, FrameworkElement view, object viewModel, bool isModal, bool isOpenedView)
+        private ViewInfo NavigateToInternal(string viewKey, string parentViewKey, FrameworkElement view, object viewModel, bool isModal, bool showAsOpenedView)
         {
             ViewInfo resultViewInfo;
             LinkedListNode<ViewInfo> foundChildViewInfoNode;
@@ -107,7 +107,7 @@ namespace GasyTek.Lakana.WPF.Services
                 if (!IsTopMostView(foundParentViewInfoNode))
                     throw new ParentViewNotTopMostException(parentViewKey);
 
-                resultViewInfo = new ViewInfo(viewKey) { View = view, IsModal = isModal, IsOpenedViewMember = isOpenedView };
+                resultViewInfo = new ViewInfo(viewKey) { View = view, IsModal = isModal, IsOpenedViewMember = showAsOpenedView };
 
                 EnforceViewKey(view, viewModel, viewKey);
                 EnforceUIMetadata(view, viewModel, ref resultViewInfo);
@@ -125,7 +125,7 @@ namespace GasyTek.Lakana.WPF.Services
             return resultViewInfo;
         }
 
-        private ViewInfo NavigateToInternal(string viewKey, FrameworkElement view, object viewModel, bool isOpenedView)
+        private ViewInfo NavigateToInternal(string viewKey, FrameworkElement view, object viewModel, bool showAsOpenedView)
         {
             ViewInfo resultViewInfo;
             LinkedListNode<ViewInfo> foundViewInfoNode;
@@ -141,7 +141,7 @@ namespace GasyTek.Lakana.WPF.Services
             }
             else
             {
-                resultViewInfo = new ViewInfo(viewKey) { View = view, IsOpenedViewMember = isOpenedView };
+                resultViewInfo = new ViewInfo(viewKey) { View = view, IsOpenedViewMember = showAsOpenedView };
 
                 EnforceViewKey(view, viewModel, viewKey);
                 EnforceUIMetadata(view, viewModel, ref resultViewInfo);
@@ -175,33 +175,49 @@ namespace GasyTek.Lakana.WPF.Services
             return foundViewInfoNode.Value;
         }
 
-        public ViewInfo ShowModal<TView>(NavigationInfo navigationInfo) where TView : FrameworkElement, new()
+        public ModalResult ShowModal<TView>(NavigationInfo navigationInfo) where TView : FrameworkElement, new()
         {
             if (!navigationInfo.HasParentKey)
                 throw new InvalidOperationException("Parent view key must be initialized");
 
-            var modalHostControl = new ModalHostControl { ModalContent = new TView() };
+            return ShowModalInternal(new TView(), navigationInfo.ViewKey, navigationInfo.ParentViewKey, navigationInfo.ViewModel, navigationInfo.ShowAsOpenedView);
+        }
 
-            return NavigateToInternal(navigationInfo.ViewKey, navigationInfo.ParentViewKey, modalHostControl,
-                             navigationInfo.ViewModel, true, navigationInfo.IsOpenedView);
+        private ModalResult ShowModalInternal(FrameworkElement view, string viewKey, string parentViewKey, object viewModel, bool showAsOpenedView)
+        {
+            var modalHostControl = new ModalHostControl { ModalContent = view };
+            var viewInfo = NavigateToInternal(viewKey, parentViewKey, modalHostControl, viewModel, true, showAsOpenedView);
+
+            return new ModalResult { ViewInfo = viewInfo, Result = modalHostControl.ResultCompletionSource.Task };
         }
 
         public Task<MessageBoxResult> ShowMessageBox(string parentViewKey, string message = "", MessageBoxImage messageBoxImage = MessageBoxImage.Information, MessageBoxButton messageBoxButton = MessageBoxButton.OK)
         {
             var messageBoxViewKey = Guid.NewGuid().ToString();
             var view = new MessageBoxControl
-                           {
-                               NavigationService = this,
-                               ViewKey = messageBoxViewKey,
-                               Message = message,
-                               MessageBoxImage = messageBoxImage,
-                               MessageBoxButton = messageBoxButton
-                           };
+            {
+                NavigationService = this,
+                ViewKey = messageBoxViewKey,
+                Message = message,
+                MessageBoxImage = messageBoxImage,
+                MessageBoxButton = messageBoxButton
+            };
+
             NavigateToInternal(messageBoxViewKey, parentViewKey, view, null, true, false);
-            return view.Result;
+            return view.ResultCompletionSource.Task;
         }
 
         public ViewInfo Close(string viewKey)
+        {
+            return CloseInternal(viewKey, null);
+        }
+
+        public ViewInfo CloseModal<TResult>(string viewKey, TResult modalResult = default(TResult))
+        {
+            return CloseInternal(viewKey, modalResult);
+        }
+
+        private ViewInfo CloseInternal(string viewKey, object modalResult)
         {
             var foundViewInfoNode = FindViewInternal(viewKey);
 
@@ -216,7 +232,14 @@ namespace GasyTek.Lakana.WPF.Services
 
             // Raise ClosingApplicationHidden event if the view to close is the closing application view
             if (foundViewInfoNode.Value.View is CloseApplicationControl && ClosingApplicationHidden != null)
-                ClosingApplicationHidden (this, new EventArgs());
+                ClosingApplicationHidden(this, new EventArgs());
+
+            // Manage modal views
+            if (foundViewInfoNode.Value.IsModal && foundViewInfoNode.Value.View is ModalHostControl)
+            {
+                var modalView = (ModalHostControl)foundViewInfoNode.Value.View;
+                modalView.ResultCompletionSource.SetResult(modalResult);
+            }
 
             PerformTransitionAnimation(RootPanel, closedView.View, CurrentView.View);
             RemoveOpenedView(closedView);

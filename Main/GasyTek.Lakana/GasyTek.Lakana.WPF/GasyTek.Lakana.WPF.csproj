@@ -112,6 +112,7 @@
     <Compile Include="Services\INavigationService.cs" />
     <Compile Include="Services\IPresentable.cs" />
     <Compile Include="Services\IViewKeyAware.cs" />
+    <Compile Include="Services\ModalResult.cs" />
     <Compile Include="Services\NavigationInfo.cs" />
     <Compile Include="Services\NavigationService.cs" />
     <Compile Include="Services\ViewInfo.cs" />

@@ -30,7 +30,8 @@
                 Margin="0,0,0,5"
                 Click="CloseClick"/>
 
-        <TextBox Text="This is a Fake !"                
+        <TextBox x:Name="txtModalResult" 
+                Text="Type your modal dialog result here"                
                 AcceptsReturn="True"
                 TextWrapping="Wrap" 
                 Margin="5" />
