@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,6 +11,19 @@ namespace GasyTek.Lakana.WPF.Services
     /// </summary>
     public interface INavigationService
     {
+        /// <summary>
+        /// Occurs when the closing application view was shown.
+        /// </summary>
+        event EventHandler ClosingApplicationShown;
+        
+        /// <summary>
+        /// Occurs when the closing application view was hidden.
+        /// </summary>
+        event EventHandler ClosingApplicationHidden;
+
+        /// <summary>
+        /// Workspace root panel which contains all views.
+        /// </summary>
         Panel RootPanel { get; }
         
         /// <summary>
@@ -26,7 +40,7 @@ namespace GasyTek.Lakana.WPF.Services
         /// Gets the number of currently opened views.
         /// </summary>
         int NbOpenedViews { get; }
-
+        
         /// <summary>
         /// Creates a new workspace that will be managed by this navigation service.
         /// </summary>

@@ -11,6 +11,13 @@ namespace GasyTek.Lakana.WPF.Services
 {
     public class NavigationService : INavigationService
     {
+        #region Events
+
+        public event EventHandler ClosingApplicationShown;
+        public event EventHandler ClosingApplicationHidden;
+
+        #endregion
+
         #region Fields
 
         private Panel _rootPanel;
@@ -102,8 +109,8 @@ namespace GasyTek.Lakana.WPF.Services
 
                 resultViewInfo = new ViewInfo(viewKey) { View = view, IsModal = isModal, IsOpenedViewMember = isOpenedView };
 
-                EnsureViewKeyAwareIsSet(view, viewModel, viewKey);
-                EnsureUIMetadataIsSet(view, viewModel, ref resultViewInfo);
+                EnforceViewKey(view, viewModel, viewKey);
+                EnforceUIMetadata(view, viewModel, ref resultViewInfo);
 
                 // Link view and view model
                 view.DataContext = viewModel;
@@ -136,8 +143,8 @@ namespace GasyTek.Lakana.WPF.Services
             {
                 resultViewInfo = new ViewInfo(viewKey) { View = view, IsOpenedViewMember = isOpenedView };
 
-                EnsureViewKeyAwareIsSet(view, viewModel, viewKey);
-                EnsureUIMetadataIsSet(view, viewModel, ref resultViewInfo);
+                EnforceViewKey(view, viewModel, viewKey);
+                EnforceUIMetadata(view, viewModel, ref resultViewInfo);
 
                 // Link view and view model
                 view.DataContext = viewModel;
@@ -207,6 +214,10 @@ namespace GasyTek.Lakana.WPF.Services
 
             if (stack.Count == 0) _viewCollection.Remove(stack);
 
+            // Raise ClosingApplicationHidden event if the view to close is the closing application view
+            if (foundViewInfoNode.Value.View is CloseApplicationControl && ClosingApplicationHidden != null)
+                ClosingApplicationHidden (this, new EventArgs());
+
             PerformTransitionAnimation(RootPanel, closedView.View, CurrentView.View);
             RemoveOpenedView(closedView);
 
@@ -222,9 +233,9 @@ namespace GasyTek.Lakana.WPF.Services
                 return true;
             }
 
-            var closeableViews = GetCloseableViews().ToList();
-
-            if (!closeableViews.Any())
+            // if there is no views or view models that prevent the app from closing
+            var notCloseableViews = GetNotCloseableViews().ToList();
+            if (notCloseableViews.Any() == false)
             {
                 OnCloseApplicationExecuted();
                 return true;
@@ -233,12 +244,16 @@ namespace GasyTek.Lakana.WPF.Services
             var viewKey = Guid.NewGuid().ToString();
             var closeApplicationControl = new CloseApplicationControl
                                               {
-                                                  ItemsSource = closeableViews.OrderBy(v => v.ViewKey),
+                                                  ItemsSource = notCloseableViews.OrderBy(v => v.ViewKey),
                                                  NavigationService = this,
                                                  ViewKey = viewKey
                                               };
 
             NavigateToInternal(viewKey, CurrentView.ViewKey, closeApplicationControl, null, true, false);
+
+            if(ClosingApplicationShown != null)
+                ClosingApplicationShown(this, new EventArgs());
+
             return false;
         }
 
@@ -260,11 +275,12 @@ namespace GasyTek.Lakana.WPF.Services
             return _viewCollection.Last.Value.Last;
         }
 
-        private IEnumerable<ViewInfo> GetCloseableViews()
+        private IEnumerable<ViewInfo> GetNotCloseableViews()
         {
             return  from vs in _viewCollection
-                    let icl = vs.Last.Value.View.DataContext as ICloseable
-                    where icl != null && !icl.CanClose()
+                    let v = vs.Last.Value.View as ICloseable
+                    let vm = vs.Last.Value.View.DataContext as ICloseable
+                    where (v != null && v.CanClose() == false) || (vm != null && vm.CanClose() == false)
                     select vs.Last.Value;
         }
 
@@ -363,7 +379,7 @@ namespace GasyTek.Lakana.WPF.Services
             return viewInfo.List.Last.Value == viewInfo.Value;
         }
 
-        private void EnsureViewKeyAwareIsSet(FrameworkElement view, object viewModel, string viewKey)
+        private void EnforceViewKey(FrameworkElement view, object viewModel, string viewKey)
         {
             // Initializes view key on the view 
             var viewKeyAwareView = view as IViewKeyAware;
@@ -376,7 +392,7 @@ namespace GasyTek.Lakana.WPF.Services
                 viewKeyAwareViewModel.ViewKey = viewKey;
         }
 
-        private void EnsureUIMetadataIsSet(FrameworkElement view, object viewModel, ref ViewInfo targetViewInfo)
+        private void EnforceUIMetadata(FrameworkElement view, object viewModel, ref ViewInfo targetViewInfo)
         {                
             // Extract presentation metadata from view first if possible
             var presentableView = view as IPresentable;
