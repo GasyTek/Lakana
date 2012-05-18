@@ -7,6 +7,6 @@ namespace GasyTek.Lakana.WPF.Services
     /// </summary>
     public interface IPresentable
     {
-        IUiMetadata UiMetadata { get; }
+        IUIMetadata UIMetadata { get; }
     }
 }

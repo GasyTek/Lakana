@@ -27,6 +27,11 @@ namespace GasyTek.Lakana.WPF.Services
         /// </summary>
         int NbOpenedViews { get; }
 
+        /// <summary>
+        /// Creates a new workspace that will be managed by this navigation service.
+        /// </summary>
+        /// <param name="rootPanel">The root panel.</param>
+        /// <param name="animateTransitionAction">The animate transition action. Can be null</param>
         void CreateWorkspace(Panel rootPanel, AnimateTransitionAction animateTransitionAction);
 
         /// <summary>

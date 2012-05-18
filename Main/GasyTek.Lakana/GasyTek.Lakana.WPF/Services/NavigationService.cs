@@ -76,7 +76,7 @@ namespace GasyTek.Lakana.WPF.Services
                 : NavigateToInternal(navigationInfo.ViewKey, view, navigationInfo.ViewModel, navigationInfo.IsOpenedView);
         }
 
-        private ViewInfo NavigateToInternal(string viewKey, string parentViewKey, FrameworkElement view, object viewContext, bool isModal, bool isOpenedView)
+        private ViewInfo NavigateToInternal(string viewKey, string parentViewKey, FrameworkElement view, object viewModel, bool isModal, bool isOpenedView)
         {
             ViewInfo resultViewInfo;
             LinkedListNode<ViewInfo> foundChildViewInfoNode;
@@ -102,23 +102,11 @@ namespace GasyTek.Lakana.WPF.Services
 
                 resultViewInfo = new ViewInfo(viewKey) { View = view, IsModal = isModal, IsOpenedViewMember = isOpenedView };
 
-                // Initializes view key on the view model 
-                var viewKeyAwareViewContext = viewContext as IViewKeyAware;
-                if (viewKeyAwareViewContext != null)
-                    viewKeyAwareViewContext.ViewKey = viewKey;
-
-                // Extract presentation metadata from view first if possible
-                var presentableView = view as IPresentable;
-                if (presentableView != null)
-                    resultViewInfo.UiMetadata = presentableView.UiMetadata;
-
-                // Extract presentation metadata from view model if possible
-                var presentableViewContext = viewContext as IPresentable;
-                if (presentableViewContext != null)
-                    resultViewInfo.UiMetadata = presentableViewContext.UiMetadata;
+                EnsureViewKeyAwareIsSet(view, viewModel, viewKey);
+                EnsureUIMetadataIsSet(view, viewModel, ref resultViewInfo);
 
                 // Link view and view model
-                view.DataContext = viewContext;
+                view.DataContext = viewModel;
                 
                 foundParentViewInfoNode.List.AddLast(resultViewInfo);
 
@@ -130,7 +118,7 @@ namespace GasyTek.Lakana.WPF.Services
             return resultViewInfo;
         }
 
-        private ViewInfo NavigateToInternal(string viewKey, FrameworkElement view, object viewContext, bool isOpenedView)
+        private ViewInfo NavigateToInternal(string viewKey, FrameworkElement view, object viewModel, bool isOpenedView)
         {
             ViewInfo resultViewInfo;
             LinkedListNode<ViewInfo> foundViewInfoNode;
@@ -148,23 +136,11 @@ namespace GasyTek.Lakana.WPF.Services
             {
                 resultViewInfo = new ViewInfo(viewKey) { View = view, IsOpenedViewMember = isOpenedView };
 
-                // Initializes view key on the view model 
-                var viewKeyAwareViewContext = viewContext as IViewKeyAware;
-                if (viewKeyAwareViewContext != null)
-                    viewKeyAwareViewContext.ViewKey = viewKey;
-
-                // Extract presentation metadata from view first if possible
-                var presentableView = view as IPresentable;
-                if (presentableView != null)
-                    resultViewInfo.UiMetadata = presentableView.UiMetadata;
-
-                // Extract presentation metadata from view model if possible
-                var presentableViewContext = viewContext as IPresentable;
-                if (presentableViewContext != null)
-                    resultViewInfo.UiMetadata = presentableViewContext.UiMetadata;
+                EnsureViewKeyAwareIsSet(view, viewModel, viewKey);
+                EnsureUIMetadataIsSet(view, viewModel, ref resultViewInfo);
 
                 // Link view and view model
-                view.DataContext = viewContext;
+                view.DataContext = viewModel;
 
                 var viewStack = new LinkedList<ViewInfo>();
                 viewStack.AddLast(resultViewInfo);
@@ -385,6 +361,32 @@ namespace GasyTek.Lakana.WPF.Services
         private bool IsTopMostView(LinkedListNode<ViewInfo> viewInfo)
         {
             return viewInfo.List.Last.Value == viewInfo.Value;
+        }
+
+        private void EnsureViewKeyAwareIsSet(FrameworkElement view, object viewModel, string viewKey)
+        {
+            // Initializes view key on the view 
+            var viewKeyAwareView = view as IViewKeyAware;
+            if (viewKeyAwareView != null)
+                viewKeyAwareView.ViewKey = viewKey;
+
+            // Initializes view key on the view model 
+            var viewKeyAwareViewModel = viewModel as IViewKeyAware;
+            if (viewKeyAwareViewModel != null)
+                viewKeyAwareViewModel.ViewKey = viewKey;
+        }
+
+        private void EnsureUIMetadataIsSet(FrameworkElement view, object viewModel, ref ViewInfo targetViewInfo)
+        {                
+            // Extract presentation metadata from view first if possible
+            var presentableView = view as IPresentable;
+            if (presentableView != null)
+                targetViewInfo.UIMetadata = presentableView.UIMetadata;
+
+            // Extract presentation metadata from view model if possible
+            var presentableViewModel = viewModel as IPresentable;
+            if (presentableViewModel != null)
+                targetViewInfo.UIMetadata = presentableViewModel.UIMetadata;
         }
 
         #endregion

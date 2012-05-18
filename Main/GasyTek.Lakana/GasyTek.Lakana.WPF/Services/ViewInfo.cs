@@ -44,7 +44,7 @@ namespace GasyTek.Lakana.WPF.Services
         /// <value>
         /// The presentation metadata.
         /// </value>
-        public IUiMetadata UiMetadata { get; internal set; }
+        public IUIMetadata UIMetadata { get; internal set; }
 
         internal ViewInfo(string viewKey)
             : this()

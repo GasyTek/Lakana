@@ -10,17 +10,17 @@ namespace Samples.GasyTek.Lakana.WPF.Features
     /// </summary>
     public partial class AboutView : IPresentable
     {
-        private readonly IUiMetadata _uiMetadata;
+        private readonly IUIMetadata _uiMetadata;
 
 
         public AboutView()
         {
             InitializeComponent();
 
-            _uiMetadata = new UiMetadata { LabelProvider = () => "About" };
+            _uiMetadata = new UIMetadata { LabelProvider = () => "About" };
         }
 
-        public IUiMetadata UiMetadata
+        public IUIMetadata UIMetadata
         {
             get { return _uiMetadata; }
         }

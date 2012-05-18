@@ -504,6 +504,11 @@ namespace GasyTek.Lakana.WPF.Tests
                 Assert.IsTrue(closeApplicationControl.ItemsSource.Cast<ViewInfo>().ToList().Contains(expectedViewInfo1));
                 Assert.IsTrue(closeApplicationControl.ItemsSource.Cast<ViewInfo>().Contains(expectedViewInfo2));
             }
+
+            public void ClosingApplicationViewVisible()
+            {
+                // Assert.Fail()
+            }
         }
     }
 }

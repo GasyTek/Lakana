@@ -26,7 +26,7 @@
                       MenuItem.Click="OpenViewClick">
                 <MenuItem.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding UiMetadata.Label}" />
+                        <TextBlock Text="{Binding UIMetadata.Label}" />
                     </DataTemplate>
                 </MenuItem.ItemTemplate>
             </MenuItem>
