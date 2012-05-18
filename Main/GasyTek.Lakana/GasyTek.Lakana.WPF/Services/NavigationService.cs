@@ -110,12 +110,12 @@ namespace GasyTek.Lakana.WPF.Services
                 // Extract presentation metadata from view first if possible
                 var presentableView = view as IPresentable;
                 if (presentableView != null)
-                    resultViewInfo.PresentationMetadata = presentableView.PresentationMetadata;
+                    resultViewInfo.UiMetadata = presentableView.UiMetadata;
 
                 // Extract presentation metadata from view model if possible
                 var presentableViewContext = viewContext as IPresentable;
                 if (presentableViewContext != null)
-                    resultViewInfo.PresentationMetadata = presentableViewContext.PresentationMetadata;
+                    resultViewInfo.UiMetadata = presentableViewContext.UiMetadata;
 
                 // Link view and view model
                 view.DataContext = viewContext;
@@ -156,12 +156,12 @@ namespace GasyTek.Lakana.WPF.Services
                 // Extract presentation metadata from view first if possible
                 var presentableView = view as IPresentable;
                 if (presentableView != null)
-                    resultViewInfo.PresentationMetadata = presentableView.PresentationMetadata;
+                    resultViewInfo.UiMetadata = presentableView.UiMetadata;
 
                 // Extract presentation metadata from view model if possible
                 var presentableViewContext = viewContext as IPresentable;
                 if (presentableViewContext != null)
-                    resultViewInfo.PresentationMetadata = presentableViewContext.PresentationMetadata;
+                    resultViewInfo.UiMetadata = presentableViewContext.UiMetadata;
 
                 // Link view and view model
                 view.DataContext = viewContext;

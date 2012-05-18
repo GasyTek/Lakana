@@ -6,7 +6,7 @@ namespace GasyTek.Lakana.WPF.Common
     /// <summary>
     /// Metadata used by views and view models to display informations such as view title etc.
     /// </summary>
-    public interface IPresentationMetadata
+    public interface IUiMetadata
     {
         /// <summary>
         /// Gets the label.

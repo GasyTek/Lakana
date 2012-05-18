@@ -3,7 +3,7 @@ using System.Windows.Media;
 
 namespace GasyTek.Lakana.WPF.Common
 {
-    public class PresentationMetadata : NotifyPropertyChangedBase, IPresentationMetadata
+    public class UiMetadata : NotifyPropertyChangedBase, IUiMetadata
     {
         private Func<string> _labelProvider;
         private Func<string> _descriptionProvider;
