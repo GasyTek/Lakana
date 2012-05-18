@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace GasyTek.Lakana.WPF.Controls
@@ -21,6 +22,8 @@ namespace GasyTek.Lakana.WPF.Controls
             set { SetValue(ModalContentProperty, value); }
         }
 
+        internal TaskCompletionSource<object> ResultCompletionSource { get; private set; }
+
         #endregion
 
         #region Constructor
@@ -28,6 +31,11 @@ namespace GasyTek.Lakana.WPF.Controls
         static ModalHostControl()
         {
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ModalHostControl), new FrameworkPropertyMetadata(typeof(ModalHostControl)));
+        }
+
+        public ModalHostControl()
+        {
+            ResultCompletionSource = new TaskCompletionSource<object>();
         }
 
         #endregion

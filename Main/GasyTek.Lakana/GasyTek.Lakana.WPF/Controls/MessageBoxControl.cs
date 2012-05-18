@@ -14,18 +14,6 @@ namespace GasyTek.Lakana.WPF.Controls
     [TemplatePart(Name = "PART_Ok", Type = typeof(Button))]
     public class MessageBoxControl : UserControl
     {
-        #region Fields
-
-        private const string OkButtonId = "Ok";
-        private const string YesButtonId = "Yes";
-        private const string NoButtonId = "No";
-        private const string CancelButtonId = "Cancel";
-
-        private string _clickedButtonId;
-        private readonly Task<MessageBoxResult> _result;
-
-        #endregion
-
         #region Dependency properties
 
         public static readonly DependencyProperty MessageProperty =
@@ -45,10 +33,7 @@ namespace GasyTek.Lakana.WPF.Controls
 
         internal string ViewKey { get; set; }
 
-        public Task<MessageBoxResult> Result
-        {
-            get { return _result; }
-        }
+        internal TaskCompletionSource<MessageBoxResult> ResultCompletionSource { get; private set; }
 
         public string Message
         {
@@ -79,7 +64,7 @@ namespace GasyTek.Lakana.WPF.Controls
 
         public MessageBoxControl()
         {
-            _result = new Task<MessageBoxResult>(OnButtonClicked);
+            ResultCompletionSource = new TaskCompletionSource<MessageBoxResult>();
         }
 
         #endregion
@@ -94,8 +79,8 @@ namespace GasyTek.Lakana.WPF.Controls
             {
                 btnPartOk.Click += (sender, args) =>
                                        {
-                                           _clickedButtonId = OkButtonId;
-                                           _result.RunSynchronously();
+                                           NavigationService.Close(ViewKey);
+                                           ResultCompletionSource.SetResult(MessageBoxResult.OK);
                                        };
             }
 
@@ -105,8 +90,8 @@ namespace GasyTek.Lakana.WPF.Controls
             {
                 btnPartYes.Click += (sender, args) =>
                                         {
-                                            _clickedButtonId = YesButtonId;
-                                            _result.RunSynchronously();
+                                            NavigationService.Close(ViewKey);
+                                            ResultCompletionSource.SetResult(MessageBoxResult.Yes);
                                         };
             }
 
@@ -115,10 +100,10 @@ namespace GasyTek.Lakana.WPF.Controls
             if (btnPartNo != null)
             {
                 btnPartNo.Click += (sender, args) =>
-                                        {
-                                            _clickedButtonId = NoButtonId;
-                                            _result.RunSynchronously();
-                                        };
+                                       {
+                                           NavigationService.Close(ViewKey);
+                                           ResultCompletionSource.SetResult(MessageBoxResult.No);
+                                       };
             }
 
             // Cancel button
@@ -126,36 +111,13 @@ namespace GasyTek.Lakana.WPF.Controls
             if (btnPartCancel != null)
             {
                 btnPartCancel.Click += (sender, args) =>
-                                        {
-                                            _clickedButtonId = CancelButtonId;
-                                            _result.RunSynchronously();
-                                        };
+                                           {
+                                               NavigationService.Close(ViewKey);
+                                               ResultCompletionSource.SetResult(MessageBoxResult.Cancel);
+                                           };
             }
         }
 
         #endregion
-
-        private MessageBoxResult OnButtonClicked()
-        {
-            NavigationService.Close(ViewKey);
-
-            // Ok clicked
-            if (Equals(_clickedButtonId, OkButtonId))
-                return MessageBoxResult.OK;
-
-            // Yes clicked
-            if (Equals(_clickedButtonId, YesButtonId))
-                return MessageBoxResult.Yes;
-
-            // No clicked
-            if (Equals(_clickedButtonId, NoButtonId))
-                return MessageBoxResult.No;
-
-            // Cancel clicked
-            if (Equals(_clickedButtonId, CancelButtonId))
-                return MessageBoxResult.Cancel;
-
-            return MessageBoxResult.None;
-        }
     }
 }

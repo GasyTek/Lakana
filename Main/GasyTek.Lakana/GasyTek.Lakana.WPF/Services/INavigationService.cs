@@ -69,7 +69,7 @@ namespace GasyTek.Lakana.WPF.Services
         /// <typeparam name="TView">The type of the view.</typeparam>
         /// <param name="navigationInfo">The navigation info. It must specify the parent view key on which to push the view.</param>
         /// <remarks></remarks>
-        ViewInfo ShowModal<TView>(NavigationInfo navigationInfo) where TView : FrameworkElement, new();
+        ModalResult ShowModal<TView>(NavigationInfo navigationInfo) where TView : FrameworkElement, new();
 
         /// <summary>
         /// Shows a message box that is modal to the specified parent.
@@ -87,6 +87,15 @@ namespace GasyTek.Lakana.WPF.Services
         /// <param name="viewKey">The view key.</param>
         /// <returns>The view info for the closed view.</returns>
         ViewInfo Close(string viewKey);
+
+        /// <summary>
+        /// Closes a modal dialog and provide a result.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="viewKey">The view key.</param>
+        /// <param name="modalResult">The result that will be returned by the modal view to its parent.</param>
+        /// <returns></returns>
+        ViewInfo CloseModal<TResult>(string viewKey, TResult modalResult = default(TResult));
 
         /// <summary>
         /// Closes the application.

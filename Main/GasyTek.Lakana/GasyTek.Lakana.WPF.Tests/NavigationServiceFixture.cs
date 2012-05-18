@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using GasyTek.Lakana.WPF.Controls;
@@ -316,15 +317,15 @@ namespace GasyTek.Lakana.WPF.Tests
                 var parentNavigationInfo = NavigationInfo.CreateSimple("parentViewKey");
                 var modalNavigationInfo = NavigationInfo.CreateComplex("modalViewKey", parentNavigationInfo.ViewKey);
                 _navigationService.NavigateTo<UserControl>(parentNavigationInfo);
-                var modalViewInfo = _navigationService.ShowModal<UserControl>(modalNavigationInfo);
+                var modalResult = _navigationService.ShowModal<UserControl>(modalNavigationInfo);
                 _navigationService.NavigateTo<UserControl>(navigationInfo);
 
                 // Act
                 var parentViewInfo = _navigationService.NavigateTo<UserControl>(parentNavigationInfo);
 
                 // Verify
-                Assert.AreEqual(modalViewInfo, _navigationService.CurrentView);
-                Assert.IsTrue(modalViewInfo.View.Visibility == Visibility.Visible);
+                Assert.AreEqual(modalResult.ViewInfo, _navigationService.CurrentView);
+                Assert.IsTrue(modalResult.ViewInfo.View.Visibility == Visibility.Visible);
                 Assert.IsTrue(parentViewInfo.View.Visibility == Visibility.Visible);
                 Assert.IsFalse(parentViewInfo.View.IsEnabled);
             }
@@ -379,12 +380,30 @@ namespace GasyTek.Lakana.WPF.Tests
                 var parentViewInfo = _navigationService.NavigateTo<UserControl>(parentNavigationInfo);
 
                 // Act
-                var modalViewInfo = _navigationService.ShowModal<UserControl>(modalNavigationInfo);
+                var modalResult = _navigationService.ShowModal<UserControl>(modalNavigationInfo);
 
                 // Verify
-                Assert.IsTrue(modalViewInfo.View.Visibility == Visibility.Visible);
+                Assert.IsTrue(modalResult.ViewInfo.View.Visibility == Visibility.Visible);
                 Assert.IsTrue(parentViewInfo.View.Visibility == Visibility.Visible);
                 Assert.IsFalse(parentViewInfo.View.IsEnabled);
+            }
+
+            [TestMethod]
+            public  void CanRetrieveModalResult()
+            {
+                // Prepare
+                var testedModalResult = "";
+                var navigationInfo = NavigationInfo.CreateSimple("viewKey");
+                var modalNavigationInfo = NavigationInfo.CreateComplex("modalViewKey", navigationInfo.ViewKey);
+                _navigationService.NavigateTo<UserControl>(navigationInfo);
+
+                // Act
+                var modalResult = _navigationService.ShowModal<UserControl>(modalNavigationInfo);
+                modalResult.Result.ContinueWith(r => testedModalResult = r.Result.ToString());
+                _navigationService.CloseModal(modalResult.ViewInfo.ViewKey, "ModalResult");  // Close the modal view and provide the modal result
+
+                // Verify
+                Assert.AreEqual("ModalResult", testedModalResult);
             }
         }
 
