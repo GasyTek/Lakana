@@ -385,7 +385,6 @@ namespace GasyTek.Lakana.WPF.Tests
                 Assert.IsTrue(modalViewInfo.View.Visibility == Visibility.Visible);
                 Assert.IsTrue(parentViewInfo.View.Visibility == Visibility.Visible);
                 Assert.IsFalse(parentViewInfo.View.IsEnabled);
-
             }
         }
 

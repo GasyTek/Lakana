@@ -18,7 +18,7 @@
         /// Specify the object that will be used as DataContext for the view.
         /// It will contain the view model in a MVVM scenario.
         /// </summary>
-        public object ViewContext { get; private set; }
+        public object ViewModel { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether the view will appear in <see cref="INavigationService.OpenedViews"/> or not.
@@ -28,12 +28,12 @@
         /// </value>
         public bool IsOpenedView { get; private set; }
 
-        private NavigationInfo(string viewKey, string parentViewKey, object viewContext, bool isOpenedView)
+        private NavigationInfo(string viewKey, string parentViewKey, object viewModel, bool isOpenedView)
             : this()
         {
             ViewKey = viewKey;
             ParentViewKey = parentViewKey;
-            ViewContext = viewContext;
+            ViewModel = viewModel;
             IsOpenedView = isOpenedView;
         }
 

@@ -8,6 +8,8 @@ namespace GasyTek.Lakana.WPF.Transitions
     /// <summary>
     /// Contains default transition animations that users can leverage.
     /// </summary>
+    /// 
+    /// <remarks>Source : "Ocean Framework" by Karl Shifflett : http://karlshifflett.wordpress.com/ocean/ </remarks>
     public static class Transitions
     {
         /// <summary>

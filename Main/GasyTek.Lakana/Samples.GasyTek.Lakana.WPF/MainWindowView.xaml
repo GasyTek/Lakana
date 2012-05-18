@@ -6,7 +6,7 @@
         Closing="WindowClosing"
         Width="800"
         Height="600"
-        Title="Matoa - Sample"
+        Title="Lakana - Sample Application"
         Background="{DynamicResource WindowBackgroundBrush}">
 
     <DockPanel>
@@ -21,7 +21,7 @@
                 <MenuItem Header="Product List"
                           Command="{Binding OpenProductListCommand}" />
             </MenuItem>
-            <MenuItem Header="Views"
+            <MenuItem Header="Current Views"
                       ItemsSource="{Binding OpenedViews}" 
                       MenuItem.Click="OpenViewClick">
                 <MenuItem.ItemTemplate>

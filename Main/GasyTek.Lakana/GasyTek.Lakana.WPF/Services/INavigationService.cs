@@ -66,7 +66,7 @@ namespace GasyTek.Lakana.WPF.Services
         /// Closes the specified view.
         /// </summary>
         /// <param name="viewKey">The view key.</param>
-        /// <returns></returns>
+        /// <returns>The view info for the closed view.</returns>
         ViewInfo Close(string viewKey);
 
         /// <summary>
