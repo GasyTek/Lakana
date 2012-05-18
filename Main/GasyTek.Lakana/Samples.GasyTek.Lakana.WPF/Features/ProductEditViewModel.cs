@@ -10,7 +10,7 @@ namespace Samples.GasyTek.Lakana.WPF.Features
 {
     public class ProductEditViewModel : NotifyPropertyChangedBase, IViewKeyAware, ICloseable, IPresentable
     {
-        private readonly IPresentationMetadata _presentationMetadata;
+        private readonly IUiMetadata _uiMetadata;
         private bool _isDirty;
 
         public Product Product { get; private set; }
@@ -31,7 +31,7 @@ namespace Samples.GasyTek.Lakana.WPF.Features
 
         public ProductEditViewModel(Product product)
         {
-            _presentationMetadata = new PresentationMetadata { LabelProvider = () => "Edit a product" };
+            _uiMetadata = new UiMetadata { LabelProvider = () => "Edit a product" };
             IsDirty = true;
             Product = product;
 
@@ -87,9 +87,9 @@ namespace Samples.GasyTek.Lakana.WPF.Features
 
         #region IPresentable members
 
-        public IPresentationMetadata PresentationMetadata
+        public IUiMetadata UiMetadata
         {
-            get { return _presentationMetadata; }
+            get { return _uiMetadata; }
         }
 
         #endregion

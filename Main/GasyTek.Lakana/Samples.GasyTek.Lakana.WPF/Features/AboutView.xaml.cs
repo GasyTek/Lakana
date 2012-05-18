@@ -10,19 +10,19 @@ namespace Samples.GasyTek.Lakana.WPF.Features
     /// </summary>
     public partial class AboutView : IPresentable
     {
-        private readonly IPresentationMetadata _presentationMetadata;
+        private readonly IUiMetadata _uiMetadata;
 
 
         public AboutView()
         {
             InitializeComponent();
 
-            _presentationMetadata = new PresentationMetadata { LabelProvider = () => "About" };
+            _uiMetadata = new UiMetadata { LabelProvider = () => "About" };
         }
 
-        public IPresentationMetadata PresentationMetadata
+        public IUiMetadata UiMetadata
         {
-            get { return _presentationMetadata; }
+            get { return _uiMetadata; }
         }
 
         private void SendMailClick(object sender, RoutedEventArgs e)

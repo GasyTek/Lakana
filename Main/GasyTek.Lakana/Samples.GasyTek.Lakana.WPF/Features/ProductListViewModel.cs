@@ -8,14 +8,14 @@ namespace Samples.GasyTek.Lakana.WPF.Features
 {
     public class ProductListViewModel : IViewKeyAware, IPresentable
     {
-        private readonly IPresentationMetadata _presentationMetadata;
+        private readonly IUiMetadata _uiMetadata;
 
         public ObservableCollection<Product> Products { get; private set; }
         public ISimpleCommand<object> EditProductCommand { get; private set; }
 
         public ProductListViewModel()
         {
-            _presentationMetadata = new PresentationMetadata {LabelProvider = () => "Product List"};
+            _uiMetadata = new UiMetadata {LabelProvider = () => "Product List"};
 
             Products = new ObservableCollection<Product>
                            {
@@ -49,9 +49,9 @@ namespace Samples.GasyTek.Lakana.WPF.Features
 
         #region IPresentable members
 
-        public IPresentationMetadata PresentationMetadata
+        public IUiMetadata UiMetadata
         {
-            get { return _presentationMetadata; }
+            get { return _uiMetadata; }
         }
 
         #endregion
