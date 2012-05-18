@@ -499,15 +499,48 @@ namespace GasyTek.Lakana.WPF.Tests
                 _navigationService.CloseApplication();
 
                 // Verify
-                var closeApplicationControl = (CloseApplicationControl) _navigationService.CurrentView.View;
+                var closeApplicationControl = (CloseApplicationControl)_navigationService.CurrentView.View;
                 Assert.IsTrue(closeApplicationControl.NbCloseableViews == 2);
                 Assert.IsTrue(closeApplicationControl.ItemsSource.Cast<ViewInfo>().ToList().Contains(expectedViewInfo1));
                 Assert.IsTrue(closeApplicationControl.ItemsSource.Cast<ViewInfo>().Contains(expectedViewInfo2));
             }
 
-            public void ClosingApplicationViewVisible()
+            [TestMethod]
+            public void CanRaiseClosingApplicationShownEvent()
             {
-                // Assert.Fail()
+                // Prepare
+                var eventRaised = false;
+                var navigationInfo1 = NavigationInfo.CreateSimple("viewKey1");
+                var navigationInfo2 = NavigationInfo.CreateComplex("viewKey2", navigationInfo1.ViewKey, new FakeCloseableViewModel());
+                _navigationService.NavigateTo<UserControl>(navigationInfo1);
+                _navigationService.NavigateTo<UserControl>(navigationInfo2);
+
+                // Act
+                _navigationService.ClosingApplicationShown += (sender, e) => eventRaised = true;
+                _navigationService.CloseApplication();
+
+                // Verify
+                Assert.IsTrue(eventRaised);
+            }
+
+            [TestMethod]
+            public void CanRaiseClosingApplicationHiddenEvent()
+            {
+                // Prepare
+                var eventRaised = false;
+                var navigationInfo1 = NavigationInfo.CreateSimple("viewKey1");
+                var navigationInfo2 = NavigationInfo.CreateComplex("viewKey2", navigationInfo1.ViewKey, new FakeCloseableViewModel());
+                _navigationService.NavigateTo<UserControl>(navigationInfo1);
+                _navigationService.NavigateTo<UserControl>(navigationInfo2);
+
+                // Act
+                _navigationService.ClosingApplicationHidden += (sender, e) => eventRaised = true;
+                _navigationService.CloseApplication();
+                var closingApplicationViewKey = _navigationService.CurrentView.ViewKey;
+                _navigationService.Close(closingApplicationViewKey);
+
+                // Verify
+                Assert.IsTrue(eventRaised);
             }
         }
     }

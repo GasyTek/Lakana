@@ -10,7 +10,7 @@
         Background="{DynamicResource WindowBackgroundBrush}">
 
     <DockPanel>
-        <Menu DockPanel.Dock="Top">
+        <Menu x:Name="mainMenu" DockPanel.Dock="Top">
             <MenuItem Header="File">                
                 <MenuItem Header="Home"
                           Command="{Binding OpenHomeCommand}" />

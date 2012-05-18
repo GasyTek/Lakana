@@ -24,6 +24,11 @@ namespace Samples.GasyTek.Lakana.WPF
             // set HomeView as the first view
             var homeNavigationInfo = NavigationInfo.CreateSimple(ViewId.Home);
             Singletons.NavigationService.NavigateTo<HomeView>(homeNavigationInfo);
+
+            // activate/deactivate menu whether the closing application view is visible or not
+            Singletons.NavigationService.ClosingApplicationShown += (sender1, e1) => mainMenu.IsEnabled = false;
+            Singletons.NavigationService.ClosingApplicationHidden += (sender1, e1) => mainMenu.IsEnabled = true;
+
         }
 
         private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
