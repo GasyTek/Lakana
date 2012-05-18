@@ -15,7 +15,7 @@ namespace Samples.GasyTek.Lakana.WPF.Features
 
         private void CloseClick(object sender, RoutedEventArgs e)
         {
-            Singletons.NavigationService.CloseModal(ViewId.SendMail, txtModalResult.Text);
+            Singletons.NavigationService.Close(ViewId.SendMail, txtModalResult.Text);
         }
     }
 }

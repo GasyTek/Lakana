@@ -79,11 +79,11 @@ namespace GasyTek.Lakana.WPF.Services
             var view = new TView();
 
             return navigationInfo.HasParentKey ?
-                NavigateToInternal(navigationInfo.ViewKey, navigationInfo.ParentViewKey, view, navigationInfo.ViewModel, false, navigationInfo.ShowAsOpenedView)
-                : NavigateToInternal(navigationInfo.ViewKey, view, navigationInfo.ViewModel, navigationInfo.ShowAsOpenedView);
+                NavigateToInternal(navigationInfo.ViewKey, navigationInfo.ParentViewKey, view, navigationInfo.ViewModel, false, navigationInfo.IsOpenedViewMember)
+                : NavigateToInternal(navigationInfo.ViewKey, view, navigationInfo.ViewModel, navigationInfo.IsOpenedViewMember);
         }
 
-        private ViewInfo NavigateToInternal(string viewKey, string parentViewKey, FrameworkElement view, object viewModel, bool isModal, bool showAsOpenedView)
+        private ViewInfo NavigateToInternal(string viewKey, string parentViewKey, FrameworkElement view, object viewModel, bool isModal, bool isOpenedViewMember)
         {
             ViewInfo resultViewInfo;
             LinkedListNode<ViewInfo> foundChildViewInfoNode;
@@ -107,7 +107,7 @@ namespace GasyTek.Lakana.WPF.Services
                 if (!IsTopMostView(foundParentViewInfoNode))
                     throw new ParentViewNotTopMostException(parentViewKey);
 
-                resultViewInfo = new ViewInfo(viewKey) { View = view, IsModal = isModal, IsOpenedViewMember = showAsOpenedView };
+                resultViewInfo = new ViewInfo(viewKey) { View = view, IsModal = isModal, IsOpenedViewMember = isOpenedViewMember };
 
                 EnforceViewKey(view, viewModel, viewKey);
                 EnforceUIMetadata(view, viewModel, ref resultViewInfo);
@@ -125,7 +125,7 @@ namespace GasyTek.Lakana.WPF.Services
             return resultViewInfo;
         }
 
-        private ViewInfo NavigateToInternal(string viewKey, FrameworkElement view, object viewModel, bool showAsOpenedView)
+        private ViewInfo NavigateToInternal(string viewKey, FrameworkElement view, object viewModel, bool isOpenedViewMember)
         {
             ViewInfo resultViewInfo;
             LinkedListNode<ViewInfo> foundViewInfoNode;
@@ -141,7 +141,7 @@ namespace GasyTek.Lakana.WPF.Services
             }
             else
             {
-                resultViewInfo = new ViewInfo(viewKey) { View = view, IsOpenedViewMember = showAsOpenedView };
+                resultViewInfo = new ViewInfo(viewKey) { View = view, IsOpenedViewMember = isOpenedViewMember };
 
                 EnforceViewKey(view, viewModel, viewKey);
                 EnforceUIMetadata(view, viewModel, ref resultViewInfo);
@@ -180,7 +180,7 @@ namespace GasyTek.Lakana.WPF.Services
             if (!navigationInfo.HasParentKey)
                 throw new InvalidOperationException("Parent view key must be initialized");
 
-            return ShowModalInternal(new TView(), navigationInfo.ViewKey, navigationInfo.ParentViewKey, navigationInfo.ViewModel, navigationInfo.ShowAsOpenedView);
+            return ShowModalInternal(new TView(), navigationInfo.ViewKey, navigationInfo.ParentViewKey, navigationInfo.ViewModel, navigationInfo.IsOpenedViewMember);
         }
 
         private ModalResult ShowModalInternal(FrameworkElement view, string viewKey, string parentViewKey, object viewModel, bool showAsOpenedView)
@@ -207,17 +207,7 @@ namespace GasyTek.Lakana.WPF.Services
             return view.ResultCompletionSource.Task;
         }
 
-        public ViewInfo Close(string viewKey)
-        {
-            return CloseInternal(viewKey, null);
-        }
-
-        public ViewInfo CloseModal<TResult>(string viewKey, TResult modalResult = default(TResult))
-        {
-            return CloseInternal(viewKey, modalResult);
-        }
-
-        private ViewInfo CloseInternal(string viewKey, object modalResult)
+        public ViewInfo Close(string viewKey, object modalResult = null)
         {
             var foundViewInfoNode = FindViewInternal(viewKey);
 

@@ -363,10 +363,10 @@ namespace GasyTek.Lakana.WPF.Tests
                 var oldViewInfo = _navigationService.NavigateTo<UserControl>(navigationInfo);
 
                 // Act
-                var expectedViewInfo = _navigationService.ShowModal<UserControl>(modalNavigationInfo);
+                var modalResult = _navigationService.ShowModal<UserControl>(modalNavigationInfo);
 
                 // Verify
-                Assert.AreEqual(expectedViewInfo, _navigationService.CurrentView);
+                Assert.AreEqual(modalResult.ViewInfo, _navigationService.CurrentView);
                 Assert.IsInstanceOfType(_navigationService.CurrentView.View, typeof(ModalHostControl));
                 Assert.IsTrue(oldViewInfo.View.Visibility == Visibility.Visible);
             }
@@ -400,7 +400,7 @@ namespace GasyTek.Lakana.WPF.Tests
                 // Act
                 var modalResult = _navigationService.ShowModal<UserControl>(modalNavigationInfo);
                 modalResult.Result.ContinueWith(r => testedModalResult = r.Result.ToString());
-                _navigationService.CloseModal(modalResult.ViewInfo.ViewKey, "ModalResult");  // Close the modal view and provide the modal result
+                _navigationService.Close(modalResult.ViewInfo.ViewKey, "ModalResult");  // Close the modal view and provide the modal result
 
                 // Verify
                 Assert.AreEqual("ModalResult", testedModalResult);
