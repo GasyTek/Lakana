@@ -36,7 +36,7 @@ namespace GasyTek.Lakana.WPF.Services
         /// <value>
         /// 	<c>true</c> if the view will appear iin <see cref="INavigationService.OpenedViews"/>; otherwise, <c>false</c>.
         /// </value>
-        public bool IsOpenedView { get; internal set; }
+        public bool IsOpenedViewMember { get; internal set; }
 
         /// <summary>
         /// Gets or sets the presentation metadatas associated with the view.

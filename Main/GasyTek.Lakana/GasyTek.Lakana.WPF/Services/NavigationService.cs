@@ -72,8 +72,8 @@ namespace GasyTek.Lakana.WPF.Services
             var view = new TView();
 
             return navigationInfo.HasParentKey ?
-                NavigateToInternal(navigationInfo.ViewKey, navigationInfo.ParentViewKey, view, navigationInfo.ViewContext, false, navigationInfo.IsOpenedView)
-                : NavigateToInternal(navigationInfo.ViewKey, view, navigationInfo.ViewContext, navigationInfo.IsOpenedView);
+                NavigateToInternal(navigationInfo.ViewKey, navigationInfo.ParentViewKey, view, navigationInfo.ViewModel, false, navigationInfo.IsOpenedView)
+                : NavigateToInternal(navigationInfo.ViewKey, view, navigationInfo.ViewModel, navigationInfo.IsOpenedView);
         }
 
         private ViewInfo NavigateToInternal(string viewKey, string parentViewKey, FrameworkElement view, object viewContext, bool isModal, bool isOpenedView)
@@ -100,7 +100,7 @@ namespace GasyTek.Lakana.WPF.Services
                 if (!IsTopMostView(foundParentViewInfoNode))
                     throw new ParentViewNotTopMostException(parentViewKey);
 
-                resultViewInfo = new ViewInfo(viewKey) { View = view, IsModal = isModal, IsOpenedView = isOpenedView };
+                resultViewInfo = new ViewInfo(viewKey) { View = view, IsModal = isModal, IsOpenedViewMember = isOpenedView };
 
                 // Initializes view key on the view model 
                 var viewKeyAwareViewContext = viewContext as IViewKeyAware;
@@ -146,7 +146,7 @@ namespace GasyTek.Lakana.WPF.Services
             }
             else
             {
-                resultViewInfo = new ViewInfo(viewKey) { View = view, IsOpenedView = isOpenedView };
+                resultViewInfo = new ViewInfo(viewKey) { View = view, IsOpenedViewMember = isOpenedView };
 
                 // Initializes view key on the view model 
                 var viewKeyAwareViewContext = viewContext as IViewKeyAware;
@@ -200,7 +200,7 @@ namespace GasyTek.Lakana.WPF.Services
             var modalHostControl = new ModalHostControl { ModalContent = new TView() };
 
             return NavigateToInternal(navigationInfo.ViewKey, navigationInfo.ParentViewKey, modalHostControl,
-                             navigationInfo.ViewContext, true, navigationInfo.IsOpenedView);
+                             navigationInfo.ViewModel, true, navigationInfo.IsOpenedView);
         }
 
         public Task<MessageBoxResult> ShowMessageBox(string parentViewKey, string message = "", MessageBoxImage messageBoxImage = MessageBoxImage.Information, MessageBoxButton messageBoxButton = MessageBoxButton.OK)
@@ -345,7 +345,7 @@ namespace GasyTek.Lakana.WPF.Services
         {
             RootPanel.Children.Add(viewInfo.View);
 
-            if (viewInfo.IsOpenedView)
+            if (viewInfo.IsOpenedViewMember)
                 _openedViews.Add(viewInfo);
         }
 
@@ -353,7 +353,7 @@ namespace GasyTek.Lakana.WPF.Services
         {
             RootPanel.Children.Remove(viewInfo.View);
 
-            if (viewInfo.IsOpenedView)
+            if (viewInfo.IsOpenedViewMember)
                 _openedViews.Remove(viewInfo);
         }
 
