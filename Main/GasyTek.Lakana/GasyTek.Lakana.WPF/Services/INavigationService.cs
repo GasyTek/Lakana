@@ -67,9 +67,10 @@ namespace GasyTek.Lakana.WPF.Services
         /// Shows the view as modal.
         /// </summary>
         /// <typeparam name="TView">The type of the view.</typeparam>
+        /// <typeparam name="TResult">The type of the expected result from the modal window </typeparam>
         /// <param name="navigationInfo">The navigation info. It must specify the parent view key on which to push the view.</param>
         /// <remarks></remarks>
-        ModalResult ShowModal<TView>(NavigationInfo navigationInfo) where TView : FrameworkElement, new();
+        ModalResult<TResult> ShowModal<TView, TResult>(NavigationInfo navigationInfo) where TView : FrameworkElement, new();
 
         /// <summary>
         /// Shows a message box that is modal to the specified parent.

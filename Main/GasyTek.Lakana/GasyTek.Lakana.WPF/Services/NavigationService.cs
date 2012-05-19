@@ -175,20 +175,12 @@ namespace GasyTek.Lakana.WPF.Services
             return foundViewInfoNode.Value;
         }
 
-        public ModalResult ShowModal<TView>(NavigationInfo navigationInfo) where TView : FrameworkElement, new()
+        public ModalResult<TResult> ShowModal<TView, TResult>(NavigationInfo navigationInfo) where TView : FrameworkElement, new()
         {
             if (!navigationInfo.HasParentKey)
                 throw new InvalidOperationException("Parent view key must be initialized");
 
-            return ShowModalInternal(new TView(), navigationInfo.ViewKey, navigationInfo.ParentViewKey, navigationInfo.ViewModel, navigationInfo.IsOpenedViewMember);
-        }
-
-        private ModalResult ShowModalInternal(FrameworkElement view, string viewKey, string parentViewKey, object viewModel, bool showAsOpenedView)
-        {
-            var modalHostControl = new ModalHostControl { ModalContent = view };
-            var viewInfo = NavigateToInternal(viewKey, parentViewKey, modalHostControl, viewModel, true, showAsOpenedView);
-
-            return new ModalResult { ViewInfo = viewInfo, Result = modalHostControl.ResultCompletionSource.Task };
+            return ShowModalInternal<TResult>(new TView(), navigationInfo.ViewKey, navigationInfo.ParentViewKey, navigationInfo.ViewModel, navigationInfo.IsOpenedViewMember);
         }
 
         public Task<MessageBoxResult> ShowMessageBox(string parentViewKey, string message = "", MessageBoxImage messageBoxImage = MessageBoxImage.Information, MessageBoxButton messageBoxButton = MessageBoxButton.OK)
@@ -203,8 +195,17 @@ namespace GasyTek.Lakana.WPF.Services
                 MessageBoxButton = messageBoxButton
             };
 
-            NavigateToInternal(messageBoxViewKey, parentViewKey, view, null, true, false);
-            return view.ResultCompletionSource.Task;
+            var modalResult = ShowModalInternal<MessageBoxResult>(view, messageBoxViewKey, parentViewKey, null, false);
+
+            return modalResult.Result;
+        }
+
+        private ModalResult<TResult> ShowModalInternal<TResult>(FrameworkElement view, string viewKey, string parentViewKey, object viewModel, bool isOpenedViewMember)
+        {
+            var modalHostControl = new ModalHostControl<TResult> { ModalContent = view };
+            var viewInfo = NavigateToInternal(viewKey, parentViewKey, modalHostControl, viewModel, true, isOpenedViewMember);
+
+            return new ModalResult<TResult> { ViewInfo = viewInfo, Result = modalHostControl.ResultCompletionSource.Task };
         }
 
         public ViewInfo Close(string viewKey, object modalResult = null)
@@ -221,14 +222,16 @@ namespace GasyTek.Lakana.WPF.Services
             if (stack.Count == 0) _viewCollection.Remove(stack);
 
             // Raise ClosingApplicationHidden event if the view to close is the closing application view
-            if (foundViewInfoNode.Value.View is CloseApplicationControl && ClosingApplicationHidden != null)
-                ClosingApplicationHidden(this, new EventArgs());
+            if (foundViewInfoNode.Value.View is ModalHostControl 
+                && ((ModalHostControl)foundViewInfoNode.Value.View).ModalContent is CloseApplicationControl 
+                && ClosingApplicationHidden != null)
+                    ClosingApplicationHidden(this, new EventArgs());
 
             // Manage modal views
             if (foundViewInfoNode.Value.IsModal && foundViewInfoNode.Value.View is ModalHostControl)
             {
                 var modalView = (ModalHostControl)foundViewInfoNode.Value.View;
-                modalView.ResultCompletionSource.SetResult(modalResult);
+                modalView.SetModalResult(modalResult);
             }
 
             PerformTransitionAnimation(RootPanel, closedView.View, CurrentView.View);
@@ -255,14 +258,14 @@ namespace GasyTek.Lakana.WPF.Services
             }
 
             var viewKey = Guid.NewGuid().ToString();
-            var closeApplicationControl = new CloseApplicationControl
+            var closeApplicationView = new CloseApplicationControl
                                               {
                                                   ItemsSource = notCloseableViews.OrderBy(v => v.ViewKey),
                                                  NavigationService = this,
                                                  ViewKey = viewKey
                                               };
 
-            NavigateToInternal(viewKey, CurrentView.ViewKey, closeApplicationControl, null, true, false);
+            ShowModalInternal<object>(closeApplicationView, viewKey, CurrentView.ViewKey, null, false);
 
             if(ClosingApplicationShown != null)
                 ClosingApplicationShown(this, new EventArgs());

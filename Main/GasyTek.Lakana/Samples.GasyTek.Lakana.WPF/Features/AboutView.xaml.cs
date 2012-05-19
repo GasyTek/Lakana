@@ -34,10 +34,10 @@ namespace Samples.GasyTek.Lakana.WPF.Features
             // Notice that you have to use TaskScheduler.FromCurrentSynchronizationContext()
             // in order to use the UI thread synchronization context
             var navigationInfo = NavigationInfo.CreateComplex(ViewId.SendMail, ViewId.About, false);
-            var modalResult = Singletons.NavigationService.ShowModal<SendMailView>(navigationInfo);
+            var modalResult = Singletons.NavigationService.ShowModal<SendMailView, string>(navigationInfo);
             modalResult.Result.ContinueWith(r =>
                                                 {
-                                                    txtDisplayModalResult.Text = "Modal Result : " + r.Result.ToString();
+                                                    txtDisplayModalResult.Text = "Modal Result : " + r.Result;
                                                 }, TaskScheduler.FromCurrentSynchronizationContext());
         }
     }
