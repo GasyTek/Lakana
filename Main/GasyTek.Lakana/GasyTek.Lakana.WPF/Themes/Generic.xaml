@@ -10,75 +10,74 @@
 
     <Style x:Key="{x:Type ui:MessageBoxControl}"
            TargetType="{x:Type ui:MessageBoxControl}">
+        <Setter Property="BorderBrush"
+                Value="White" />
+        <Setter Property="BorderThickness"
+                Value="2" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ui:MessageBoxControl}">
-                    <Border x:Name="outerBorder">
-                        <Border.Background>
-                            <SolidColorBrush Color="Black"
-                                             Opacity="0.5" />
-                        </Border.Background>
-                        <Border Background="{TemplateBinding Background}"
-                                BorderBrush="Black"
-                                BorderThickness="2"
-                                CornerRadius="4"
-                                Padding="10"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center"
-                                Width="400"
-                                Height="180">
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition />
-                                </Grid.ColumnDefinitions>
+                    <Border x:Name="outerBorder"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="2"
+                            Padding="10"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Width="400"
+                            Height="180">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
 
-                                <Image x:Name="iconContainer"
-                                       RenderOptions.BitmapScalingMode="HighQuality"
-                                       Width="64"
-                                       Height="64"
-                                       Margin="10"
-                                       VerticalAlignment="Center" />
+                            <Image x:Name="iconContainer"
+                                   RenderOptions.BitmapScalingMode="HighQuality"
+                                   Width="64"
+                                   Height="64"
+                                   Margin="10"
+                                   VerticalAlignment="Center" />
 
-                                <TextBlock Grid.Column="1"
-                                           Text="{TemplateBinding Message}"
-                                           FontSize="16"
-                                           VerticalAlignment="Center"
-                                           TextWrapping="Wrap" />
+                            <TextBlock Grid.Column="1"
+                                       Text="{TemplateBinding Message}"
+                                       FontSize="16"
+                                       VerticalAlignment="Center"
+                                       TextWrapping="Wrap" />
 
-                                <Border Grid.Row="1"
-                                        Grid.ColumnSpan="2"
-                                        HorizontalAlignment="Center">
-                                    <StackPanel Orientation="Horizontal">
-                                        <Button x:Name="PART_Yes"
-                                                Content="{x:Static Resources:Labels.Yes}"
-                                                Visibility="Collapsed"
-                                                Width="100"
-                                                Margin="3" />
-                                        <Button x:Name="PART_No"
-                                                Content="{x:Static Resources:Labels.No}"
-                                                Visibility="Collapsed"
-                                                Width="100"
-                                                Margin="3" />
-                                        <Button x:Name="PART_Ok"
-                                                Content="{x:Static Resources:Labels.Ok}"
-                                                Visibility="Collapsed"
-                                                Width="100"
-                                                Margin="3" />
-                                        <Button x:Name="PART_Cancel"
-                                                Content="{x:Static Resources:Labels.Cancel}"
-                                                Visibility="Collapsed"
-                                                Width="100"
-                                                Margin="3" />
-                                    </StackPanel>
-                                </Border>
+                            <Border Grid.Row="1"
+                                    Grid.ColumnSpan="2"
+                                    HorizontalAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <Button x:Name="PART_Yes"
+                                            Content="{x:Static Resources:Labels.Yes}"
+                                            Visibility="Collapsed"
+                                            Width="100"
+                                            Margin="3" />
+                                    <Button x:Name="PART_No"
+                                            Content="{x:Static Resources:Labels.No}"
+                                            Visibility="Collapsed"
+                                            Width="100"
+                                            Margin="3" />
+                                    <Button x:Name="PART_Ok"
+                                            Content="{x:Static Resources:Labels.Ok}"
+                                            Visibility="Collapsed"
+                                            Width="100"
+                                            Margin="3" />
+                                    <Button x:Name="PART_Cancel"
+                                            Content="{x:Static Resources:Labels.Cancel}"
+                                            Visibility="Collapsed"
+                                            Width="100"
+                                            Margin="3" />
+                                </StackPanel>
+                            </Border>
 
-                            </Grid>
-                        </Border>
+                        </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="MessageBoxImage"
@@ -160,10 +159,7 @@
                             <SolidColorBrush Color="Black"
                                              Opacity="0.5" />
                         </Border.Background>
-                        <Border Background="White"
-                                BorderBrush="Black"
-                                BorderThickness="1"
-                                CornerRadius="4"
+                        <Border Background="Transparent"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center">
                             <ContentPresenter ContentSource="ModalContent" />
@@ -178,10 +174,14 @@
 
     <Style x:Key="{x:Type ui:CloseApplicationControlItem}"
            TargetType="ui:CloseApplicationControlItem">
-        <Setter Property="ViewKey" Value="{Binding ViewKey, Mode=OneWay}" />
-        <Setter Property="BorderThickness" Value="1" />
-        <Setter Property="BorderBrush" Value="LightGray" />
-        <Setter Property="Cursor" Value="Hand" />        
+        <Setter Property="ViewKey"
+                Value="{Binding ViewKey, Mode=OneWay}" />
+        <Setter Property="BorderThickness"
+                Value="1" />
+        <Setter Property="BorderBrush"
+                Value="LightGray" />
+        <Setter Property="Cursor"
+                Value="Hand" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ui:CloseApplicationControlItem">
@@ -195,11 +195,14 @@
                                           ContentTemplate="{TemplateBinding ContentTemplate}" />
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True" SourceName="outerBorder">
+                        <Trigger Property="IsMouseOver"
+                                 Value="True"
+                                 SourceName="outerBorder">
                             <Setter Property="Background"
                                     TargetName="outerBorder">
                                 <Setter.Value>
-                                    <SolidColorBrush Color="LightBlue" Opacity="0.5" />
+                                    <SolidColorBrush Color="LightBlue"
+                                                     Opacity="0.5" />
                                 </Setter.Value>
                             </Setter>
                         </Trigger>
@@ -235,62 +238,59 @@
     </Style>
 
     <Style x:Key="{x:Type ui:CloseApplicationControl}"
-           TargetType="ui:CloseApplicationControl">      
+           TargetType="ui:CloseApplicationControl">
+        <Setter Property="BorderBrush"
+                Value="White" />
+        <Setter Property="BorderThickness"
+                Value="2" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="ui:CloseApplicationControl">
-                    <Border x:Name="outerBorder">
-                        <Border.Background>
-                            <SolidColorBrush Color="Black"
-                                             Opacity="0.5" />
-                        </Border.Background>
-                        <Border Width="400"
-                                Height="400"
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="Black"
-                                BorderThickness="2"
-                                CornerRadius="4"
-                                HorizontalAlignment="Center"
-                                VerticalAlignment="Center">
-                            <Grid Margin="15">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition Height="Auto" />
-                                    <RowDefinition />
-                                    <RowDefinition Height="Auto" />
-                                </Grid.RowDefinitions>
+                    <Border x:Name="outerBorder"
+                            Width="400"
+                            Height="400"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="4">
+                        <Grid Margin="15">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
 
-                                <TextBlock Text="{x:Static Resources:Labels.RunningTasks}"
-                                           FontSize="22"
-                                           FontWeight="SemiBold" />
-                                <TextBlock Grid.Row="1"
-                                           Text="{x:Static Resources:Labels.ClickTaskToCloseItGracefully}"
-                                           Margin="20,10,20,10"
-                                           TextWrapping="Wrap" />
+                            <TextBlock Text="{x:Static Resources:Labels.RunningTasks}"
+                                       FontSize="22"
+                                       FontWeight="SemiBold" />
+                            <TextBlock Grid.Row="1"
+                                       Text="{x:Static Resources:Labels.ClickTaskToCloseItGracefully}"
+                                       Margin="20,10,20,10"
+                                       TextWrapping="Wrap" />
 
-                                <ScrollViewer Grid.Row="2" 
-                                              HorizontalScrollBarVisibility="Hidden" 
-                                              VerticalScrollBarVisibility="Auto">
-                                    <ItemsPresenter />
-                                </ScrollViewer>
+                            <ScrollViewer Grid.Row="2"
+                                          HorizontalScrollBarVisibility="Hidden"
+                                          VerticalScrollBarVisibility="Auto">
+                                <ItemsPresenter />
+                            </ScrollViewer>
 
-                                <Grid Grid.Row="3"
-                                      Margin="0,10,0,0">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <Button x:Name="PART_ExitApplication"
-                                            Content="{x:Static Resources:Labels.ExitApplication}" />
-                                    <Button Grid.Column="1"
-                                            x:Name="PART_Cancel"
-                                            Content="{x:Static Resources:Labels.Cancel}"
-                                            Width="100"
-                                            Margin="10,0,0,0" />
-                                </Grid>
-
+                            <Grid Grid.Row="3"
+                                  Margin="0,10,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+                                <Button x:Name="PART_ExitApplication"
+                                        Content="{x:Static Resources:Labels.ExitApplication}" />
+                                <Button Grid.Column="1"
+                                        x:Name="PART_Cancel"
+                                        Content="{x:Static Resources:Labels.Cancel}"
+                                        Width="100"
+                                        Margin="10,0,0,0" />
                             </Grid>
-                        </Border>
+
+                        </Grid>
                     </Border>
                 </ControlTemplate>
             </Setter.Value>

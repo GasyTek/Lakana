@@ -274,7 +274,7 @@ namespace GasyTek.Lakana.WPF.Tests
                 var parentNavigationInfo = NavigationInfo.CreateSimple("parentViewKey");
                 var modalNavigationInfo = NavigationInfo.CreateComplex("modalViewKey", parentNavigationInfo.ViewKey);
                 var parentViewInfo = _navigationService.NavigateTo<UserControl>(parentNavigationInfo);
-                _navigationService.ShowModal<UserControl>(modalNavigationInfo);
+                _navigationService.ShowModal<UserControl, string>(modalNavigationInfo);
                 _navigationService.NavigateTo<UserControl>(navigationInfo);
 
                 // Act
@@ -297,7 +297,7 @@ namespace GasyTek.Lakana.WPF.Tests
                 var modalNavigationInfo = NavigationInfo.CreateComplex("modalViewKey", parentNavigationInfo.ViewKey);
                 _navigationService.NavigateTo<UserControl>(navigationInfo);
                 var parentViewInfo = _navigationService.NavigateTo<UserControl>(parentNavigationInfo);
-                _navigationService.ShowModal<UserControl>(modalNavigationInfo);
+                _navigationService.ShowModal<UserControl, bool>(modalNavigationInfo);
 
                 // Act
                 var expectedViewInfo = _navigationService.NavigateTo("modalViewKey");
@@ -317,7 +317,7 @@ namespace GasyTek.Lakana.WPF.Tests
                 var parentNavigationInfo = NavigationInfo.CreateSimple("parentViewKey");
                 var modalNavigationInfo = NavigationInfo.CreateComplex("modalViewKey", parentNavigationInfo.ViewKey);
                 _navigationService.NavigateTo<UserControl>(parentNavigationInfo);
-                var modalResult = _navigationService.ShowModal<UserControl>(modalNavigationInfo);
+                var modalResult = _navigationService.ShowModal<UserControl, bool>(modalNavigationInfo);
                 _navigationService.NavigateTo<UserControl>(navigationInfo);
 
                 // Act
@@ -345,9 +345,9 @@ namespace GasyTek.Lakana.WPF.Tests
                 _navigationService.ShowMessageBox("viewKey", "Lorem ipsum", MessageBoxImage.Warning, MessageBoxButton.OKCancel);
 
                 // Verify
-                Assert.IsInstanceOfType(_navigationService.CurrentView.View, typeof(MessageBoxControl));
+                Assert.IsInstanceOfType(_navigationService.CurrentView.View, typeof(ModalHostControl));
                 Assert.IsTrue(oldViewInfo.View.Visibility == Visibility.Visible);
-                Assert.IsFalse(string.IsNullOrEmpty(((MessageBoxControl)_navigationService.CurrentView.View).Message));
+                Assert.IsFalse(string.IsNullOrEmpty(((MessageBoxControl)((ModalHostControl)_navigationService.CurrentView.View).ModalContent).Message));
             }
         }
 
@@ -363,7 +363,7 @@ namespace GasyTek.Lakana.WPF.Tests
                 var oldViewInfo = _navigationService.NavigateTo<UserControl>(navigationInfo);
 
                 // Act
-                var modalResult = _navigationService.ShowModal<UserControl>(modalNavigationInfo);
+                var modalResult = _navigationService.ShowModal<UserControl, bool>(modalNavigationInfo);
 
                 // Verify
                 Assert.AreEqual(modalResult.ViewInfo, _navigationService.CurrentView);
@@ -380,7 +380,7 @@ namespace GasyTek.Lakana.WPF.Tests
                 var parentViewInfo = _navigationService.NavigateTo<UserControl>(parentNavigationInfo);
 
                 // Act
-                var modalResult = _navigationService.ShowModal<UserControl>(modalNavigationInfo);
+                var modalResult = _navigationService.ShowModal<UserControl, bool>(modalNavigationInfo);
 
                 // Verify
                 Assert.IsTrue(modalResult.ViewInfo.View.Visibility == Visibility.Visible);
@@ -389,7 +389,7 @@ namespace GasyTek.Lakana.WPF.Tests
             }
 
             [TestMethod]
-            public  void CanRetrieveModalResult()
+            public void CanRetrieveModalResult()
             {
                 // Prepare
                 var testedModalResult = "";
@@ -398,8 +398,8 @@ namespace GasyTek.Lakana.WPF.Tests
                 _navigationService.NavigateTo<UserControl>(navigationInfo);
 
                 // Act
-                var modalResult = _navigationService.ShowModal<UserControl>(modalNavigationInfo);
-                modalResult.Result.ContinueWith(r => testedModalResult = r.Result.ToString());
+                var modalResult = _navigationService.ShowModal<UserControl, string>(modalNavigationInfo);
+                modalResult.Result.ContinueWith(r => testedModalResult = r.Result);
                 _navigationService.Close(modalResult.ViewInfo.ViewKey, "ModalResult");  // Close the modal view and provide the modal result
 
                 // Verify
@@ -500,7 +500,8 @@ namespace GasyTek.Lakana.WPF.Tests
                 _navigationService.CloseApplication();
 
                 // Verify
-                Assert.IsInstanceOfType(_navigationService.CurrentView.View, typeof(CloseApplicationControl));
+                Assert.IsInstanceOfType(_navigationService.CurrentView.View, typeof(ModalHostControl));
+                Assert.IsInstanceOfType(((ModalHostControl)_navigationService.CurrentView.View).ModalContent, typeof(CloseApplicationControl));
             }
 
             [TestMethod]
@@ -518,7 +519,7 @@ namespace GasyTek.Lakana.WPF.Tests
                 _navigationService.CloseApplication();
 
                 // Verify
-                var closeApplicationControl = (CloseApplicationControl)_navigationService.CurrentView.View;
+                var closeApplicationControl = (CloseApplicationControl)((ModalHostControl)_navigationService.CurrentView.View).ModalContent;
                 Assert.IsTrue(closeApplicationControl.NbCloseableViews == 2);
                 Assert.IsTrue(closeApplicationControl.ItemsSource.Cast<ViewInfo>().ToList().Contains(expectedViewInfo1));
                 Assert.IsTrue(closeApplicationControl.ItemsSource.Cast<ViewInfo>().Contains(expectedViewInfo2));
