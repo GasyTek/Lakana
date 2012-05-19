@@ -202,10 +202,10 @@ namespace GasyTek.Lakana.WPF.Services
 
         private ModalResult<TResult> ShowModalInternal<TResult>(FrameworkElement view, string viewKey, string parentViewKey, object viewModel, bool isOpenedViewMember)
         {
-            var modalHostControl = new ModalHostControl<TResult> { ModalContent = view };
+            var modalHostControl = new ModalHostControl { ModalContent = view };
             var viewInfo = NavigateToInternal(viewKey, parentViewKey, modalHostControl, viewModel, true, isOpenedViewMember);
 
-            return new ModalResult<TResult> { ViewInfo = viewInfo, Result = modalHostControl.ResultCompletionSource.Task };
+            return new ModalResult<TResult> (modalHostControl.ResultCompletionSource.Task) { ViewInfo = viewInfo };
         }
 
         public ViewInfo Close(string viewKey, object modalResult = null)
@@ -230,8 +230,8 @@ namespace GasyTek.Lakana.WPF.Services
             // Manage modal views
             if (foundViewInfoNode.Value.IsModal && foundViewInfoNode.Value.View is ModalHostControl)
             {
-                var modalView = (ModalHostControl)foundViewInfoNode.Value.View;
-                modalView.SetModalResult(modalResult);
+                var modalHostControl = (ModalHostControl)foundViewInfoNode.Value.View;
+                modalHostControl.ResultCompletionSource.SetResult(modalResult);
             }
 
             PerformTransitionAnimation(RootPanel, closedView.View, CurrentView.View);

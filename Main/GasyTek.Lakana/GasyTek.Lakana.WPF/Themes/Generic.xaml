@@ -151,14 +151,17 @@
 
     <Style x:Key="{x:Type ui:ModalHostControl}"
            TargetType="{x:Type ui:ModalHostControl}">
+        <Setter Property="Background">
+            <Setter.Value>
+                <SolidColorBrush Color="Black"
+                                 Opacity="0.5" />
+            </Setter.Value>
+        </Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ui:ModalHostControl}">
-                    <Border x:Name="outerBorder">
-                        <Border.Background>
-                            <SolidColorBrush Color="Black"
-                                             Opacity="0.5" />
-                        </Border.Background>
+                    <Border x:Name="outerBorder"
+                            Background="{TemplateBinding Background}">
                         <Border Background="Transparent"
                                 HorizontalAlignment="Center"
                                 VerticalAlignment="Center">

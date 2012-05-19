@@ -7,7 +7,7 @@ namespace GasyTek.Lakana.WPF.Controls
     /// <summary>
     /// Control that can hosts a modal view.
     /// </summary>
-    public abstract class ModalHostControl : Control
+    public class ModalHostControl : Control
     {
         #region Dependency properties
 
@@ -25,6 +25,8 @@ namespace GasyTek.Lakana.WPF.Controls
             set { SetValue(ModalContentProperty, value); }
         }
 
+        internal TaskCompletionSource<object> ResultCompletionSource { get; private set; }
+
         #endregion
 
         #region Constructor
@@ -34,31 +36,11 @@ namespace GasyTek.Lakana.WPF.Controls
             DefaultStyleKeyProperty.OverrideMetadata(typeof(ModalHostControl), new FrameworkPropertyMetadata(typeof(ModalHostControl)));
         }
 
-        #endregion
-
-        public void SetModalResult(object result)
-        {
-            OnSetModalResult(result);
-        }
-
-        protected abstract void OnSetModalResult(object result);
-    }
-
-    public class ModalHostControl<TResult> : ModalHostControl
-    {
-        internal TaskCompletionSource<TResult> ResultCompletionSource { get; private set; }
-
         public ModalHostControl()
         {
-            ResultCompletionSource = new TaskCompletionSource<TResult>();
+            ResultCompletionSource = new TaskCompletionSource<object>();
         }
 
-        protected override void OnSetModalResult(object result)
-        {
-            if (result == null)
-                ResultCompletionSource.SetResult(default(TResult));
-            else
-                ResultCompletionSource.SetResult((TResult) result);
-        }
+        #endregion
     }
 }
