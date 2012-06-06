@@ -7,45 +7,76 @@
              d:DesignHeight="300"
              d:DesignWidth="300"
              Style="{StaticResource ViewDefaultStyle}">
-    <Grid HorizontalAlignment="Center"
-          VerticalAlignment="Center">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="5" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="5" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="10" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
 
-        <CheckBox Grid.Column="1"
-                IsChecked="{Binding IsDirty, Mode=TwoWay}" 
-                Content="Check me to simulate a dirty form" />
+        <Image Source="../Resources/info.png"
+               Width="16"
+               Height="16"
+               Margin="20,0,0,0"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center" />
 
-        <TextBlock Grid.Row="2"
-                   Text="Name : "
-                   HorizontalAlignment="Right" />
-        <TextBox Grid.Row="2"
-                 Grid.Column="1"
-                 Text="{Binding Product.Name}" />
+        <FlowDocumentScrollViewer Grid.Column="1"
+                                  Margin="0,0,0,5">
+            <FlowDocument>
+                <Paragraph>
+                    <Run Text="{Binding Description, Mode=OneTime}"
+                         FontFamily="Segoe"
+                         FontSize="12"
+                         Foreground="White" />
+                </Paragraph>
+            </FlowDocument>
+        </FlowDocumentScrollViewer>         
 
-        <TextBlock Grid.Row="4"
-                   Text="Quantity : "
-                   HorizontalAlignment="Right" />
-        <TextBox Grid.Row="4"
-                 Grid.Column="1"
-                 Text="{Binding Product.Quantity}" />
+        <Grid Grid.Row="1" Grid.ColumnSpan="2"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
 
-        <Button Grid.Row="6"
-                Grid.ColumnSpan="2"
-                Content="Save"
-                Command="{Binding SaveCommand}" 
-                Width="150" />
+            <CheckBox Grid.Column="1"
+                      IsChecked="{Binding IsDirty, Mode=TwoWay}"
+                      Content="Check me to simulate a dirty form" />
 
+            <TextBlock Grid.Row="2"
+                       Text="Name : "
+                       HorizontalAlignment="Right" />
+            <TextBox Grid.Row="2"
+                     Grid.Column="1"
+                     Text="{Binding Product.Name}" />
+
+            <TextBlock Grid.Row="4"
+                       Text="Quantity : "
+                       HorizontalAlignment="Right" />
+            <TextBox Grid.Row="4"
+                     Grid.Column="1"
+                     Text="{Binding Product.Quantity}" />
+
+            <Button Grid.Row="6"
+                    Grid.ColumnSpan="2"
+                    Content="Save"
+                    Command="{Binding SaveCommand}"
+                    Width="150" />
+
+        </Grid>
     </Grid>
 </UserControl>

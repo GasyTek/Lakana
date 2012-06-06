@@ -19,10 +19,7 @@ namespace GasyTek.Lakana.WPF.Transitions
         /// <param name="newView">The new view.</param>
         public static void NoTransition(FrameworkElement currentView, FrameworkElement newView)
         {
-            if (currentView != null)
-            {
-                currentView.Visibility = Visibility.Collapsed;
-            }
+            // nothing to do in fact
         }
 
         /// <summary>
@@ -46,11 +43,6 @@ namespace GasyTek.Lakana.WPF.Transitions
             newViewtranslateTransform.BeginAnimation(TranslateTransform.XProperty
                 , new DoubleAnimation(newView.ActualWidth + 20, 0
                 , new Duration(TimeSpan.FromMilliseconds(ANIMATION_DURATION))) { DecelerationRatio = 1 });
-
-            if (currentView != null)
-            {
-                currentView.Visibility = Visibility.Collapsed;
-            }
         }
 
         /// <summary>

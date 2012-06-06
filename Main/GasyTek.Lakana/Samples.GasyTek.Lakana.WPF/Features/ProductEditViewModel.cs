@@ -29,6 +29,11 @@ namespace Samples.GasyTek.Lakana.WPF.Features
             }
         }
 
+        public string Description
+        {
+            get { return GetDescription(); }
+        }
+
         public ProductEditViewModel(Product product)
         {
             _uiMetadata = new UIMetadata { LabelProvider = () => "Edit a product" };
@@ -73,6 +78,18 @@ namespace Samples.GasyTek.Lakana.WPF.Features
                                                           break;
                                                   }
                                               }, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+
+        private string GetDescription()
+        {
+            return "This view simulates a form.\r\n\r\n" +
+                   "You can simulate a dirty form by checking the corresponding checkbox.\r\n" +
+                   "If the form is dirty, attempting to save datas will show you a message box " +
+                   "and attempting to shutdown the application will show the task manager view.\r\n" +
+                   "From the task manager view, you can decide to force the application to close or fix problems before closing the app\r\n\r\n" +
+                   "Features demonstrated : " +
+                   "\r\n > Message boxes" +
+                   "\r\n > Application shutdown management";
         }
 
         #region ICloseable members

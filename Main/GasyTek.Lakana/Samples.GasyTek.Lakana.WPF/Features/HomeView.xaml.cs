@@ -21,5 +21,26 @@ namespace Samples.GasyTek.Lakana.WPF.Features
         {
             get { return _uiMetadata; }
         }
+
+        private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            contentRun.Text = GetDescription();
+        }
+
+        public string GetDescription()
+        {
+            return "This demo application will show you the main features offered by Lakana.\r\n" +
+                   "It covers the following : \r\n" +
+                   "\r\n > Animated transition between views" +
+                   "\r\n > MDI-like navigation" +
+                   "\r\n > Modal windows" +
+                   "\r\n > Message boxes" +
+                   "\r\n > Application shutdown management" +
+                   "\r\n > Use of MVVM and non-MVVM screens" +
+                   "\r\n\r\n Project website : http://lakana.codeplex.com " +
+                   "\r\n My blog (in french) : http://gasytek.wordpress.com " +
+                   "\r\n Twitter : @gasytek, #lakana" +
+                   "\r\n Mail : gasytek@gmail.com";
+        }
     }
 }
