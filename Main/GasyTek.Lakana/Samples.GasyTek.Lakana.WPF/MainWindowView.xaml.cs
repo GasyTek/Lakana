@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using GasyTek.Lakana.WPF.Services;
 using GasyTek.Lakana.WPF.Transitions;
 using Samples.GasyTek.Lakana.WPF.Common;
@@ -47,6 +48,31 @@ namespace Samples.GasyTek.Lakana.WPF
             {
                 // HOW TO : navigate to a previously opened view
                 Singletons.NavigationService.NavigateTo(viewInfo.ViewKey);
+            }
+        }
+
+        private void MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            switch (((MenuItem)e.Source).Name)
+            {
+                case "menuNoAnimation":
+                    menuNoAnimation.IsChecked = true;
+                    menuFade.IsChecked = false;
+                    menuRightToLeft.IsChecked = false;
+                    Singletons.NavigationService.ChangeTransitionAnimation(Transitions.NoTransition);
+                    break;
+                case "menuFade":
+                    menuNoAnimation.IsChecked = false;
+                    menuFade.IsChecked = true;
+                    menuRightToLeft.IsChecked = false;
+                    Singletons.NavigationService.ChangeTransitionAnimation(Transitions.FadeTransition);
+                    break;
+                case "menuRightToLeft":
+                    menuNoAnimation.IsChecked = false;
+                    menuFade.IsChecked = false;
+                    menuRightToLeft.IsChecked = true;
+                    Singletons.NavigationService.ChangeTransitionAnimation(Transitions.SinglePaneRightToLeftTransition);
+                    break;
             }
         }
     }

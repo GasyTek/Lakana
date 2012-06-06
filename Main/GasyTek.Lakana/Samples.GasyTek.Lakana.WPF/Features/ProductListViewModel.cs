@@ -13,6 +13,11 @@ namespace Samples.GasyTek.Lakana.WPF.Features
         public ObservableCollection<Product> Products { get; private set; }
         public ISimpleCommand<object> EditProductCommand { get; private set; }
 
+        public string Description
+        {
+            get { return GetDescription(); }
+        }
+
         public ProductListViewModel()
         {
             _uiMetadata = new UIMetadata {LabelProvider = () => "Product List"};
@@ -39,6 +44,14 @@ namespace Samples.GasyTek.Lakana.WPF.Features
                 var navigationInfo = NavigationInfo.CreateComplex(ViewId.ProductEdit, ViewKey, new ProductEditViewModel(p));
                 Singletons.NavigationService.NavigateTo<ProductEditView>(navigationInfo);
             }
+        }
+
+        private string GetDescription()
+        {
+            return "Clicking on 'Edit' button will begin a local linear navigation by stacking the detailed view on this master view.\r\n" +
+                   "That means that when you close the detail view, this one will always be the next that will be displayed.\r\n\r\n" +
+                   "Features demonstrated : " +
+                   "\r\n > Stacking views (local linear navigation)";
         }
 
         #region IViewKeyAware members

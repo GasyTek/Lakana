@@ -40,5 +40,17 @@ namespace Samples.GasyTek.Lakana.WPF.Features
                                                     txtDisplayModalResult.Text = "Modal Result : " + r.Result;
                                                 }, TaskScheduler.FromCurrentSynchronizationContext());
         }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            description.Text = GetDescription();
+        }
+
+        private string GetDescription()
+        {
+            return "By clicking on 'Send mail', you will see a custom view that will be shown as a modal view.\r\nModal views can return values.\r\n\r\n" +
+                   "Features demonstrated : " +
+                   "\r\n > Custom views displayed as modal";
+        }
     }
 }

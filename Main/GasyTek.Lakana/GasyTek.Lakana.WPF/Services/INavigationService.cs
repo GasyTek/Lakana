@@ -49,6 +49,12 @@ namespace GasyTek.Lakana.WPF.Services
         void CreateWorkspace(Panel rootPanel, AnimateTransitionAction animateTransitionAction);
 
         /// <summary>
+        /// Assigns the transition animation.
+        /// </summary>
+        /// <param name="animateTransitionAction"></param>
+        void ChangeTransitionAnimation(AnimateTransitionAction animateTransitionAction);
+
+        /// <summary>
         /// Navigates or creates the specified view.
         /// </summary>
         /// <typeparam name="TView">The type of the view.</typeparam>

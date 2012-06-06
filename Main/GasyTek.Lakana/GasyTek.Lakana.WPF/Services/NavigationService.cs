@@ -73,6 +73,11 @@ namespace GasyTek.Lakana.WPF.Services
             _animateTransitionAction = animateTransitionAction;
         }
 
+        public void ChangeTransitionAnimation(AnimateTransitionAction animateTransitionAction)
+        {
+            _animateTransitionAction = animateTransitionAction;
+        }
+
         public ViewInfo NavigateTo<TView>(NavigationInfo navigationInfo) where TView : FrameworkElement, new()
         {
             // Creates a new instance of the view

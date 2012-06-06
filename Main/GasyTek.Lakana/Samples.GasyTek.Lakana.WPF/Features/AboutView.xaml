@@ -5,38 +5,54 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
-             Style="{StaticResource ViewOnlyDefaultStyle}">
-    <StackPanel HorizontalAlignment="Center"
-                VerticalAlignment="Center">
-        <TextBlock Text="Product : Lakana"  
-                   HorizontalAlignment="Center"
-                   FontSize="18"
-                   Margin="0,10,0,0" />
-        <TextBlock Text="Author : GasyTek"
-                   HorizontalAlignment="Center"
-                   FontSize="18"
-                   Margin="0,10,0,0" />
-        <TextBlock Text="Year : 2012"
-                   HorizontalAlignment="Center"
-                   FontSize="18"
-                   Margin="0,10,0,0" />
-        <TextBlock Text="Website : http://gasytek.wordpress.com/"
-                   HorizontalAlignment="Center"
-                   FontSize="18"
-                   Margin="0,10,0,0" />
+             Style="{StaticResource ViewOnlyDefaultStyle}"
+             Loaded="UserControl_Loaded">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
 
-        <TextBlock x:Name="txtDisplayModalResult"
-                   Text="Modal Result will be displayed here"
-                   Foreground="LightBlue"
-                   HorizontalAlignment="Center"
-                   FontSize="18"
-                   Margin="0,10,0,0" />
+        <Image Source="../Resources/info.png"
+               Width="16"
+               Height="16"
+               Margin="20,0,0,0"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center" />
 
-        <Button Content="Send mail to gasytek@gmail.com" 
-                Width="300"
-                Height="30"
-                Margin="0,20,0,0"
-                Click="SendMailClick" />
-    </StackPanel>
-    
+        <FlowDocumentScrollViewer Grid.Column="1"
+                                  Margin="0,0,0,5">
+            <FlowDocument>
+                <Paragraph>
+                    <Run x:Name="description"
+                         FontFamily="Segoe"
+                         FontSize="12"
+                         Foreground="White" />
+                </Paragraph>
+            </FlowDocument>
+        </FlowDocumentScrollViewer>
+
+        <StackPanel Grid.Row="1" Grid.ColumnSpan="2" 
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+
+            <TextBlock x:Name="txtDisplayModalResult"
+                       Text="Modal Result will be displayed here"
+                       Foreground="LightBlue"
+                       HorizontalAlignment="Center"
+                       FontSize="18"
+                       Margin="0,10,0,0" />
+
+            <Button Content="Send mail to gasytek@gmail.com"
+                    Width="300"
+                    Height="30"
+                    Margin="0,20,0,0"
+                    Click="SendMailClick" />
+        </StackPanel>
+    </Grid>
+
 </UserControl>
