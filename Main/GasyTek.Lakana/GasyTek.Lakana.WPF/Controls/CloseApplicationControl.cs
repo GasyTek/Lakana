@@ -65,7 +65,7 @@ namespace GasyTek.Lakana.WPF.Controls
 
         protected override DependencyObject GetContainerForItemOverride()
         {
-            return new CloseApplicationControlItem(){NavigationService = NavigationService, OwnerViewKey = ViewKey};
+            return new CloseApplicationControlItem {NavigationService = NavigationService, OwnerViewKey = ViewKey};
         }
 
         #endregion

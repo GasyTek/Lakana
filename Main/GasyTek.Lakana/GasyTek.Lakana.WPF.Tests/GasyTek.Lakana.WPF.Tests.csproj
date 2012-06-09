@@ -51,7 +51,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Fakes\FakeCloseableViewModel.cs" />
+    <Compile Include="Fakes\FakeDirtyViewModel.cs" />
     <Compile Include="Fakes\FakeViewKeyAwareViewModel.cs" />
     <Compile Include="Fakes\FakeViewModel.cs" />
     <Compile Include="NavigationServiceFixture.cs" />

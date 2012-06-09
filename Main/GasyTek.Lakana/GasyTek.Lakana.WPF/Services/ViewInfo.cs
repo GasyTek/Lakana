@@ -7,7 +7,7 @@ namespace GasyTek.Lakana.WPF.Services
     public struct ViewInfo : IEquatable<ViewInfo>
     {
         /// <summary>
-        /// Getsthe view key.
+        /// Gets the view key.
         /// </summary>
         /// <value>
         /// The view key.
@@ -23,7 +23,7 @@ namespace GasyTek.Lakana.WPF.Services
         public FrameworkElement View { get; internal set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the view is modal or not.
+        /// Gets a value indicating whether the view is modal or not.
         /// </summary>
         /// <value>
         ///   <c>true</c> if this instance is modal; otherwise, <c>false</c>.
@@ -34,17 +34,22 @@ namespace GasyTek.Lakana.WPF.Services
         /// Gets a value indicating whether the view will appear in <see cref="INavigationService.OpenedViews"/> or not.
         /// </summary>
         /// <value>
-        /// 	<c>true</c> if the view will appear iin <see cref="INavigationService.OpenedViews"/>; otherwise, <c>false</c>.
+        /// 	<c>true</c> if the view will appear in <see cref="INavigationService.OpenedViews"/>; otherwise, <c>false</c>.
         /// </value>
         public bool IsOpenedViewMember { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the presentation metadatas associated with the view.
+        /// Gets the presentation metadatas associated with the view.
         /// </summary>
         /// <value>
         /// The presentation metadata.
         /// </value>
         public IUIMetadata UIMetadata { get; internal set; }
+
+        /// <summary>
+        /// Used by the infrastructure to determine if this view is a message box or not
+        /// </summary>
+        internal bool IsMessageBox { get; set; }
 
         internal ViewInfo(string viewKey)
             : this()
