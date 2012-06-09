@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Input;
 using GasyTek.Lakana.WPF.Common;
+using GasyTek.Lakana.WPF.Extensions;
 using GasyTek.Lakana.WPF.Services;
 using Samples.GasyTek.Lakana.WPF.Common;
 using Samples.GasyTek.Lakana.WPF.Data;

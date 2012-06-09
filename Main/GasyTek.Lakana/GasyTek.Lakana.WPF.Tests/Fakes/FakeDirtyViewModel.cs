@@ -2,7 +2,7 @@
 
 namespace GasyTek.Lakana.WPF.Tests.Fakes
 {
-    public class FakeCloseableViewModel : ICloseable
+    public class FakeDirtyViewModel : ICloseable
     {
         public bool CanClose()
         {

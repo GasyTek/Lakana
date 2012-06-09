@@ -18,20 +18,20 @@ namespace GasyTek.Lakana.WPF.Tests
         public void OnSetup()
         {
             _navigationService = new NavigationService();
-            _navigationService.CreateWorkspace(new Grid(), null);
+            _navigationService.Initialize(new Grid());
         }
 
         [TestClass]
-        public class CreateWorkspace : NavigationServiceFixture
+        public class Initialize : NavigationServiceFixture
         {
             [TestMethod]
-            public void CreateWorkspaceInitializesPanel()
+            public void CanInitializeNavigationService()
             {
                 // Prepare
                 var panel = new Grid();
 
                 // Act
-                _navigationService.CreateWorkspace(panel, null);
+                _navigationService.Initialize(panel);
 
                 // Verify
                 Assert.IsNotNull(_navigationService.RootPanel);
@@ -482,6 +482,25 @@ namespace GasyTek.Lakana.WPF.Tests
                 Assert.IsFalse(_navigationService.RootPanel.Children.Contains(closedViewInfo.View));
                 Assert.IsTrue(_navigationService.NbOpenedViews == 2);
             }
+
+            [TestMethod]
+            public void CancelTheCloseApplicationControlOnModalViewRestoresCorrectModalStates()
+            {
+                // Prepare
+                var navigationInfo = NavigationInfo.CreateSimple("viewKey", new FakeDirtyViewModel());
+                var parentViewInfo = _navigationService.NavigateTo<UserControl>(navigationInfo);
+                _navigationService.ShowMessageBox("viewKey", "Hello");
+                _navigationService.CloseApplication();
+                var closeApplicationControl = (CloseApplicationControl)((ModalHostControl)_navigationService.CurrentView.View).ModalContent;
+
+                // Act
+                _navigationService.Close(closeApplicationControl.ViewKey);  // simulates a click on 'Cancel' button
+
+                // Verify
+                Assert.IsTrue(_navigationService.CurrentView.View.Visibility == Visibility.Visible);
+                Assert.IsTrue(_navigationService.OpenedViews.First(v => v == parentViewInfo).View.Visibility == Visibility.Visible);
+                Assert.IsFalse(_navigationService.OpenedViews.First(v => v == parentViewInfo).View.IsEnabled );
+            }
         }
 
         [TestClass]
@@ -492,7 +511,7 @@ namespace GasyTek.Lakana.WPF.Tests
             {
                 // Prepare
                 var navigationInfo1 = NavigationInfo.CreateSimple("viewKey1");
-                var navigationInfo2 = NavigationInfo.CreateComplex("viewKey2", navigationInfo1.ViewKey, new FakeCloseableViewModel());
+                var navigationInfo2 = NavigationInfo.CreateComplex("viewKey2", navigationInfo1.ViewKey, new FakeDirtyViewModel());
                 _navigationService.NavigateTo<UserControl>(navigationInfo1);
                 _navigationService.NavigateTo<UserControl>(navigationInfo2);
 
@@ -509,8 +528,8 @@ namespace GasyTek.Lakana.WPF.Tests
             {
                 // Prepare
                 var navigationInfo1 = NavigationInfo.CreateSimple("viewKey1");
-                var navigationInfo2 = NavigationInfo.CreateComplex("viewKey2", navigationInfo1.ViewKey, new FakeCloseableViewModel());
-                var navigationInfo3 = NavigationInfo.CreateSimple("viewKey3", new FakeCloseableViewModel());
+                var navigationInfo2 = NavigationInfo.CreateComplex("viewKey2", navigationInfo1.ViewKey, new FakeDirtyViewModel());
+                var navigationInfo3 = NavigationInfo.CreateSimple("viewKey3", new FakeDirtyViewModel());
                 _navigationService.NavigateTo<UserControl>(navigationInfo1);
                 var expectedViewInfo1 = _navigationService.NavigateTo<UserControl>(navigationInfo2);
                 var expectedViewInfo2 = _navigationService.NavigateTo<UserControl>(navigationInfo3);
@@ -526,12 +545,28 @@ namespace GasyTek.Lakana.WPF.Tests
             }
 
             [TestMethod]
+            public void MessageBoxesAreNotConsideredAsTopMostViewsDuringClosingProcess()
+            {
+                // Prepare
+                var navigationInfo = NavigationInfo.CreateSimple("viewKey", new FakeDirtyViewModel());
+                _navigationService.NavigateTo<UserControl>(navigationInfo);
+                _navigationService.ShowMessageBox("viewKey", "Hello");
+
+                // Act
+                _navigationService.CloseApplication();
+
+                // Verify
+                Assert.IsInstanceOfType(_navigationService.CurrentView.View, typeof(ModalHostControl));
+                Assert.IsInstanceOfType(((ModalHostControl)_navigationService.CurrentView.View).ModalContent, typeof(CloseApplicationControl));
+            }
+
+            [TestMethod]
             public void CanRaiseClosingApplicationShownEvent()
             {
                 // Prepare
                 var eventRaised = false;
                 var navigationInfo1 = NavigationInfo.CreateSimple("viewKey1");
-                var navigationInfo2 = NavigationInfo.CreateComplex("viewKey2", navigationInfo1.ViewKey, new FakeCloseableViewModel());
+                var navigationInfo2 = NavigationInfo.CreateComplex("viewKey2", navigationInfo1.ViewKey, new FakeDirtyViewModel());
                 _navigationService.NavigateTo<UserControl>(navigationInfo1);
                 _navigationService.NavigateTo<UserControl>(navigationInfo2);
 
@@ -549,7 +584,7 @@ namespace GasyTek.Lakana.WPF.Tests
                 // Prepare
                 var eventRaised = false;
                 var navigationInfo1 = NavigationInfo.CreateSimple("viewKey1");
-                var navigationInfo2 = NavigationInfo.CreateComplex("viewKey2", navigationInfo1.ViewKey, new FakeCloseableViewModel());
+                var navigationInfo2 = NavigationInfo.CreateComplex("viewKey2", navigationInfo1.ViewKey, new FakeDirtyViewModel());
                 _navigationService.NavigateTo<UserControl>(navigationInfo1);
                 _navigationService.NavigateTo<UserControl>(navigationInfo2);
 

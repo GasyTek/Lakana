@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Media;
+using GasyTek.Lakana.WPF.Extensions;
 
 namespace GasyTek.Lakana.WPF.Common
 {

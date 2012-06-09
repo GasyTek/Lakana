@@ -20,7 +20,10 @@ namespace Samples.GasyTek.Lakana.WPF
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
             // initializes navigation service
-            Singletons.NavigationService.CreateWorkspace(ContentView, Transitions.FadeTransition);
+            Singletons.NavigationService.Initialize(ContentView);
+
+            // Change the transition animation to Fade transition
+            Singletons.NavigationService.ChangeTransitionAnimation(Transition.FadeTransition);
 
             // set HomeView as the first view
             var homeNavigationInfo = NavigationInfo.CreateSimple(ViewId.Home);
@@ -59,19 +62,19 @@ namespace Samples.GasyTek.Lakana.WPF
                     menuNoAnimation.IsChecked = true;
                     menuFade.IsChecked = false;
                     menuRightToLeft.IsChecked = false;
-                    Singletons.NavigationService.ChangeTransitionAnimation(Transitions.NoTransition);
+                    Singletons.NavigationService.ChangeTransitionAnimation(Transition.NoTransition);
                     break;
                 case "menuFade":
                     menuNoAnimation.IsChecked = false;
                     menuFade.IsChecked = true;
                     menuRightToLeft.IsChecked = false;
-                    Singletons.NavigationService.ChangeTransitionAnimation(Transitions.FadeTransition);
+                    Singletons.NavigationService.ChangeTransitionAnimation(Transition.FadeTransition);
                     break;
                 case "menuRightToLeft":
                     menuNoAnimation.IsChecked = false;
                     menuFade.IsChecked = false;
                     menuRightToLeft.IsChecked = true;
-                    Singletons.NavigationService.ChangeTransitionAnimation(Transitions.SinglePaneRightToLeftTransition);
+                    Singletons.NavigationService.ChangeTransitionAnimation(Transition.SinglePaneRightToLeftTransition);
                     break;
             }
         }

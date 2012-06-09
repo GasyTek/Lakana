@@ -83,6 +83,7 @@
     <Compile Include="Common\Constants.cs" />
     <Compile Include="Common\IUIMetadata.cs" />
     <Compile Include="Common\NotifyPropertyChangedBase.cs" />
+    <Compile Include="Extensions\NotifyPropertyChangedExtensions.cs" />
     <Compile Include="Common\UIMetadata.cs" />
     <Compile Include="Controls\CloseApplicationControl.cs" />
     <Compile Include="Controls\CloseApplicationControlItem.cs" />

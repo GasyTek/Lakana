@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using GasyTek.Lakana.WPF.Controls;
+using GasyTek.Lakana.WPF.Transitions;
 
 namespace GasyTek.Lakana.WPF.Services
 {
@@ -67,10 +68,10 @@ namespace GasyTek.Lakana.WPF.Services
 
         #endregion
 
-        public void CreateWorkspace(Panel rootPanel, AnimateTransitionAction animateTransitionAction)
+        public void Initialize(Panel rootPanel)
         {
             _rootPanel = rootPanel;
-            _animateTransitionAction = animateTransitionAction;
+            _animateTransitionAction = Transition.NoTransition;
         }
 
         public void ChangeTransitionAnimation(AnimateTransitionAction animateTransitionAction)
@@ -88,7 +89,7 @@ namespace GasyTek.Lakana.WPF.Services
                 : NavigateToInternal(navigationInfo.ViewKey, view, navigationInfo.ViewModel, navigationInfo.IsOpenedViewMember);
         }
 
-        private ViewInfo NavigateToInternal(string viewKey, string parentViewKey, FrameworkElement view, object viewModel, bool isModal, bool isOpenedViewMember)
+        private ViewInfo NavigateToInternal(string viewKey, string parentViewKey, FrameworkElement view, object viewModel, bool isModal, bool isOpenedViewMember, bool isMessageBox = false)
         {
             ViewInfo resultViewInfo;
             LinkedListNode<ViewInfo> foundChildViewInfoNode;
@@ -112,7 +113,7 @@ namespace GasyTek.Lakana.WPF.Services
                 if (!IsTopMostView(foundParentViewInfoNode))
                     throw new ParentViewNotTopMostException(parentViewKey);
 
-                resultViewInfo = new ViewInfo(viewKey) { View = view, IsModal = isModal, IsOpenedViewMember = isOpenedViewMember };
+                resultViewInfo = new ViewInfo(viewKey) { View = view, IsModal = isModal, IsOpenedViewMember = isOpenedViewMember, IsMessageBox =  isMessageBox };
 
                 EnforceViewKey(view, viewModel, viewKey);
                 EnforceUIMetadata(view, viewModel, ref resultViewInfo);
@@ -200,15 +201,15 @@ namespace GasyTek.Lakana.WPF.Services
                 MessageBoxButton = messageBoxButton
             };
 
-            var modalResult = ShowModalInternal<MessageBoxResult>(view, messageBoxViewKey, parentViewKey, null, false);
+            var modalResult = ShowModalInternal<MessageBoxResult>(view, messageBoxViewKey, parentViewKey, null, false, true);
 
             return modalResult.Result;
         }
 
-        private ModalResult<TResult> ShowModalInternal<TResult>(FrameworkElement view, string viewKey, string parentViewKey, object viewModel, bool isOpenedViewMember)
+        private ModalResult<TResult> ShowModalInternal<TResult>(FrameworkElement view, string viewKey, string parentViewKey, object viewModel, bool isOpenedViewMember, bool isMessageBox = false)
         {
             var modalHostControl = new ModalHostControl { ModalContent = view };
-            var viewInfo = NavigateToInternal(viewKey, parentViewKey, modalHostControl, viewModel, true, isOpenedViewMember);
+            var viewInfo = NavigateToInternal(viewKey, parentViewKey, modalHostControl, viewModel, true, isOpenedViewMember, isMessageBox);
 
             return new ModalResult<TResult> (modalHostControl.ResultCompletionSource.Task) { ViewInfo = viewInfo };
         }
@@ -239,7 +240,7 @@ namespace GasyTek.Lakana.WPF.Services
                 modalHostControl.ResultCompletionSource.SetResult(modalResult);
             }
 
-            PerformTransitionAnimation(RootPanel, closedView.View, CurrentView.View);
+            PerformTransitionAnimation(RootPanel, closedView.View, CurrentView.View, CurrentView.IsModal);
             RemoveOpenedView(closedView);
 
             return closedView;
@@ -265,7 +266,7 @@ namespace GasyTek.Lakana.WPF.Services
             var viewKey = Guid.NewGuid().ToString();
             var closeApplicationView = new CloseApplicationControl
                                               {
-                                                  ItemsSource = notCloseableViews.OrderBy(v => v.ViewKey),
+                                                 ItemsSource = notCloseableViews.OrderBy(v => v.ViewKey),
                                                  NavigationService = this,
                                                  ViewKey = viewKey
                                               };
@@ -282,7 +283,8 @@ namespace GasyTek.Lakana.WPF.Services
 
         protected virtual void OnCloseApplicationExecuted()
         {
-            Application.Current.Shutdown();
+            if (Application.Current != null)
+                Application.Current.Shutdown();
         }
 
         #endregion
@@ -298,11 +300,27 @@ namespace GasyTek.Lakana.WPF.Services
 
         private IEnumerable<ViewInfo> GetNotCloseableViews()
         {
-            return  from vs in _viewCollection
-                    let v = vs.Last.Value.View as ICloseable
-                    let vm = vs.Last.Value.View.DataContext as ICloseable
+            // retrieve views that are parent of top most message box views
+            var q1 = (from vs in _viewCollection
+                     let last = vs.Last
+                     let lastPrevious = vs.Last.Previous
+                     where last != null 
+                        && lastPrevious != null 
+                        && last.Value.IsMessageBox
+                     select lastPrevious.Value).ToList();
+
+            // retrieve top most views except message boxes
+            var q2 = (from vs in _viewCollection
+                     let last = vs.Last
+                     where last != null
+                     select last.Value).Except(q1);
+
+            // retrieve views/viewmodels that are not closeable
+            return from vi in q1.Concat(q2)
+                    let v = vi.View as ICloseable
+                    let vm = vi.View.DataContext as ICloseable
                     where (v != null && v.CanClose() == false) || (vm != null && vm.CanClose() == false)
-                    select vs.Last.Value;
+                    select vi;
         }
 
         private void PerformTransitionAnimation(Panel rootPanel, FrameworkElement oldView, FrameworkElement newView, bool isModal = false)
@@ -373,10 +391,10 @@ namespace GasyTek.Lakana.WPF.Services
         private LinkedListNode<ViewInfo> FindViewInternal(string viewkey)
         {
             var viewInfo = new ViewInfo(viewkey);
-            var q = from stack in _viewCollection
+            var q = (from stack in _viewCollection
                     from v in stack
                     where v == viewInfo
-                    select stack.Find(v);
+                    select stack.Find(v)).ToList();
             if (q.Any()) return q.First();
             throw new ViewNotFoundException(viewkey);
         }

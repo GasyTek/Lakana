@@ -32,7 +32,7 @@ namespace GasyTek.Lakana.WPF.Services
         ViewInfo CurrentView { get; }
 
         /// <summary>
-        /// Gets all the opened views except message boxes.
+        /// Gets all opened views (event those that are not actually visible) except message boxes.
         /// </summary>
         ReadOnlyObservableCollection<ViewInfo> OpenedViews { get; }
        
@@ -40,13 +40,12 @@ namespace GasyTek.Lakana.WPF.Services
         /// Gets the number of currently opened views.
         /// </summary>
         int NbOpenedViews { get; }
-        
+
         /// <summary>
-        /// Creates a new workspace that will be managed by this navigation service.
+        /// Initializes the navigation service and associates the root workspace to it.
         /// </summary>
-        /// <param name="rootPanel">The root panel.</param>
-        /// <param name="animateTransitionAction">The animate transition action. Can be null</param>
-        void CreateWorkspace(Panel rootPanel, AnimateTransitionAction animateTransitionAction);
+        /// <param name="rootPanel">The root view that will constitute the shell of the application.</param>
+        void Initialize(Panel rootPanel);
 
         /// <summary>
         /// Assigns the transition animation.
