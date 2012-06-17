@@ -1,11 +1,11 @@
 using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using GasyTek.Lakana.WPF.Controls;
 using GasyTek.Lakana.WPF.Services;
 using GasyTek.Lakana.WPF.Tests.Fakes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 
 namespace GasyTek.Lakana.WPF.Tests
 {
@@ -329,6 +329,196 @@ namespace GasyTek.Lakana.WPF.Tests
                 Assert.IsTrue(parentViewInfo.View.Visibility == Visibility.Visible);
                 Assert.IsFalse(parentViewInfo.View.IsEnabled);
             }
+
+            [TestMethod]
+            public void NavigateToActiveAwareViewSupported()
+            {
+                // Prepare
+                var activeAwareViewModelMock = new Mock<IActiveAware>();
+                var navigationInfo = NavigationInfo.CreateSimple("viewKey", activeAwareViewModelMock.Object);
+
+                // Act
+                _navigationService.NavigateTo<UserControl>(navigationInfo);
+
+                // Verify
+                activeAwareViewModelMock.Verify(m => m.OnActivating(), Times.Exactly(1));
+                activeAwareViewModelMock.Verify(m => m.OnActivated(), Times.Exactly(1));
+            }
+
+            [TestMethod]
+            public void NavigateToExistingActiveAwareViewSupported()
+            {
+                // Prepare
+                var activeAwareViewModelMock = new Mock<IActiveAware>();
+                var navigationInfo = NavigationInfo.CreateSimple("viewKey", activeAwareViewModelMock.Object);
+                _navigationService.NavigateTo<UserControl>(navigationInfo);
+
+                // Act
+                _navigationService.NavigateTo("viewKey");
+
+                // Verify
+                activeAwareViewModelMock.Verify(m => m.OnActivating(), Times.Exactly(2));
+                activeAwareViewModelMock.Verify(m => m.OnActivated(), Times.Exactly(2));
+            }
+
+            [TestMethod]
+            public void NavigateToActiveAwareViewOnTopOfExistingOneSupported()
+            {
+                // Prepare
+                var parentNavigationInfo = NavigationInfo.CreateSimple("parentViewKey");
+                var activeAwareViewModelMock = new Mock<IActiveAware>();
+                var navigationInfo = NavigationInfo.CreateComplex("viewKey", "parentViewKey", activeAwareViewModelMock.Object);
+                _navigationService.NavigateTo<UserControl>(parentNavigationInfo);
+
+                // Act
+                _navigationService.NavigateTo<UserControl>(navigationInfo);
+
+                // Verify
+                activeAwareViewModelMock.Verify(m => m.OnActivating(), Times.Exactly(1));
+                activeAwareViewModelMock.Verify(m => m.OnActivated(), Times.Exactly(1));
+            }
+
+            [TestMethod]
+            public void NavigateMultipleTimeToActiveAwareViewSupported()
+            {
+                // Prepare
+                var activeAwareViewModelMock = new Mock<IActiveAware>();
+                var navigationInfo = NavigationInfo.CreateSimple("viewKey", activeAwareViewModelMock.Object);
+                _navigationService.NavigateTo<UserControl>(navigationInfo);
+
+                // Act
+                _navigationService.NavigateTo<UserControl>(navigationInfo);
+
+                // Verify
+                activeAwareViewModelMock.Verify(m => m.OnActivating(), Times.Exactly(2));
+                activeAwareViewModelMock.Verify(m => m.OnActivated(), Times.Exactly(2));
+            }
+
+            [TestMethod]
+            public void NavigateMultipleTimeToActiveAwareViewOnTopOfExistingOneSupported()
+            {
+                // Prepare
+                var parentNavigationInfo = NavigationInfo.CreateSimple("parentViewKey");
+                var activeAwareViewModelMock = new Mock<IActiveAware>();
+                var navigationInfo = NavigationInfo.CreateComplex("viewKey", "parentViewKey", activeAwareViewModelMock.Object);
+                _navigationService.NavigateTo<UserControl>(parentNavigationInfo);
+                _navigationService.NavigateTo<UserControl>(navigationInfo);
+
+                // Act
+                _navigationService.NavigateTo<UserControl>(navigationInfo);
+
+                // Verify
+                activeAwareViewModelMock.Verify(m => m.OnActivating(), Times.Exactly(2));
+                activeAwareViewModelMock.Verify(m => m.OnActivated(), Times.Exactly(2));
+            }
+
+            [TestMethod]
+            public void NavigateToExistingNotTopMostViewDoNotFireActivation()
+            {
+                // Prepare
+                var activeAwareViewModelMock = new Mock<IActiveAware>();
+                var parentNavigationInfo = NavigationInfo.CreateSimple("parentViewKey", activeAwareViewModelMock.Object);
+                var navigationInfo = NavigationInfo.CreateComplex("viewKey", "parentViewKey");
+                _navigationService.NavigateTo<UserControl>(parentNavigationInfo);
+                _navigationService.NavigateTo<UserControl>(navigationInfo);
+
+                // Act
+                _navigationService.NavigateTo("parentViewKey");
+
+                // Verify
+                activeAwareViewModelMock.Verify(m => m.OnActivating(), Times.Exactly(1));
+                activeAwareViewModelMock.Verify(m => m.OnActivated(), Times.Exactly(1));
+            }
+
+            [TestMethod]
+            public void NavigateMultipleTimeToNotTopMostViewDoNotFireActivation()
+            {
+                // Prepare
+                var activeAwareViewModelMock = new Mock<IActiveAware>();
+                var parentNavigationInfo = NavigationInfo.CreateSimple("parentViewKey", activeAwareViewModelMock.Object);
+                var navigationInfo = NavigationInfo.CreateComplex("viewKey", "parentViewKey");
+                _navigationService.NavigateTo<UserControl>(parentNavigationInfo);
+                _navigationService.NavigateTo<UserControl>(navigationInfo);
+
+                // Act
+                _navigationService.NavigateTo<UserControl>(parentNavigationInfo);
+
+                // Verify
+                activeAwareViewModelMock.Verify(m => m.OnActivating(), Times.Exactly(1));
+                activeAwareViewModelMock.Verify(m => m.OnActivated(), Times.Exactly(1));
+            }
+
+            [TestMethod]
+            public void NavigateMultipleTimeToNotTopMostParentViewDoNotFireActivation()
+            {
+                // Prepare
+                var activeAwareViewModelMock = new Mock<IActiveAware>();
+                var parentNavigationInfo = NavigationInfo.CreateSimple("parentViewKey");
+                var childNavigationInfo = NavigationInfo.CreateComplex("childViewKey", "parentViewKey", activeAwareViewModelMock.Object);
+                var grandChildNavigationInfo = NavigationInfo.CreateComplex("grandChildViewKey", "childViewKey");
+                _navigationService.NavigateTo<UserControl>(parentNavigationInfo);
+                _navigationService.NavigateTo<UserControl>(childNavigationInfo);
+                _navigationService.NavigateTo<UserControl>(grandChildNavigationInfo);
+
+                // Act
+                _navigationService.NavigateTo<UserControl>(childNavigationInfo);
+
+                // Verify
+                activeAwareViewModelMock.Verify(m => m.OnActivating(), Times.Exactly(1));
+                activeAwareViewModelMock.Verify(m => m.OnActivated(), Times.Exactly(1));    
+            }
+
+            [TestMethod]
+            public void LeavingActiveAwareViewSupported()
+            {
+                // Prepare
+                var activeAwareViewModelMock = new Mock<IActiveAware>();
+                var navigationInfo1 = NavigationInfo.CreateSimple("viewKey1", activeAwareViewModelMock.Object);
+                var navigationInfo2 = NavigationInfo.CreateSimple("viewKey2");
+                _navigationService.NavigateTo<UserControl>(navigationInfo1);
+
+                // Act
+                _navigationService.NavigateTo<UserControl>(navigationInfo2);
+
+                // Verify
+                activeAwareViewModelMock.Verify(m => m.OnDeactivating(), Times.Exactly(1));
+                activeAwareViewModelMock.Verify(m => m.OnDeactivated(), Times.Exactly(1));
+            }
+
+            [TestMethod]
+            public void LeavingExistingActiveAwareViewSupported()
+            {
+                // Prepare
+                var navigationInfo1 = NavigationInfo.CreateSimple("viewKey1");
+                var activeAwareViewModelMock = new Mock<IActiveAware>();
+                var navigationInfo2 = NavigationInfo.CreateSimple("viewKey2", activeAwareViewModelMock.Object);
+                _navigationService.NavigateTo<UserControl>(navigationInfo1);
+                _navigationService.NavigateTo<UserControl>(navigationInfo2);
+
+                // Act
+                _navigationService.NavigateTo<UserControl>(navigationInfo1);
+
+                // Verify
+                activeAwareViewModelMock.Verify(m => m.OnDeactivating(), Times.Exactly(1));
+                activeAwareViewModelMock.Verify(m => m.OnDeactivated(), Times.Exactly(1));
+            }
+
+            [TestMethod]
+            public void LeavingParentActiveAwareViewSupported()
+            {
+                // Prepare
+                var activeAwareViewModelMock = new Mock<IActiveAware>();
+                var parentNavigationInfo = NavigationInfo.CreateSimple("parentViewKey", activeAwareViewModelMock.Object);
+                var navigationInfo = NavigationInfo.CreateComplex("viewKey", "parentViewKey");
+                _navigationService.NavigateTo<UserControl>(parentNavigationInfo);
+
+                // Act
+                _navigationService.NavigateTo<UserControl>(navigationInfo);
+
+                // Verify
+                activeAwareViewModelMock.Verify(m => m.OnDeactivating(), Times.Exactly(1));
+                activeAwareViewModelMock.Verify(m => m.OnDeactivated(), Times.Exactly(1));
+            }
         }
 
         [TestClass]
@@ -404,6 +594,24 @@ namespace GasyTek.Lakana.WPF.Tests
 
                 // Verify
                 Assert.AreEqual("ModalResult", testedModalResult);
+            }
+
+            [TestMethod]
+            public void ShowModalActiveAwareViewSupported()
+            {
+                // Prepare
+                var navigationInfo = NavigationInfo.CreateSimple("viewKey");
+                var activeAwareViewModelMock = new Mock<IActiveAware>();
+                var modalNavigationInfo = NavigationInfo.CreateComplex("modalViewKey", navigationInfo.ViewKey, activeAwareViewModelMock.Object);
+                _navigationService.NavigateTo<UserControl>(navigationInfo);
+
+                // Act
+                _navigationService.ShowModal<UserControl, string>(modalNavigationInfo);
+                
+                // Verify
+                activeAwareViewModelMock.Verify(m => m.OnActivating(), Times.Exactly(1));
+                activeAwareViewModelMock.Verify(m => m.OnActivated(), Times.Exactly(1));
+
             }
         }
 
@@ -491,7 +699,7 @@ namespace GasyTek.Lakana.WPF.Tests
                 var parentViewInfo = _navigationService.NavigateTo<UserControl>(navigationInfo);
                 _navigationService.ShowMessageBox("viewKey", "Hello");
                 _navigationService.CloseApplication();
-                var closeApplicationControl = (CloseApplicationControl)((ModalHostControl)_navigationService.CurrentView.View).ModalContent;
+                var closeApplicationControl = (ShutdownApplicationControl)((ModalHostControl)_navigationService.CurrentView.View).ModalContent;
 
                 // Act
                 _navigationService.Close(closeApplicationControl.ViewKey);  // simulates a click on 'Cancel' button
@@ -500,6 +708,22 @@ namespace GasyTek.Lakana.WPF.Tests
                 Assert.IsTrue(_navigationService.CurrentView.View.Visibility == Visibility.Visible);
                 Assert.IsTrue(_navigationService.OpenedViews.First(v => v == parentViewInfo).View.Visibility == Visibility.Visible);
                 Assert.IsFalse(_navigationService.OpenedViews.First(v => v == parentViewInfo).View.IsEnabled );
+            }
+
+            [TestMethod]
+            public void ClosingActiveAwareViewSupported()
+            {
+                // Prepare
+                var activeAwareViewModelMock = new Mock<IActiveAware>();
+                var navigationInfo = NavigationInfo.CreateSimple("viewKey", activeAwareViewModelMock.Object);
+                _navigationService.NavigateTo<UserControl>(navigationInfo);
+
+                // Act
+                _navigationService.Close("viewKey");
+
+                // Verify
+                activeAwareViewModelMock.Verify(m => m.OnDeactivating(), Times.Exactly(1));
+                activeAwareViewModelMock.Verify(m => m.OnDeactivated(), Times.Exactly(1));
             }
         }
 
@@ -520,7 +744,7 @@ namespace GasyTek.Lakana.WPF.Tests
 
                 // Verify
                 Assert.IsInstanceOfType(_navigationService.CurrentView.View, typeof(ModalHostControl));
-                Assert.IsInstanceOfType(((ModalHostControl)_navigationService.CurrentView.View).ModalContent, typeof(CloseApplicationControl));
+                Assert.IsInstanceOfType(((ModalHostControl)_navigationService.CurrentView.View).ModalContent, typeof(ShutdownApplicationControl));
             }
 
             [TestMethod]
@@ -538,7 +762,7 @@ namespace GasyTek.Lakana.WPF.Tests
                 _navigationService.CloseApplication();
 
                 // Verify
-                var closeApplicationControl = (CloseApplicationControl)((ModalHostControl)_navigationService.CurrentView.View).ModalContent;
+                var closeApplicationControl = (ShutdownApplicationControl)((ModalHostControl)_navigationService.CurrentView.View).ModalContent;
                 Assert.IsTrue(closeApplicationControl.NbCloseableViews == 2);
                 Assert.IsTrue(closeApplicationControl.ItemsSource.Cast<ViewInfo>().ToList().Contains(expectedViewInfo1));
                 Assert.IsTrue(closeApplicationControl.ItemsSource.Cast<ViewInfo>().Contains(expectedViewInfo2));
@@ -557,7 +781,7 @@ namespace GasyTek.Lakana.WPF.Tests
 
                 // Verify
                 Assert.IsInstanceOfType(_navigationService.CurrentView.View, typeof(ModalHostControl));
-                Assert.IsInstanceOfType(((ModalHostControl)_navigationService.CurrentView.View).ModalContent, typeof(CloseApplicationControl));
+                Assert.IsInstanceOfType(((ModalHostControl)_navigationService.CurrentView.View).ModalContent, typeof(ShutdownApplicationControl));
             }
 
             [TestMethod]
@@ -571,7 +795,7 @@ namespace GasyTek.Lakana.WPF.Tests
                 _navigationService.NavigateTo<UserControl>(navigationInfo2);
 
                 // Act
-                _navigationService.ClosingApplicationShown += (sender, e) => eventRaised = true;
+                _navigationService.ShutdownApplicationShown += (sender, e) => eventRaised = true;
                 _navigationService.CloseApplication();
 
                 // Verify
@@ -589,7 +813,7 @@ namespace GasyTek.Lakana.WPF.Tests
                 _navigationService.NavigateTo<UserControl>(navigationInfo2);
 
                 // Act
-                _navigationService.ClosingApplicationHidden += (sender, e) => eventRaised = true;
+                _navigationService.ShutdownApplicationHidden += (sender, e) => eventRaised = true;
                 _navigationService.CloseApplication();
                 var closingApplicationViewKey = _navigationService.CurrentView.ViewKey;
                 _navigationService.Close(closingApplicationViewKey);

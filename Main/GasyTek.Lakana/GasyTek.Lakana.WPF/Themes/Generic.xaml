@@ -14,6 +14,10 @@
                 Value="White" />
         <Setter Property="BorderThickness"
                 Value="2" />
+        <Setter Property="Background"
+                Value="White" />
+        <Setter Property="Background"
+                Value="White" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ui:MessageBoxControl}">
@@ -173,10 +177,10 @@
         </Setter>
     </Style>
 
-    <!-- CloseApplicationControl styles -->
+    <!-- ShutdownApplicationControl styles -->
 
-    <Style x:Key="{x:Type ui:CloseApplicationControlItem}"
-           TargetType="ui:CloseApplicationControlItem">
+    <Style x:Key="{x:Type ui:ShutdownApplicationControlItem}"
+           TargetType="ui:ShutdownApplicationControlItem">
         <Setter Property="ViewKey"
                 Value="{Binding ViewKey, Mode=OneWay}" />
         <Setter Property="BorderThickness"
@@ -187,7 +191,7 @@
                 Value="Hand" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="ui:CloseApplicationControlItem">
+                <ControlTemplate TargetType="ui:ShutdownApplicationControlItem">
                     <Border x:Name="outerBorder"
                             Margin="3"
                             Padding="3"
@@ -240,15 +244,15 @@
         </Setter>
     </Style>
 
-    <Style x:Key="{x:Type ui:CloseApplicationControl}"
-           TargetType="ui:CloseApplicationControl">
+    <Style x:Key="{x:Type ui:ShutdownApplicationControl}"
+           TargetType="ui:ShutdownApplicationControl">
         <Setter Property="BorderBrush"
                 Value="White" />
         <Setter Property="BorderThickness"
                 Value="2" />
         <Setter Property="Template">
             <Setter.Value>
-                <ControlTemplate TargetType="ui:CloseApplicationControl">
+                <ControlTemplate TargetType="ui:ShutdownApplicationControl">
                     <Border x:Name="outerBorder"
                             Width="400"
                             Height="400"

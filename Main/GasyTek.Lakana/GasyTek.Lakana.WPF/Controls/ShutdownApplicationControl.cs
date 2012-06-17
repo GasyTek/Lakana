@@ -9,7 +9,7 @@ namespace GasyTek.Lakana.WPF.Controls
     /// </summary>
     [TemplatePart(Name = "PART_Cancel", Type = typeof(Button))]
     [TemplatePart(Name = "PART_ExitApplication", Type = typeof(Button))]
-    public class CloseApplicationControl : ItemsControl
+    public class ShutdownApplicationControl : ItemsControl
     {
         #region Properties
 
@@ -25,9 +25,9 @@ namespace GasyTek.Lakana.WPF.Controls
 
         #region Constructor
 
-        static CloseApplicationControl()
+        static ShutdownApplicationControl()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(CloseApplicationControl), new FrameworkPropertyMetadata(typeof(CloseApplicationControl)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(ShutdownApplicationControl), new FrameworkPropertyMetadata(typeof(ShutdownApplicationControl)));
         }
         
         #endregion
@@ -65,7 +65,7 @@ namespace GasyTek.Lakana.WPF.Controls
 
         protected override DependencyObject GetContainerForItemOverride()
         {
-            return new CloseApplicationControlItem {NavigationService = NavigationService, OwnerViewKey = ViewKey};
+            return new ShutdownApplicationControlItem {NavigationService = NavigationService, OwnerViewKey = ViewKey};
         }
 
         #endregion
