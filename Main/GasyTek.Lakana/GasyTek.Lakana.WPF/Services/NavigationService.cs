@@ -14,8 +14,8 @@ namespace GasyTek.Lakana.WPF.Services
     {
         #region Events
 
-        public event EventHandler ClosingApplicationShown;
-        public event EventHandler ClosingApplicationHidden;
+        public event EventHandler ShutdownApplicationShown;
+        public event EventHandler ShutdownApplicationHidden;
 
         #endregion
 
@@ -100,11 +100,19 @@ namespace GasyTek.Lakana.WPF.Services
             {
                 if (foundChildViewInfoNode.Previous == null || foundChildViewInfoNode.Previous.Value != new ViewInfo(parentViewKey))
                     throw new ChildViewAlreadyExistsException(viewKey, parentViewKey);
+
+                // only top most views can receive activation notifications
+                if (IsTopMostView(foundChildViewInfoNode))
+                    EnforceOnActivatingView(foundChildViewInfoNode.Value.View, foundChildViewInfoNode.Value.View.DataContext);
                 
                 // If the combination (ViewKey, ParentViewKey) already exists then make their stack the current one
                 _viewCollection.Remove(foundChildViewInfoNode.List);
                 _viewCollection.AddLast(foundChildViewInfoNode.List);
                 resultViewInfo = foundChildViewInfoNode.Value;
+
+                // only top most views can receive activation notifications
+                if (IsTopMostView(foundChildViewInfoNode))
+                    EnforceOnActivatedView(foundChildViewInfoNode.Value.View, foundChildViewInfoNode.Value.View.DataContext);
             }
             else
             {
@@ -115,6 +123,9 @@ namespace GasyTek.Lakana.WPF.Services
 
                 resultViewInfo = new ViewInfo(viewKey) { View = view, IsModal = isModal, IsOpenedViewMember = isOpenedViewMember, IsMessageBox =  isMessageBox };
 
+                if (oldView != ViewInfo.Null)
+                    EnforceOnDeactivatingView(oldView.View, oldView.View.DataContext);
+                EnforceOnActivatingView(view, viewModel);
                 EnforceViewKey(view, viewModel, viewKey);
                 EnforceUIMetadata(view, viewModel, ref resultViewInfo);
 
@@ -124,6 +135,10 @@ namespace GasyTek.Lakana.WPF.Services
                 foundParentViewInfoNode.List.AddLast(resultViewInfo);
 
                 AddOpenedView(resultViewInfo);
+
+                if (oldView != ViewInfo.Null)
+                    EnforceOnDeactivatedView(oldView.View, oldView.View.DataContext);
+                EnforceOnActivatedView(view, viewModel);
             }
 
             PerformTransitionAnimation(RootPanel, oldView.View, CurrentView.View, resultViewInfo.IsModal);
@@ -140,15 +155,32 @@ namespace GasyTek.Lakana.WPF.Services
 
             if (TryFindViewInternal(viewKey, out foundViewInfoNode))
             {
+                if (oldView != ViewInfo.Null)
+                    EnforceOnDeactivatingView(oldView.View, oldView.View.DataContext);
+
+                // only top most views can receive activation notifications
+                if (IsTopMostView(foundViewInfoNode))
+                    EnforceOnActivatingView(foundViewInfoNode.Value.View, foundViewInfoNode.Value.View.DataContext);
+
                 // The view already exists
                 _viewCollection.Remove(foundViewInfoNode.List);
                 _viewCollection.AddLast(foundViewInfoNode.List);
                 resultViewInfo = foundViewInfoNode.Value;
+
+                if (oldView != ViewInfo.Null)
+                    EnforceOnDeactivatedView(oldView.View, oldView.View.DataContext);
+
+                // only top most views can receive activation notifications
+                if (IsTopMostView(foundViewInfoNode))
+                    EnforceOnActivatedView(foundViewInfoNode.Value.View, foundViewInfoNode.Value.View.DataContext);
             }
             else
             {
                 resultViewInfo = new ViewInfo(viewKey) { View = view, IsOpenedViewMember = isOpenedViewMember };
 
+                if (oldView != ViewInfo.Null)
+                    EnforceOnDeactivatingView(oldView.View, oldView.View.DataContext);
+                EnforceOnActivatingView(view, viewModel);
                 EnforceViewKey(view, viewModel, viewKey);
                 EnforceUIMetadata(view, viewModel, ref resultViewInfo);
 
@@ -160,6 +192,10 @@ namespace GasyTek.Lakana.WPF.Services
 
                 _viewCollection.AddLast(viewStack);
                 AddOpenedView(resultViewInfo);
+
+                if (oldView != ViewInfo.Null)
+                    EnforceOnDeactivatedView(oldView.View, oldView.View.DataContext);
+                EnforceOnActivatedView(view, viewModel);
             }
 
             PerformTransitionAnimation(RootPanel, oldView.View, CurrentView.View, CurrentView.IsModal);
@@ -172,9 +208,17 @@ namespace GasyTek.Lakana.WPF.Services
             var oldView = CurrentView;
             var foundViewInfoNode = FindViewInternal(viewKey);
 
+            // only top most views can receive activation notifications
+            if (IsTopMostView(foundViewInfoNode))
+                EnforceOnActivatingView(foundViewInfoNode.Value.View, foundViewInfoNode.Value.View.DataContext);
+
             // moves the stack to the last position
             _viewCollection.Remove(foundViewInfoNode.List);
             _viewCollection.AddLast(foundViewInfoNode.List);
+
+            // only top most views can receive activation notifications
+            if (IsTopMostView(foundViewInfoNode))
+                EnforceOnActivatedView(foundViewInfoNode.Value.View, foundViewInfoNode.Value.View.DataContext);
 
             PerformTransitionAnimation(RootPanel, oldView.View, CurrentView.View, CurrentView.IsModal);
 
@@ -221,17 +265,19 @@ namespace GasyTek.Lakana.WPF.Services
             if (!IsTopMostView(foundViewInfoNode))
                 throw new ParentViewNotTopMostException(viewKey);
 
+            EnforceOnDeactivatingView(foundViewInfoNode.Value.View, foundViewInfoNode.Value.View.DataContext);
+
             var stack = foundViewInfoNode.List;
             var closedView = stack.Last.Value;
             stack.RemoveLast();
 
             if (stack.Count == 0) _viewCollection.Remove(stack);
 
-            // Raise ClosingApplicationHidden event if the view to close is the closing application view
+            // Raise ShutdownApplicationHidden event if the view to close is the shutdown application view
             if (foundViewInfoNode.Value.View is ModalHostControl 
-                && ((ModalHostControl)foundViewInfoNode.Value.View).ModalContent is CloseApplicationControl 
-                && ClosingApplicationHidden != null)
-                    ClosingApplicationHidden(this, new EventArgs());
+                && ((ModalHostControl)foundViewInfoNode.Value.View).ModalContent is ShutdownApplicationControl 
+                && ShutdownApplicationHidden != null)
+                    ShutdownApplicationHidden(this, new EventArgs());
 
             // Manage modal views
             if (foundViewInfoNode.Value.IsModal && foundViewInfoNode.Value.View is ModalHostControl)
@@ -239,6 +285,8 @@ namespace GasyTek.Lakana.WPF.Services
                 var modalHostControl = (ModalHostControl)foundViewInfoNode.Value.View;
                 modalHostControl.ResultCompletionSource.SetResult(modalResult);
             }
+
+            EnforceOnDeactivatedView(foundViewInfoNode.Value.View, foundViewInfoNode.Value.View.DataContext);
 
             PerformTransitionAnimation(RootPanel, closedView.View, CurrentView.View, CurrentView.IsModal);
             RemoveOpenedView(closedView);
@@ -264,7 +312,7 @@ namespace GasyTek.Lakana.WPF.Services
             }
 
             var viewKey = Guid.NewGuid().ToString();
-            var closeApplicationView = new CloseApplicationControl
+            var closeApplicationView = new ShutdownApplicationControl
                                               {
                                                  ItemsSource = notCloseableViews.OrderBy(v => v.ViewKey),
                                                  NavigationService = this,
@@ -273,8 +321,8 @@ namespace GasyTek.Lakana.WPF.Services
 
             ShowModalInternal<object>(closeApplicationView, viewKey, CurrentView.ViewKey, null, false);
 
-            if(ClosingApplicationShown != null)
-                ClosingApplicationShown(this, new EventArgs());
+            if(ShutdownApplicationShown != null)
+                ShutdownApplicationShown(this, new EventArgs());
 
             return false;
         }
@@ -442,6 +490,50 @@ namespace GasyTek.Lakana.WPF.Services
             var presentableViewModel = viewModel as IPresentable;
             if (presentableViewModel != null)
                 targetViewInfo.UIMetadata = presentableViewModel.UIMetadata;
+        }
+
+        private void EnforceOnActivatingView(FrameworkElement view, object viewModel)
+        {
+            // Notifies activation on the view 
+            var activeAwareView = view as IActiveAware;
+            if (activeAwareView != null) activeAwareView.OnActivating();
+
+            // Notifies activation on the view model
+            var activeAwareViewModel = viewModel as IActiveAware;
+            if (activeAwareViewModel != null) activeAwareViewModel.OnActivating();
+        }
+
+        private void EnforceOnActivatedView(FrameworkElement view, object viewModel)
+        {
+            // Notifies activation on the view 
+            var activeAwareView = view as IActiveAware;
+            if (activeAwareView != null) activeAwareView.OnActivated();
+
+            // Notifies activation on the view model
+            var activeAwareViewModel = viewModel as IActiveAware;
+            if (activeAwareViewModel != null) activeAwareViewModel.OnActivated();
+        }
+
+        private void EnforceOnDeactivatingView(FrameworkElement view, object viewModel)
+        {
+            // Notifies deactivation on the view 
+            var activeAwareView = view as IActiveAware;
+            if (activeAwareView != null) activeAwareView.OnDeactivating();
+
+            // Notifies deactivation on the view model
+            var activeAwareViewModel = viewModel as IActiveAware;
+            if (activeAwareViewModel != null) activeAwareViewModel.OnDeactivating();
+        }
+
+        private void EnforceOnDeactivatedView(FrameworkElement view, object viewModel)
+        {
+            // Notifies deactivation on the view 
+            var activeAwareView = view as IActiveAware;
+            if (activeAwareView != null) activeAwareView.OnDeactivated();
+
+            // Notifies deactivation on the view model
+            var activeAwareViewModel = viewModel as IActiveAware;
+            if (activeAwareViewModel != null) activeAwareViewModel.OnDeactivated();
         }
 
         #endregion

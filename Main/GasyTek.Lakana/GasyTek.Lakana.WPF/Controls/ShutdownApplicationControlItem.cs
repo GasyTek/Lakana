@@ -5,14 +5,14 @@ using GasyTek.Lakana.WPF.Services;
 namespace GasyTek.Lakana.WPF.Controls
 {
     /// <summary>
-    /// Represents an item for <see cref="CloseApplicationControl" />
+    /// Represents an item for <see cref="ShutdownApplicationControl" />
     /// </summary>
-    public class CloseApplicationControlItem : Button
+    public class ShutdownApplicationControlItem : Button
     {
         #region Dependency properties
 
         public static readonly DependencyProperty ViewKeyProperty =
-                        DependencyProperty.Register("ViewKey", typeof(string), typeof(CloseApplicationControlItem), new PropertyMetadata(default(string)));
+                        DependencyProperty.Register("ViewKey", typeof(string), typeof(ShutdownApplicationControlItem), new PropertyMetadata(default(string)));
 
         #endregion
 
@@ -31,12 +31,12 @@ namespace GasyTek.Lakana.WPF.Controls
 
         #region Constructor
 
-        static CloseApplicationControlItem()
+        static ShutdownApplicationControlItem()
         {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(CloseApplicationControlItem), new FrameworkPropertyMetadata(typeof(CloseApplicationControlItem)));
+            DefaultStyleKeyProperty.OverrideMetadata(typeof(ShutdownApplicationControlItem), new FrameworkPropertyMetadata(typeof(ShutdownApplicationControlItem)));
         }
 
-        public CloseApplicationControlItem()
+        public ShutdownApplicationControlItem()
         {
             Click += (sender, args) =>
                               {

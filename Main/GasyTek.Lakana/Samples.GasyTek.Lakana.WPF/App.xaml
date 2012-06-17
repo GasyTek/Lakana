@@ -62,7 +62,7 @@
 
             <!-- Default style for CloseApplication and MessageBox dialog -->
 
-            <Style TargetType="{x:Type ctrl:CloseApplicationControl}">
+            <Style TargetType="{x:Type ctrl:ShutdownApplicationControl}">
                 <Setter Property="Background"
                         Value="{DynamicResource WindowBackgroundBrush}" />
             </Style>

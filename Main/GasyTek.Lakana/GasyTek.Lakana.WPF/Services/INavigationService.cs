@@ -14,12 +14,12 @@ namespace GasyTek.Lakana.WPF.Services
         /// <summary>
         /// Occurs when the closing application view was shown.
         /// </summary>
-        event EventHandler ClosingApplicationShown;
+        event EventHandler ShutdownApplicationShown;
         
         /// <summary>
         /// Occurs when the closing application view was hidden.
         /// </summary>
-        event EventHandler ClosingApplicationHidden;
+        event EventHandler ShutdownApplicationHidden;
 
         /// <summary>
         /// Workspace root panel which contains all views.

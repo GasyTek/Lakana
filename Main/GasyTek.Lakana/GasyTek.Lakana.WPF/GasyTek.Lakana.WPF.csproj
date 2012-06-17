@@ -85,8 +85,8 @@
     <Compile Include="Common\NotifyPropertyChangedBase.cs" />
     <Compile Include="Extensions\NotifyPropertyChangedExtensions.cs" />
     <Compile Include="Common\UIMetadata.cs" />
-    <Compile Include="Controls\CloseApplicationControl.cs" />
-    <Compile Include="Controls\CloseApplicationControlItem.cs" />
+    <Compile Include="Controls\ShutdownApplicationControl.cs" />
+    <Compile Include="Controls\ShutdownApplicationControlItem.cs" />
     <Compile Include="Controls\MessageBoxControl.cs" />
     <Compile Include="Controls\ModalHostControl.cs" />
     <Compile Include="Extensions\PropertyExtensions.cs" />
@@ -109,6 +109,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Labels.resx</DependentUpon>
     </Compile>
+    <Compile Include="Services\IActiveAware.cs" />
     <Compile Include="Services\ICloseable.cs" />
     <Compile Include="Services\INavigationService.cs" />
     <Compile Include="Services\IPresentable.cs" />

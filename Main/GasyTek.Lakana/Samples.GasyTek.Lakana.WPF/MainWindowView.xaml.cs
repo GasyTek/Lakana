@@ -30,8 +30,8 @@ namespace Samples.GasyTek.Lakana.WPF
             Singletons.NavigationService.NavigateTo<HomeView>(homeNavigationInfo);
 
             // activate/deactivate menu whether the closing application view is visible or not
-            Singletons.NavigationService.ClosingApplicationShown += (sender1, e1) => mainMenu.IsEnabled = false;
-            Singletons.NavigationService.ClosingApplicationHidden += (sender1, e1) => mainMenu.IsEnabled = true;
+            Singletons.NavigationService.ShutdownApplicationShown += (sender1, e1) => mainMenu.IsEnabled = false;
+            Singletons.NavigationService.ShutdownApplicationHidden += (sender1, e1) => mainMenu.IsEnabled = true;
 
         }
 
