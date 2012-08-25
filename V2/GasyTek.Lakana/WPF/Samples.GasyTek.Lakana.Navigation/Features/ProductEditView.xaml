@@ -1,0 +1,82 @@
+﻿<UserControl x:Class="Samples.GasyTek.Lakana.Navigation.Features.ProductEditView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             Style="{StaticResource ViewDefaultStyle}">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+        <Image Source="../Resources/info.png"
+               Width="16"
+               Height="16"
+               Margin="20,0,0,0"
+               HorizontalAlignment="Center"
+               VerticalAlignment="Center" />
+
+        <FlowDocumentScrollViewer Grid.Column="1"
+                                  Margin="0,0,0,5">
+            <FlowDocument>
+                <Paragraph>
+                    <Run Text="{Binding Description, Mode=OneTime}"
+                         FontFamily="Segoe"
+                         FontSize="12"
+                         Foreground="White" />
+                </Paragraph>
+            </FlowDocument>
+        </FlowDocumentScrollViewer>         
+
+        <Grid Grid.Row="1" Grid.ColumnSpan="2"
+              HorizontalAlignment="Center"
+              VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="10" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <CheckBox Grid.Column="1"
+                      IsChecked="{Binding IsDirty, Mode=TwoWay}"
+                      Content="Check me to simulate a dirty form" />
+
+            <TextBlock Grid.Row="2"
+                       Text="Name : "
+                       HorizontalAlignment="Right" />
+            <TextBox Grid.Row="2"
+                     Grid.Column="1"
+                     Text="{Binding Product.Name}" />
+
+            <TextBlock Grid.Row="4"
+                       Text="Quantity : "
+                       HorizontalAlignment="Right" />
+            <TextBox Grid.Row="4"
+                     Grid.Column="1"
+                     Text="{Binding Product.Quantity}" />
+
+            <Button Grid.Row="6"
+                    Grid.ColumnSpan="2"
+                    Content="Save"
+                    Command="{Binding SaveCommand}"
+                    Width="150" />
+
+        </Grid>
+    </Grid>
+</UserControl>
