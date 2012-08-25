@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="GasyTek.Lakana.Mvvm.ViewModelProperties.ViewModelProperty" Collapsed="true">
+    <Position X="10" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAEEAAAAQAgKAgEigAAQAAEAAIAACABAAAAAAA=</HashCode>
+      <FileName>ViewModelProperties\ViewModelProperty.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="GasyTek.Lakana.Mvvm.ViewModelProperties.EnumItem&lt;TEnum&gt;" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="16.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAEAAAAAAAAAAEAAAAAAAAAAAAACAgAAAAAAA=</HashCode>
+      <FileName>ViewModelProperties\EnumItem.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="GasyTek.Lakana.Mvvm.ViewModelProperties.EnumViewModelProperty&lt;TEnum&gt;" Collapsed="true">
+    <Position X="8.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAEAAAAA=</HashCode>
+      <FileName>ViewModelProperties\EnumViewModelProperty.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="GasyTek.Lakana.Mvvm.ViewModelProperties.LookupViewModelProperty&lt;TValue, TItem&gt;" Collapsed="true">
+    <Position X="8.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AGAACAAGAAAAAAAAAAAAQAAAQAQAAAAAAgEBAIAAAAA=</HashCode>
+      <FileName>ViewModelProperties\LookupViewModelProperty.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="GasyTek.Lakana.Mvvm.ViewModelProperties.ValueViewModelProperty&lt;TValue&gt;" Collapsed="true">
+    <Position X="11" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AFAAAAAEAAAAAAAAAAAAQAAAQAQAAAAAAAAhAAAAAAA=</HashCode>
+      <FileName>ViewModelProperties\ValueViewModelProperty.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="GasyTek.Lakana.Mvvm.ViewModelProperties.IEnumItem&lt;TEnum&gt;" Collapsed="true">
+    <Position X="16.5" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAACAgAAAAAAA=</HashCode>
+      <FileName>ViewModelProperties\IEnumItem.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="GasyTek.Lakana.Mvvm.ViewModelProperties.IEnumViewModelProperty&lt;TEnum&gt;" Collapsed="true">
+    <Position X="14" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModelProperties\IEnumViewModelProperty.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="GasyTek.Lakana.Mvvm.ViewModelProperties.IHasPropertyMetadata" Collapsed="true">
+    <Position X="18.25" Y="4.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModelProperties\IHasPropertyMetadata.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="GasyTek.Lakana.Mvvm.ViewModelProperties.IHasValidationEngine" Collapsed="true">
+    <Position X="16.5" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAACAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewModelProperties\IHasValidationEngine.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="GasyTek.Lakana.Mvvm.ViewModelProperties.ILookupViewModelProperty&lt;TValue, TItem&gt;" Collapsed="true">
+    <Position X="14" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAAAAAAAAAAAQAAAAAAAAAAAAAAAAIAAAAA=</HashCode>
+      <FileName>ViewModelProperties\ILookupViewModelProperty.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="GasyTek.Lakana.Mvvm.ViewModelProperties.IValueViewModelProperty&lt;TValue&gt;" Collapsed="true">
+    <Position X="11.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAgAAAAAAA=</HashCode>
+      <FileName>ViewModelProperties\IValueViewModelProperty.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="GasyTek.Lakana.Mvvm.ViewModelProperties.IViewModelProperty" Collapsed="true">
+    <Position X="13" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAAIAgAAAAAAAAAAAAAACAAAAAAAAA=</HashCode>
+      <FileName>ViewModelProperties\IViewModelProperty.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -1,0 +1,29 @@
+﻿<UserControl x:Class="Samples.GasyTek.Lakana.Navigation.Features.HomeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d"
+             d:DesignHeight="768"
+             d:DesignWidth="1024"
+             Style="{StaticResource ViewOnlyDefaultStyle}"
+             Loaded="UserControl_Loaded">
+
+    <FlowDocumentScrollViewer>
+        <FlowDocument>
+            <Paragraph>
+                <Run Text="Lakana - Sample Application"
+                     FontFamily="Stencil"
+                     FontSize="25"
+                     Foreground="#FCF7A30A" />
+            </Paragraph>
+            <Paragraph>
+                <Run x:Name="contentRun"
+                     FontFamily="Segoe"
+                     FontSize="12"
+                     Foreground="White" />
+            </Paragraph>
+        </FlowDocument>
+    </FlowDocumentScrollViewer>
+
+</UserControl>

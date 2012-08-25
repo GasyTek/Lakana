@@ -1,0 +1,134 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GasyTek.Lakana.Navigation", "WPF\GasyTek.Lakana.Navigation\GasyTek.Lakana.Navigation.csproj", "{695CC6AF-40F4-48B8-9CC6-242856B5FC37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GasyTek.Lakana.Mvvm", "WPF\GasyTek.Lakana.Mvvm\GasyTek.Lakana.Mvvm.csproj", "{18F144D7-1DA2-4E90-BA4A-4190B5D89A9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GasyTek.Lakana.Common", "WPF\GasyTek.Lakana.Common\GasyTek.Lakana.Common.csproj", "{09CF9933-5A0C-4896-9E6D-18A54C3E0FA1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GasyTek.Lakana.Mvvm.Tests", "WPF\GasyTek.Lakana.Mvvm.Tests\GasyTek.Lakana.Mvvm.Tests.csproj", "{AF4F2CD1-9F92-47D5-868E-FDD4F76E8592}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{EEFA3E22-F481-4015-967A-2F8E4FA2EF82}"
+	ProjectSection(SolutionItems) = preProject
+		Lib\Moq.4.0.10827\Moq.dll = Lib\Moq.4.0.10827\Moq.dll
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.GasyTek.Lakana.Mvvm", "WPF\Samples.GasyTek.Lakana.Mvvm\Samples.GasyTek.Lakana.Mvvm.csproj", "{F4B64B9C-383C-42F7-8330-AB36AFAB5F0B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GasyTek.Lakana.Navigation.Tests", "WPF\GasyTek.Lakana.Navigation.Tests\GasyTek.Lakana.Navigation.Tests.csproj", "{25B187F3-26D5-43BA-8C1E-D9EEC1751D61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.GasyTek.Lakana.Navigation", "WPF\Samples.GasyTek.Lakana.Navigation\Samples.GasyTek.Lakana.Navigation.csproj", "{966DF967-1D4F-4C43-828D-E10C27FAABF7}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 8
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs25
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = WPF\\GasyTek.Lakana.Common\\GasyTek.Lakana.Common.csproj
+		SccProjectName1 = WPF/GasyTek.Lakana.Common
+		SccLocalPath1 = WPF\\GasyTek.Lakana.Common
+		SccProjectUniqueName2 = WPF\\GasyTek.Lakana.Mvvm.Tests\\GasyTek.Lakana.Mvvm.Tests.csproj
+		SccProjectName2 = WPF/GasyTek.Lakana.Mvvm.Tests
+		SccLocalPath2 = WPF\\GasyTek.Lakana.Mvvm.Tests
+		SccProjectUniqueName3 = WPF\\GasyTek.Lakana.Mvvm\\GasyTek.Lakana.Mvvm.csproj
+		SccProjectName3 = WPF/GasyTek.Lakana.Mvvm
+		SccLocalPath3 = WPF\\GasyTek.Lakana.Mvvm
+		SccProjectUniqueName4 = WPF\\GasyTek.Lakana.Navigation.Tests\\GasyTek.Lakana.Navigation.Tests.csproj
+		SccProjectName4 = WPF/GasyTek.Lakana.Navigation.Tests
+		SccLocalPath4 = WPF\\GasyTek.Lakana.Navigation.Tests
+		SccProjectUniqueName5 = WPF\\GasyTek.Lakana.Navigation\\GasyTek.Lakana.Navigation.csproj
+		SccProjectName5 = WPF/GasyTek.Lakana.Navigation
+		SccLocalPath5 = WPF\\GasyTek.Lakana.Navigation
+		SccProjectUniqueName6 = WPF\\Samples.GasyTek.Lakana.Mvvm\\Samples.GasyTek.Lakana.Mvvm.csproj
+		SccProjectName6 = WPF/Samples.GasyTek.Lakana.Mvvm
+		SccLocalPath6 = WPF\\Samples.GasyTek.Lakana.Mvvm
+		SccProjectUniqueName7 = WPF\\Samples.GasyTek.Lakana.Navigation\\Samples.GasyTek.Lakana.Navigation.csproj
+		SccProjectName7 = WPF/Samples.GasyTek.Lakana.Navigation
+		SccLocalPath7 = WPF\\Samples.GasyTek.Lakana.Navigation
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{695CC6AF-40F4-48B8-9CC6-242856B5FC37}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{695CC6AF-40F4-48B8-9CC6-242856B5FC37}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{695CC6AF-40F4-48B8-9CC6-242856B5FC37}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{695CC6AF-40F4-48B8-9CC6-242856B5FC37}.Debug|x86.ActiveCfg = Debug|x86
+		{695CC6AF-40F4-48B8-9CC6-242856B5FC37}.Debug|x86.Build.0 = Debug|x86
+		{695CC6AF-40F4-48B8-9CC6-242856B5FC37}.Release|Any CPU.ActiveCfg = Release|x86
+		{695CC6AF-40F4-48B8-9CC6-242856B5FC37}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{695CC6AF-40F4-48B8-9CC6-242856B5FC37}.Release|Mixed Platforms.Build.0 = Release|x86
+		{695CC6AF-40F4-48B8-9CC6-242856B5FC37}.Release|x86.ActiveCfg = Release|x86
+		{695CC6AF-40F4-48B8-9CC6-242856B5FC37}.Release|x86.Build.0 = Release|x86
+		{18F144D7-1DA2-4E90-BA4A-4190B5D89A9F}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{18F144D7-1DA2-4E90-BA4A-4190B5D89A9F}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{18F144D7-1DA2-4E90-BA4A-4190B5D89A9F}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{18F144D7-1DA2-4E90-BA4A-4190B5D89A9F}.Debug|x86.ActiveCfg = Debug|x86
+		{18F144D7-1DA2-4E90-BA4A-4190B5D89A9F}.Debug|x86.Build.0 = Debug|x86
+		{18F144D7-1DA2-4E90-BA4A-4190B5D89A9F}.Release|Any CPU.ActiveCfg = Release|x86
+		{18F144D7-1DA2-4E90-BA4A-4190B5D89A9F}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{18F144D7-1DA2-4E90-BA4A-4190B5D89A9F}.Release|Mixed Platforms.Build.0 = Release|x86
+		{18F144D7-1DA2-4E90-BA4A-4190B5D89A9F}.Release|x86.ActiveCfg = Release|x86
+		{18F144D7-1DA2-4E90-BA4A-4190B5D89A9F}.Release|x86.Build.0 = Release|x86
+		{09CF9933-5A0C-4896-9E6D-18A54C3E0FA1}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{09CF9933-5A0C-4896-9E6D-18A54C3E0FA1}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{09CF9933-5A0C-4896-9E6D-18A54C3E0FA1}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{09CF9933-5A0C-4896-9E6D-18A54C3E0FA1}.Debug|x86.ActiveCfg = Debug|x86
+		{09CF9933-5A0C-4896-9E6D-18A54C3E0FA1}.Debug|x86.Build.0 = Debug|x86
+		{09CF9933-5A0C-4896-9E6D-18A54C3E0FA1}.Release|Any CPU.ActiveCfg = Release|x86
+		{09CF9933-5A0C-4896-9E6D-18A54C3E0FA1}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{09CF9933-5A0C-4896-9E6D-18A54C3E0FA1}.Release|Mixed Platforms.Build.0 = Release|x86
+		{09CF9933-5A0C-4896-9E6D-18A54C3E0FA1}.Release|x86.ActiveCfg = Release|x86
+		{09CF9933-5A0C-4896-9E6D-18A54C3E0FA1}.Release|x86.Build.0 = Release|x86
+		{AF4F2CD1-9F92-47D5-868E-FDD4F76E8592}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF4F2CD1-9F92-47D5-868E-FDD4F76E8592}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF4F2CD1-9F92-47D5-868E-FDD4F76E8592}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{AF4F2CD1-9F92-47D5-868E-FDD4F76E8592}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{AF4F2CD1-9F92-47D5-868E-FDD4F76E8592}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AF4F2CD1-9F92-47D5-868E-FDD4F76E8592}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF4F2CD1-9F92-47D5-868E-FDD4F76E8592}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF4F2CD1-9F92-47D5-868E-FDD4F76E8592}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{AF4F2CD1-9F92-47D5-868E-FDD4F76E8592}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{AF4F2CD1-9F92-47D5-868E-FDD4F76E8592}.Release|x86.ActiveCfg = Release|Any CPU
+		{F4B64B9C-383C-42F7-8330-AB36AFAB5F0B}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{F4B64B9C-383C-42F7-8330-AB36AFAB5F0B}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{F4B64B9C-383C-42F7-8330-AB36AFAB5F0B}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{F4B64B9C-383C-42F7-8330-AB36AFAB5F0B}.Debug|x86.ActiveCfg = Debug|x86
+		{F4B64B9C-383C-42F7-8330-AB36AFAB5F0B}.Debug|x86.Build.0 = Debug|x86
+		{F4B64B9C-383C-42F7-8330-AB36AFAB5F0B}.Release|Any CPU.ActiveCfg = Release|x86
+		{F4B64B9C-383C-42F7-8330-AB36AFAB5F0B}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{F4B64B9C-383C-42F7-8330-AB36AFAB5F0B}.Release|Mixed Platforms.Build.0 = Release|x86
+		{F4B64B9C-383C-42F7-8330-AB36AFAB5F0B}.Release|x86.ActiveCfg = Release|x86
+		{F4B64B9C-383C-42F7-8330-AB36AFAB5F0B}.Release|x86.Build.0 = Release|x86
+		{25B187F3-26D5-43BA-8C1E-D9EEC1751D61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25B187F3-26D5-43BA-8C1E-D9EEC1751D61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25B187F3-26D5-43BA-8C1E-D9EEC1751D61}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{25B187F3-26D5-43BA-8C1E-D9EEC1751D61}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{25B187F3-26D5-43BA-8C1E-D9EEC1751D61}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{25B187F3-26D5-43BA-8C1E-D9EEC1751D61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25B187F3-26D5-43BA-8C1E-D9EEC1751D61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25B187F3-26D5-43BA-8C1E-D9EEC1751D61}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{25B187F3-26D5-43BA-8C1E-D9EEC1751D61}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{25B187F3-26D5-43BA-8C1E-D9EEC1751D61}.Release|x86.ActiveCfg = Release|Any CPU
+		{966DF967-1D4F-4C43-828D-E10C27FAABF7}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{966DF967-1D4F-4C43-828D-E10C27FAABF7}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{966DF967-1D4F-4C43-828D-E10C27FAABF7}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{966DF967-1D4F-4C43-828D-E10C27FAABF7}.Debug|x86.ActiveCfg = Debug|x86
+		{966DF967-1D4F-4C43-828D-E10C27FAABF7}.Debug|x86.Build.0 = Debug|x86
+		{966DF967-1D4F-4C43-828D-E10C27FAABF7}.Release|Any CPU.ActiveCfg = Release|x86
+		{966DF967-1D4F-4C43-828D-E10C27FAABF7}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{966DF967-1D4F-4C43-828D-E10C27FAABF7}.Release|Mixed Platforms.Build.0 = Release|x86
+		{966DF967-1D4F-4C43-828D-E10C27FAABF7}.Release|x86.ActiveCfg = Release|x86
+		{966DF967-1D4F-4C43-828D-E10C27FAABF7}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
