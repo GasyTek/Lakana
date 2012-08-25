@@ -6,12 +6,10 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
 {
     /// <summary>
     /// Base class for view models that supports edition.
+    /// You must assign a model to this class, in order to initialize it correctly.
     /// </summary>
     /// <typeparam name="TModel">The type of the model that will be the data source for this view model</typeparam>
-    /// <typeparam name="TViewModel">The type of the view model that inherits from this view model </typeparam>
-    public abstract class EditViewModelBase<TViewModel, TModel> : ViewModelBase
-        where TViewModel : ViewModelBase
-        where TModel : class, new() 
+    public abstract class EditViewModelBase<TModel> : ViewModelBase where TModel : class, new() 
     {
         #region Fields
 
@@ -54,9 +52,19 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
             get { return _model; }
             set 
             { 
-                this.SetPropertyValue(ref _model, value, o => o.Model);
-                CreateAll();
+                this.SetPropertyValueAndNotify(ref _model, value, o => o.Model);
+                CreatePropertiesAndCommands();
             }
+        }
+
+        #endregion
+
+        #region Constructor
+
+        protected EditViewModelBase()
+            : base (false)
+        {
+            
         }
 
         #endregion

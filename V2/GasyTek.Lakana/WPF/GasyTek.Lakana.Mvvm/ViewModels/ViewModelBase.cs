@@ -34,7 +34,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
             get { return _uiMetadata; }
             protected set
             {
-                this.SetPropertyValue(ref _uiMetadata, value, o => o.UIMetadata);
+                this.SetPropertyValueAndNotify(ref _uiMetadata, value, o => o.UIMetadata);
             }
         }
 
@@ -64,13 +64,21 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
 
         #region Constructor
 
-        protected ViewModelBase()
+        protected ViewModelBase(bool createPropertiesAndCommandsImmediately)
         {
             _registeredProperties = new List<IViewModelProperty>();
             _registeredCommands = new List<ISimpleCommand>();
             _observableValidationEngine = new ObservableValidationEngine();
-            
+
             UIMetadata = new UIMetadata { LabelProvider = () => "???" };
+
+            if (createPropertiesAndCommandsImmediately) 
+                CreatePropertiesAndCommands();
+        }
+
+        protected ViewModelBase()
+            : this (true)
+        {
         }
 
         #endregion
@@ -94,7 +102,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
 
         #region Create Properties
 
-        protected void ClearProperties()
+        protected void ClearViewmModelProperties()
         {
             DetachEventsFromProperty();
             RegisteredProperties.Clear();
@@ -186,13 +194,13 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
         /// <summary>
         /// Initialize properties, commands and all infrastructure wiring.
         /// </summary>
-        protected void CreateAll()
+        protected void CreatePropertiesAndCommands()
         {
             // build properties
-            ClearProperties();
-            OnCreateProperties();
-            CreatePropertyMetadatas();
-            AttachEventsToProperty();
+            ClearViewmModelProperties();
+            OnCreateViewModelProperties();
+            CreateViewModelPropertyMetadatas();
+            AttachEventsToViewModelProperty();
 
             // build commands
             ClearCommands();
@@ -205,7 +213,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
             RegisteredCommands.ToList().ForEach(c => c.RaiseCanExecuteChanged());
         }
         
-        private void CreatePropertyMetadatas()
+        private void CreateViewModelPropertyMetadatas()
         {
             // initializes metadatas for properties
             foreach (var registeredProperty in RegisteredProperties)
@@ -222,7 +230,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
             }
         }
 
-        private void AttachEventsToProperty()
+        private void AttachEventsToViewModelProperty()
         {
             RegisteredProperties.ToList().ForEach(p => p.PropertyChanged += OnPropertyChanged);
         }
@@ -242,7 +250,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
         /// <summary>
         /// Called when building properties for the view model..
         /// </summary>
-        protected abstract void OnCreateProperties();
+        protected abstract void OnCreateViewModelProperties();
 
         /// <summary>
         /// Called when building commands for the view model..

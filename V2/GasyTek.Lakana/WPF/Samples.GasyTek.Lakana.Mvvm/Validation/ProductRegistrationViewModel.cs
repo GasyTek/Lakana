@@ -7,7 +7,7 @@ using GasyTek.Lakana.Mvvm.ViewModels;
 
 namespace Samples.GasyTek.Lakana.Mvvm.Validation
 {
-    public class ProductRegistrationViewModel : EditViewModelBase<ProductRegistrationViewModel, Product>
+    public class ProductRegistrationViewModel : EditViewModelBase<Product>
     {
         [Required]
         public IViewModelProperty Code { get; private set; }
@@ -27,7 +27,7 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation
             ValidationEngine = new DataAnnotationValidationEngine();
         }
 
-        protected override void OnCreateProperties()
+        protected override void OnCreateViewModelProperties()
         {
             var product = Model;
 

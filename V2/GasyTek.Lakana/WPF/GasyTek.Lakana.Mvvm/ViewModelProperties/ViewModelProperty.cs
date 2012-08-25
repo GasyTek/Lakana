@@ -33,7 +33,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModelProperties
         public IUIMetadata UIMetadata
         {
             get { return _uiMetadata; }
-            set { this.SetPropertyValue(ref _uiMetadata, value, o => o.UIMetadata); }
+            set { this.SetPropertyValueAndNotify(ref _uiMetadata, value, o => o.UIMetadata); }
         }
 
         public PropertyInfo PropertyMetadata

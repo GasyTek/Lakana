@@ -29,7 +29,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModelProperties
             {
                 var oldValue = _value;
                 var newValue = value;
-                this.SetPropertyValue(ref _value, value, o => o.Value, o => o.HasChanged);
+                this.SetPropertyValueAndNotify(ref _value, value, o => o.Value, o => o.HasChanged);
                 OnValidatePropertyValueAsync(oldValue, newValue);
             }
         }
@@ -57,7 +57,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModelProperties
         protected void AssignOriginalValue(TValue originalValue)
         {
             _originalValue = originalValue;
-            this.SetPropertyValue(ref _value, originalValue, o => o.Value);
+            this.SetPropertyValueAndNotify(ref _value, originalValue, o => o.Value);
         }
 
         #region Overriden methods

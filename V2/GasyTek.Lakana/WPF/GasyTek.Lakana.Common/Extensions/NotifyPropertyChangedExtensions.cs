@@ -20,7 +20,7 @@ namespace GasyTek.Lakana.Common.Extensions
         }
 
         /// <summary>
-        /// Sets the property value then notify property changed
+        /// Sets the property value then notify property change.
         /// </summary>
         /// <typeparam name="TPropertyOwner">The type of the property owner.</typeparam>
         /// <typeparam name="TProperty">The type of the property.</typeparam>
@@ -28,7 +28,7 @@ namespace GasyTek.Lakana.Common.Extensions
         /// <param name="oldValue">The old value.</param>
         /// <param name="newValue">The new value.</param>
         /// <param name="propertyExpressions">The property expr.</param>
-        public static void SetPropertyValue<TPropertyOwner, TProperty>(this TPropertyOwner owner
+        public static void SetPropertyValueAndNotify<TPropertyOwner, TProperty>(this TPropertyOwner owner
                                                                        , ref TProperty oldValue
                                                                        , TProperty newValue
                                                                        , params Expression<Func<TPropertyOwner, object>> [] propertyExpressions) where TPropertyOwner : NotifyPropertyChangedBase

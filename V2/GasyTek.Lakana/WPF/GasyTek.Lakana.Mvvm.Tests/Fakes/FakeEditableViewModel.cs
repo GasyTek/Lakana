@@ -6,7 +6,7 @@ using GasyTek.Lakana.Mvvm.ViewModels;
 
 namespace GasyTek.Lakana.Mvvm.Tests.Fakes
 {
-    class FakeEditableViewModel : EditViewModelBase<FakeEditableViewModel, Product>
+    class FakeEditableViewModel : EditViewModelBase<Product>
     {
         [Required]
         public IValueViewModelProperty<string> Code { get; private set; }
@@ -25,7 +25,7 @@ namespace GasyTek.Lakana.Mvvm.Tests.Fakes
             ValidationEngine = validationEngine;
         }
 
-        protected override void OnCreateProperties()
+        protected override void OnCreateViewModelProperties()
         {
             Code = CreateValueProperty(Model.Code);
             Quantity = CreateValueProperty(Model.Quantity);
