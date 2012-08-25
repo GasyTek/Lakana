@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Windows.Input;
 using GasyTek.Lakana.Common.Extensions;
+using GasyTek.Lakana.Mvvm.Validation;
 
 namespace GasyTek.Lakana.Mvvm.ViewModels
 {
@@ -53,7 +54,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
             set 
             { 
                 this.SetPropertyValueAndNotify(ref _model, value, o => o.Model);
-                CreatePropertiesAndCommands();
+                InitializeAll();
             }
         }
 
@@ -94,7 +95,14 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
             _cancelCommand = CreateCommand(OnCancelCommandExecute);
         }
 
+        protected sealed override IValidationEngine CreateValidationEngine()
+        {
+            return OnCreateValidationEngine();
+        }
+
         #region Abstract methods
+
+        protected abstract IValidationEngine OnCreateValidationEngine();
 
         /// <summary>
         /// Saves the current edition..

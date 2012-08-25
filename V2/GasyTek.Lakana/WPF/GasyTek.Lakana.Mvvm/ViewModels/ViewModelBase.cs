@@ -44,7 +44,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
             }
         }
 
-        protected IValidationEngine ValidationEngine
+        private IValidationEngine ValidationEngine
         {
             get { return _observableValidationEngine.Object; }
             set { _observableValidationEngine.Object = value; }
@@ -79,7 +79,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
             UIMetadata = new UIMetadata { LabelProvider = () => "???" };
 
             if (createPropertiesAndCommandsImmediately) 
-                CreatePropertiesAndCommands();
+                InitializeAll();
         }
 
         protected ViewModelBase()
@@ -200,7 +200,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
         /// <summary>
         /// Initialize properties, commands and all infrastructure wiring.
         /// </summary>
-        protected void CreatePropertiesAndCommands()
+        protected void InitializeAll()
         {
             // build properties
             ClearViewmModelProperties();
@@ -212,6 +212,9 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
             ClearCommands();
             OnCreateCommands();
             OnRefreshCmmands();
+
+            // initialize validation engine
+            ValidationEngine = CreateValidationEngine();
         }
 
         protected void OnRefreshCmmands()
@@ -262,6 +265,11 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
         /// Called when building commands for the view model..
         /// </summary>
         protected abstract void OnCreateCommands();
+
+        protected virtual IValidationEngine CreateValidationEngine()
+        {
+            return null;
+        }
 
         #endregion
 
