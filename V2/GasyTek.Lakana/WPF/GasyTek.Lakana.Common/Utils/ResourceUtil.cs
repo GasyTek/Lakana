@@ -11,6 +11,9 @@ using GasyTek.Lakana.Common.Attributes;
 
 namespace GasyTek.Lakana.Common.Utils
 {
+    /// <summary>
+    /// Helper class to accessing Resources.
+    /// </summary>
     public class ResourceUtil
     {
         /// <summary>
