@@ -1,6 +1,3 @@
-using System;
-using GasyTek.Lakana.Mvvm.Validation;
-
 namespace GasyTek.Lakana.Mvvm.ViewModelProperties
 {
     /// <summary>

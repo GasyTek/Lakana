@@ -3,6 +3,7 @@ using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Markup;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -55,3 +56,6 @@ using System.Windows;
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
 [assembly: InternalsVisibleTo("GasyTek.Lakana.Mvvm.Tests")]
+
+[assembly: XmlnsPrefix("http://schemas.gasytek.com/wpf/ui", "ui")]
+[assembly: XmlnsDefinition("http://schemas.gasytek.com/wpf/ui", "GasyTek.Lakana.Mvvm.Utils")]

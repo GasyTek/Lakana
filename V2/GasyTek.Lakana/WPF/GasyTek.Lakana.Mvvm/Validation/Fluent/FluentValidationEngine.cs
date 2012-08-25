@@ -10,6 +10,10 @@ using GasyTek.Lakana.Mvvm.ViewModels;
 
 namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 {
+    /// <summary>
+    /// Base class from which custom fluent validation engines should derive.
+    /// </summary>
+    /// <typeparam name="TViewModel">The type of the view model.</typeparam>
     public abstract class FluentValidationEngine<TViewModel> : ValidationEngineBase where TViewModel : ViewModelBase
     {
         private readonly Parser _parser;
@@ -24,7 +28,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         /// <summary>
         /// Do not use this constructor, it is intended to be used by the infrastructure only.
         /// </summary>
-        protected FluentValidationEngine(TViewModel viewModelInstance, bool buildRuleImmediatly)
+        internal FluentValidationEngine(TViewModel viewModelInstance, bool buildRuleImmediatly)
         {
             _parser = new Parser();
             _definedRules = new Dictionary<string, List<FluentImplementer<TViewModel>>>();
@@ -64,7 +68,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             var property = propertyExpression.Compile()(_viewModelInstance);
             if (property == null)
                 throw new InvalidOperationException(
-                    "Property instance is null. Please verify that you assigned a model to your view model and that you also defined the property on your view model.");
+                    "Property instance is null. Please verify that you assigned a model to your view model.");
 
             var propertyName = property.PropertyMetadata.Name;
             var fluentApi = new FluentImplementer<TViewModel>(_viewModelInstance);
@@ -135,6 +139,9 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             // bind directly to view model properties in order to get their values.
 
             var propertyName = property.Name;
+
+            // if there is no rules attached to the property then just ignore it.
+            if (_compiledRules.ContainsKey(propertyName) == false) return;
 
             // retrieve all evaluation tasks
             var allEvaluationTasks = (from cr in _compiledRules[propertyName] select cr.Evaluate()).ToList();
