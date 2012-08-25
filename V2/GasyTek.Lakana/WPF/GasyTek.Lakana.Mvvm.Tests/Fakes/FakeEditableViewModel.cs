@@ -14,16 +14,8 @@ namespace GasyTek.Lakana.Mvvm.Tests.Fakes
         public IValueViewModelProperty<int> PurchasingPrice { get; set; }
         public IValueViewModelProperty<int> SellingPrice { get; set; }
         public IValueViewModelProperty<string> SellerEmail { get; set; }
-        
-        public FakeEditableViewModel()
-        {
-            ValidationEngine = new DataAnnotationValidationEngine();
-        }
 
-        public void AssignValidationEngine(IValidationEngine validationEngine)
-        {
-            ValidationEngine = validationEngine;
-        }
+        public Func<IValidationEngine> ValidationEngineProvider { get; set; } 
 
         protected override void OnCreateViewModelProperties()
         {
@@ -32,6 +24,12 @@ namespace GasyTek.Lakana.Mvvm.Tests.Fakes
             PurchasingPrice = CreateValueProperty(Model.PurchasingPrice);
             SellingPrice = CreateValueProperty(Model.SellingPrice);
             SellerEmail = CreateValueProperty(Model.SellerEmail);
+        }
+
+        protected override IValidationEngine OnCreateValidationEngine()
+        {
+            if (ValidationEngineProvider == null) return null;
+            return ValidationEngineProvider();
         }
 
         protected override void OnSave()

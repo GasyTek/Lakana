@@ -21,12 +21,6 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation
         public IViewModelProperty EndDistributionDate { get; private set; }
         public IViewModelProperty Category { get; private set; }
 
-        public ProductRegistrationViewModel()
-        {
-            //ValidationEngine = new CustomValidationEngine();
-            ValidationEngine = new DataAnnotationValidationEngine();
-        }
-
         protected override void OnCreateViewModelProperties()
         {
             var product = Model;
@@ -83,6 +77,12 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation
         //    //    WhichFailsWithMessage("Begin and End date must comprised between TODAY -1 and TODAY + 1");
         //}
 
+
+        protected override IValidationEngine OnCreateValidationEngine()
+        {
+            //return new CustomValidationEngine();
+            return new DataAnnotationValidationEngine();
+        }
 
         protected override void OnSave()
         {

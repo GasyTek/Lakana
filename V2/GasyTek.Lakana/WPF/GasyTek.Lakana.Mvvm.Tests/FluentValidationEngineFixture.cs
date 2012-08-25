@@ -15,9 +15,10 @@ namespace GasyTek.Lakana.Mvvm.Tests
         [TestInitialize]
         public void OnSetup()
         {
-            _fakeEditableViewModel = new FakeEditableViewModel { Model = new Product () };
+            _fakeEditableViewModel = new FakeEditableViewModel ();
             _fluentValidationEngine = new FakeFluentValidationEngine(_fakeEditableViewModel);
-            _fakeEditableViewModel.AssignValidationEngine(_fluentValidationEngine);
+            _fakeEditableViewModel.ValidationEngineProvider = () => _fluentValidationEngine;
+            _fakeEditableViewModel.Model = new Product();
         }
 
         #region Helper methods
