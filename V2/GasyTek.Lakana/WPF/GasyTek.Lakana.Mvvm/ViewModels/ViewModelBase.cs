@@ -29,6 +29,12 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
 
         #region Properties
 
+        /// <summary>
+        /// Gets or sets the UI metadata, meaning localized text, icons etc.
+        /// </summary>
+        /// <value>
+        /// The UI metadata.
+        /// </value>
         public IUIMetadata UIMetadata
         {
             get { return _uiMetadata; }

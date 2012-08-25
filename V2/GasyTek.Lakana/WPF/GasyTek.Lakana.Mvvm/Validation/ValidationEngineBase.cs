@@ -30,6 +30,9 @@ namespace GasyTek.Lakana.Mvvm.Validation
 
         #region IValidationEngine members
 
+        /// <summary>
+        /// Occurs when Errors where update.
+        /// </summary>
         public event ErrorsChangedEventHandler ErrorsChangedEvent;
 
         public IEnumerable<string> GetErrors(string propertyName)
