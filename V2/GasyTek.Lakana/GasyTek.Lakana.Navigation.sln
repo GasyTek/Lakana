@@ -1,0 +1,84 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GasyTek.Lakana.Navigation", "WPF\GasyTek.Lakana.Navigation\GasyTek.Lakana.Navigation.csproj", "{695CC6AF-40F4-48B8-9CC6-242856B5FC37}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GasyTek.Lakana.Common", "WPF\GasyTek.Lakana.Common\GasyTek.Lakana.Common.csproj", "{09CF9933-5A0C-4896-9E6D-18A54C3E0FA1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GasyTek.Lakana.Navigation.Tests", "WPF\GasyTek.Lakana.Navigation.Tests\GasyTek.Lakana.Navigation.Tests.csproj", "{25B187F3-26D5-43BA-8C1E-D9EEC1751D61}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Samples.GasyTek.Lakana.Navigation", "WPF\Samples.GasyTek.Lakana.Navigation\Samples.GasyTek.Lakana.Navigation.csproj", "{966DF967-1D4F-4C43-828D-E10C27FAABF7}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 5
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs25
+		SccProjectUniqueName0 = WPF\\GasyTek.Lakana.Navigation\\GasyTek.Lakana.Navigation.csproj
+		SccProjectName0 = WPF/GasyTek.Lakana.Navigation
+		SccLocalPath0 = WPF\\GasyTek.Lakana.Navigation
+		SccProjectUniqueName1 = WPF\\GasyTek.Lakana.Common\\GasyTek.Lakana.Common.csproj
+		SccProjectName1 = WPF/GasyTek.Lakana.Common
+		SccLocalPath1 = WPF\\GasyTek.Lakana.Common
+		SccProjectUniqueName2 = WPF\\GasyTek.Lakana.Navigation.Tests\\GasyTek.Lakana.Navigation.Tests.csproj
+		SccProjectName2 = WPF/GasyTek.Lakana.Navigation.Tests
+		SccLocalPath2 = WPF\\GasyTek.Lakana.Navigation.Tests
+		SccProjectUniqueName3 = WPF\\Samples.GasyTek.Lakana.Navigation\\Samples.GasyTek.Lakana.Navigation.csproj
+		SccProjectName3 = WPF/Samples.GasyTek.Lakana.Navigation
+		SccLocalPath3 = WPF\\Samples.GasyTek.Lakana.Navigation
+		SccLocalPath4 = .
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{695CC6AF-40F4-48B8-9CC6-242856B5FC37}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{695CC6AF-40F4-48B8-9CC6-242856B5FC37}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{695CC6AF-40F4-48B8-9CC6-242856B5FC37}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{695CC6AF-40F4-48B8-9CC6-242856B5FC37}.Debug|x86.ActiveCfg = Debug|x86
+		{695CC6AF-40F4-48B8-9CC6-242856B5FC37}.Debug|x86.Build.0 = Debug|x86
+		{695CC6AF-40F4-48B8-9CC6-242856B5FC37}.Release|Any CPU.ActiveCfg = Release|x86
+		{695CC6AF-40F4-48B8-9CC6-242856B5FC37}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{695CC6AF-40F4-48B8-9CC6-242856B5FC37}.Release|Mixed Platforms.Build.0 = Release|x86
+		{695CC6AF-40F4-48B8-9CC6-242856B5FC37}.Release|x86.ActiveCfg = Release|x86
+		{695CC6AF-40F4-48B8-9CC6-242856B5FC37}.Release|x86.Build.0 = Release|x86
+		{09CF9933-5A0C-4896-9E6D-18A54C3E0FA1}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{09CF9933-5A0C-4896-9E6D-18A54C3E0FA1}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{09CF9933-5A0C-4896-9E6D-18A54C3E0FA1}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{09CF9933-5A0C-4896-9E6D-18A54C3E0FA1}.Debug|x86.ActiveCfg = Debug|x86
+		{09CF9933-5A0C-4896-9E6D-18A54C3E0FA1}.Debug|x86.Build.0 = Debug|x86
+		{09CF9933-5A0C-4896-9E6D-18A54C3E0FA1}.Release|Any CPU.ActiveCfg = Release|x86
+		{09CF9933-5A0C-4896-9E6D-18A54C3E0FA1}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{09CF9933-5A0C-4896-9E6D-18A54C3E0FA1}.Release|Mixed Platforms.Build.0 = Release|x86
+		{09CF9933-5A0C-4896-9E6D-18A54C3E0FA1}.Release|x86.ActiveCfg = Release|x86
+		{09CF9933-5A0C-4896-9E6D-18A54C3E0FA1}.Release|x86.Build.0 = Release|x86
+		{25B187F3-26D5-43BA-8C1E-D9EEC1751D61}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25B187F3-26D5-43BA-8C1E-D9EEC1751D61}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25B187F3-26D5-43BA-8C1E-D9EEC1751D61}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{25B187F3-26D5-43BA-8C1E-D9EEC1751D61}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{25B187F3-26D5-43BA-8C1E-D9EEC1751D61}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{25B187F3-26D5-43BA-8C1E-D9EEC1751D61}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25B187F3-26D5-43BA-8C1E-D9EEC1751D61}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25B187F3-26D5-43BA-8C1E-D9EEC1751D61}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{25B187F3-26D5-43BA-8C1E-D9EEC1751D61}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{25B187F3-26D5-43BA-8C1E-D9EEC1751D61}.Release|x86.ActiveCfg = Release|Any CPU
+		{966DF967-1D4F-4C43-828D-E10C27FAABF7}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{966DF967-1D4F-4C43-828D-E10C27FAABF7}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{966DF967-1D4F-4C43-828D-E10C27FAABF7}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{966DF967-1D4F-4C43-828D-E10C27FAABF7}.Debug|x86.ActiveCfg = Debug|x86
+		{966DF967-1D4F-4C43-828D-E10C27FAABF7}.Debug|x86.Build.0 = Debug|x86
+		{966DF967-1D4F-4C43-828D-E10C27FAABF7}.Release|Any CPU.ActiveCfg = Release|x86
+		{966DF967-1D4F-4C43-828D-E10C27FAABF7}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{966DF967-1D4F-4C43-828D-E10C27FAABF7}.Release|Mixed Platforms.Build.0 = Release|x86
+		{966DF967-1D4F-4C43-828D-E10C27FAABF7}.Release|x86.ActiveCfg = Release|x86
+		{966DF967-1D4F-4C43-828D-E10C27FAABF7}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
