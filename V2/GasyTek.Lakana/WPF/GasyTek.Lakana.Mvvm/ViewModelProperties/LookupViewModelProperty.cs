@@ -6,6 +6,11 @@ using GasyTek.Lakana.Common.Extensions;
 
 namespace GasyTek.Lakana.Mvvm.ViewModelProperties
 {
+    /// <summary>
+    /// A lookup property represents a collection of value. Only one value can be selected one at a time.
+    /// </summary>
+    /// <typeparam name="TValue">The type of the value.</typeparam>
+    /// <typeparam name="TItem">The type of the item.</typeparam>
     [DebuggerDisplay("Name = {PropertyMetadata.Name}, CurrentValue = {SelectedValue}")]
     public class LookupViewModelProperty<TValue, TItem> : ViewModelProperty, ILookupViewModelProperty<TValue, TItem>
     {
@@ -28,7 +33,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModelProperties
                 var oldValue = _selectedValue;
                 var newValue = value;
                 this.SetPropertyValueAndNotify(ref _selectedValue, value, o => o.SelectedValue, o => o.HasChanged);
-                OnValidatePropertyValueAsync(oldValue, newValue);
+                OnValidatePropertyValue(oldValue, newValue, typeof(TValue));
             }
         }
 

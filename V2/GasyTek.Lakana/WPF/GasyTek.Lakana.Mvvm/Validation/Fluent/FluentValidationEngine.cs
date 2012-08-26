@@ -53,7 +53,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         #region Rule definition
 
         /// <summary>
-        /// Defines the rules for all properties.
+        /// Define the rules for all properties.
         /// </summary>
         protected abstract void DefineRules();
 
@@ -61,8 +61,8 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         /// Allows to define rule for one property.
         /// </summary>
         /// <param name="propertyExpression">The expression that specify the property to define rule for.</param>
-        /// <remarks>You will typically call this method from <see cref="DefineRules"/> method.</remarks>
-        protected IFluentVerb<TViewModel> RequiresThat(
+        /// <remarks>This method will typically called from <see cref="DefineRules"/> method.</remarks>
+        protected IFluentVerb<TViewModel> Property(
             Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
         {
             var property = propertyExpression.Compile()(_viewModelInstance);
@@ -133,7 +133,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
         #region Rule evaluation
 
-        protected override void OnValidateAsync(PropertyInfo property, object propertyValue)
+        protected override void OnValidate(PropertyInfo property, object propertyValue)
         {
             // Note that propertyValue is never used here. The fluent validation engine will 
             // bind directly to view model properties in order to get their values.
@@ -214,6 +214,10 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
     /// </summary>
     public class RuleDefinitionException : ApplicationException
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RuleDefinitionException"/> class.
+        /// </summary>
+        /// <param name="message">The message.</param>
         public RuleDefinitionException(string message)
             : base(message)
         { }

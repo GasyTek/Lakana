@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Threading.Tasks;
 using GasyTek.Lakana.Mvvm.Validation;
 using GasyTek.Lakana.Mvvm.ViewModelProperties;
 using GasyTek.Lakana.Mvvm.ViewModels;
@@ -15,7 +16,21 @@ namespace GasyTek.Lakana.Mvvm.Tests.Fakes
         public IValueViewModelProperty<int> SellingPrice { get; set; }
         public IValueViewModelProperty<string> SellerEmail { get; set; }
 
+        /// <summary>
+        /// Used by the unit testing framework to wait for a result of 
+        /// an asynchronous operation before testing the result.
+        /// </summary>
+        public Task SynchronizationTask { get; private set; }
+
         public Func<IValidationEngine> ValidationEngineProvider { get; set; } 
+
+        public FakeEditableViewModel()
+        {
+            SynchronizationTask = new Task(DummyAction);
+        }
+
+        private void DummyAction()
+        {}
 
         protected override void OnCreateViewModelProperties()
         {
@@ -29,7 +44,15 @@ namespace GasyTek.Lakana.Mvvm.Tests.Fakes
         protected override IValidationEngine OnCreateValidationEngine()
         {
             if (ValidationEngineProvider == null) return null;
-            return ValidationEngineProvider();
+            var validationEngine = ValidationEngineProvider();
+            validationEngine.ErrorsChangedEvent += (sender, args) =>
+                                                       {
+                                                           // surrounded by try/catch to avoid the error that appears
+                                                           // when trying to start a task that alread started.
+                                                           try { SynchronizationTask.Start(); }
+                                                           catch { }   
+                                                       };
+            return validationEngine;
         }
 
         protected override void OnSave()

@@ -20,7 +20,7 @@ namespace GasyTek.Lakana.Mvvm.Validation
             Errors = new ConcurrentDictionary<string, List<string>>();
         }
 
-        protected abstract void OnValidateAsync(PropertyInfo property, object propertyValue);
+        protected abstract void OnValidate(PropertyInfo property, object propertyValue);
 
         protected virtual void OnRaiseErrorsChangedEvent(string propertyName)
         {
@@ -47,9 +47,9 @@ namespace GasyTek.Lakana.Mvvm.Validation
             return GetErrors(propertyName).Any() == false;
         }
 
-        public void ValidateAsync(PropertyInfo property, object value)
+        public void Validate(PropertyInfo property, object value)
         {
-            OnValidateAsync(property, value);
+            OnValidate(property, value);
         }
 
         #endregion

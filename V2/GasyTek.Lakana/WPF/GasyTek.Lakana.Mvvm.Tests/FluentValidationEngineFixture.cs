@@ -68,7 +68,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
             // Act
             _fakeEditableViewModel.Quantity.Value = 15;
-            _fluentValidationEngine.SynchronizationTask.Wait();
+            _fakeEditableViewModel.SynchronizationTask.Wait();
 
             // Verify
             // if this is satisfied, that means that rules were broken
@@ -88,7 +88,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
             // Act
             _fakeEditableViewModel.PurchasingPrice.Value = 20;
-            _fluentValidationEngine.SynchronizationTask.Wait();
+            _fakeEditableViewModel.SynchronizationTask.Wait();
 
             // Verify
             VerifyThatRuleIsBroken(propertyName);
@@ -108,7 +108,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
             // Act
             _fakeEditableViewModel.PurchasingPrice.Value = 20;
-            _fluentValidationEngine.SynchronizationTask.Wait();
+            _fakeEditableViewModel.SynchronizationTask.Wait();
 
             // Verify
             Assert.IsNotNull(_fluentValidationEngine.GetErrors(propertyName));
@@ -129,7 +129,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
             // Act
             _fakeEditableViewModel.PurchasingPrice.Value = 20;
             _fakeEditableViewModel.SellingPrice.Value = 19;
-            _fluentValidationEngine.SynchronizationTask.Wait();
+            _fakeEditableViewModel.SynchronizationTask.Wait();
 
             // Verify
             VerifyThatRuleIsBroken(propertyName);
@@ -149,7 +149,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
             // Act
             _fakeEditableViewModel.PurchasingPrice.Value = 19;
             _fakeEditableViewModel.SellingPrice.Value = 21;
-            _fluentValidationEngine.SynchronizationTask.Wait();
+            _fakeEditableViewModel.SynchronizationTask.Wait();
             
             // Verify
             VerifyThatRuleIsBroken(propertyName);
@@ -168,7 +168,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
             // Act
             _fakeEditableViewModel.Quantity.Value = 25;
-            _fluentValidationEngine.SynchronizationTask.Wait();
+            _fakeEditableViewModel.SynchronizationTask.Wait();
 
             // Verify
             VerifyThatRuleIsBroken(propertyName);
@@ -186,7 +186,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
             // Act
             _fakeEditableViewModel.Quantity.Value = 20;
-            _fluentValidationEngine.SynchronizationTask.Wait();
+            _fakeEditableViewModel.SynchronizationTask.Wait();
 
             // Verify
             VerifyThatRuleIsBroken(propertyName);
@@ -204,7 +204,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
             // Act
             _fakeEditableViewModel.Quantity.Value = 30;
-            _fluentValidationEngine.SynchronizationTask.Wait();
+            _fakeEditableViewModel.SynchronizationTask.Wait();
 
             // Verify
             VerifyThatRuleIsBroken(propertyName);
@@ -225,7 +225,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
             _fakeEditableViewModel.Quantity.Value = 30;
             _fakeEditableViewModel.PurchasingPrice.Value = 10;
             _fakeEditableViewModel.SellingPrice.Value = 20;
-            _fluentValidationEngine.SynchronizationTask.Wait();
+            _fakeEditableViewModel.SynchronizationTask.Wait();
 
             // Verify
             VerifyThatRuleIsBroken(propertyName);
@@ -243,7 +243,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
             // Act
             _fakeEditableViewModel.Quantity.Value = 20;
-            _fluentValidationEngine.SynchronizationTask.Wait();
+            _fakeEditableViewModel.SynchronizationTask.Wait();
 
             // Verify
             VerifyThatRuleIsBroken(propertyName);

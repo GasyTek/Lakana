@@ -5,6 +5,7 @@ using GasyTek.Lakana.Common.Extensions;
 namespace GasyTek.Lakana.Mvvm.ViewModelProperties
 {
     /// <summary>
+    /// A single valued property.
     /// </summary>
     /// <typeparam name="TValue">The type of the value.</typeparam>
     [DebuggerDisplay("Name = {PropertyMetadata.Name}, CurrentValue = {Value}")]
@@ -30,7 +31,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModelProperties
                 var oldValue = _value;
                 var newValue = value;
                 this.SetPropertyValueAndNotify(ref _value, value, o => o.Value, o => o.HasChanged);
-                OnValidatePropertyValueAsync(oldValue, newValue);
+                OnValidatePropertyValue(oldValue, newValue, typeof(TValue));
             }
         }
 

@@ -30,10 +30,10 @@ namespace GasyTek.Lakana.Mvvm.Validation
         bool IsValid(string propertyName);
 
         /// <summary>
-        /// Validates asyncronously the provided value of the provided property.
+        /// Validates the provided value of the provided property.
         /// </summary>
         /// <param name="property">The metadata of the property.</param>
         /// <param name="value">The value to validate. Typically, this is the current value of the property.</param>
-        void ValidateAsync(PropertyInfo property, object value);
+        void Validate(PropertyInfo property, object value);
     }
 }
