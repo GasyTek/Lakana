@@ -7,22 +7,45 @@ namespace GasyTek.Lakana.Mvvm.Tests
     [TestClass]
     public class FluentApiFixture
     {
-        private Parser _parser;
-        private FakeEditableViewModel _fakeEditableViewModel;
-        private IFluentProperty<FakeEditableViewModel> _fluentApi;
-        
+        private const string FakeEditableViewModelProperty = "FakeEditableViewModelProperty";
+        private const string ParserProperty = "ParserProperty";
+        private const string FluentApiProperty = "FluentApiProperty";
+
+        public TestContext TestContext { get; set; }
+
         [TestInitialize]
         public void OnSetup()
         {
-            _fakeEditableViewModel = new FakeEditableViewModel
+            var fakeEditableViewModel = new FakeEditableViewModel
                                          {
                                                 Model = new Product
                                                             {
                                                                 Code = "PR001", Quantity = 2, PurchasingPrice = 30, SellingPrice = 50, SellerEmail = "abc@abc.com"
                                                             }
                                             };
-            _fluentApi = new FluentImplementer<FakeEditableViewModel>(_fakeEditableViewModel);
-            _parser = new Parser();
+            var fluentApi = new FluentImplementer<FakeEditableViewModel>(fakeEditableViewModel);
+            var parser = new Parser();
+
+            TestContext.Properties.Add(FakeEditableViewModelProperty, fakeEditableViewModel);
+            TestContext.Properties.Add(FluentApiProperty, fluentApi);
+            TestContext.Properties.Add(ParserProperty, parser);
+        }
+
+        #region Helper methods
+
+        private FakeEditableViewModel FakeEditableViewModel
+        {
+            get { return (FakeEditableViewModel)TestContext.Properties[FakeEditableViewModelProperty]; }
+        }
+
+        private IFluentProperty<FakeEditableViewModel> FluentApi
+        {
+            get { return (FluentImplementer<FakeEditableViewModel>)TestContext.Properties[FluentApiProperty]; }
+        }        
+        
+        private Parser Parser
+        {
+            get { return (Parser)TestContext.Properties[ParserProperty]; }
         }
 
         private void Given(IFluentOtherwise<FakeEditableViewModel> expression)
@@ -32,7 +55,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
         private void VerifyThatRuleIsBroken()
         {
-            var expressionNode = _parser.Parse(((FluentImplementer<FakeEditableViewModel>) _fluentApi).InternalTokens);
+            var expressionNode = Parser.Parse(((FluentImplementer<FakeEditableViewModel>) FluentApi).InternalTokens);
             var task = expressionNode.Evaluate();
             task.Start();
 
@@ -40,14 +63,16 @@ namespace GasyTek.Lakana.Mvvm.Tests
             Assert.IsFalse(task.Result);
         }
 
+        #endregion
+
         [TestMethod]
         public void CanEvaluateGreaterThanRule()
         {
             // define the rule
-            Given(_fluentApi.Property(vm => vm.Quantity).IsNot.GreaterThan(5));
+            Given(FluentApi.Property(vm => vm.Quantity).IsNot.GreaterThan(5));
 
             // break the rule
-            _fakeEditableViewModel.Quantity.Value = 10;
+            FakeEditableViewModel.Quantity.Value = 10;
 
             // verify that rule is broken
             VerifyThatRuleIsBroken();
@@ -57,11 +82,11 @@ namespace GasyTek.Lakana.Mvvm.Tests
         public void CanEvaluateGreaterThanRuleAgainstProperty()
         {
             // define the rule
-            Given(_fluentApi.Property(vm => vm.SellingPrice).Is.GreaterThan(vm => vm.PurchasingPrice));
+            Given(FluentApi.Property(vm => vm.SellingPrice).Is.GreaterThan(vm => vm.PurchasingPrice));
 
             // break the rule
-            _fakeEditableViewModel.PurchasingPrice.Value = 20;
-            _fakeEditableViewModel.SellingPrice.Value = 15;
+            FakeEditableViewModel.PurchasingPrice.Value = 20;
+            FakeEditableViewModel.SellingPrice.Value = 15;
 
             // verify that rule is broken
             VerifyThatRuleIsBroken();
@@ -71,10 +96,10 @@ namespace GasyTek.Lakana.Mvvm.Tests
         public void CanEvaluateLessThanRule()
         {
             // define the rule
-            Given(_fluentApi.Property(vm => vm.Quantity).Is.LessThan(20));
+            Given(FluentApi.Property(vm => vm.Quantity).Is.LessThan(20));
 
             // break the rule
-            _fakeEditableViewModel.Quantity.Value = 25;
+            FakeEditableViewModel.Quantity.Value = 25;
 
             // verify that rule is broken
             VerifyThatRuleIsBroken();
@@ -84,11 +109,11 @@ namespace GasyTek.Lakana.Mvvm.Tests
         public void CanEvaluateLessThanRuleAgainstProperty()
         {
             // define the rule
-            Given(_fluentApi.Property(vm => vm.PurchasingPrice).Is.LessThan(vm => vm.SellingPrice));
+            Given(FluentApi.Property(vm => vm.PurchasingPrice).Is.LessThan(vm => vm.SellingPrice));
 
             // break the rule
-            _fakeEditableViewModel.PurchasingPrice.Value = 20;
-            _fakeEditableViewModel.SellingPrice.Value = 15;
+            FakeEditableViewModel.PurchasingPrice.Value = 20;
+            FakeEditableViewModel.SellingPrice.Value = 15;
 
             // verify that rule is broken
             VerifyThatRuleIsBroken();
@@ -98,10 +123,10 @@ namespace GasyTek.Lakana.Mvvm.Tests
         public void CanEvaluateEqualToRule()
         {
             // define the rule
-            Given(_fluentApi.Property(vm => vm.Quantity).Is.EqualTo(10));
+            Given(FluentApi.Property(vm => vm.Quantity).Is.EqualTo(10));
 
             // break the rule
-            _fakeEditableViewModel.Quantity.Value = 20;
+            FakeEditableViewModel.Quantity.Value = 20;
 
             // verify that rule is broken
             VerifyThatRuleIsBroken();
@@ -111,11 +136,11 @@ namespace GasyTek.Lakana.Mvvm.Tests
         public void CanEvaluateEqualToRuleAgainstProperty()
         {
             // define the rule
-            Given(_fluentApi.Property(vm => vm.PurchasingPrice).Is.EqualTo(vm => vm.SellingPrice));
+            Given(FluentApi.Property(vm => vm.PurchasingPrice).Is.EqualTo(vm => vm.SellingPrice));
 
             // break the rule
-            _fakeEditableViewModel.SellingPrice.Value = 15;
-            _fakeEditableViewModel.PurchasingPrice.Value = 10;
+            FakeEditableViewModel.SellingPrice.Value = 15;
+            FakeEditableViewModel.PurchasingPrice.Value = 10;
 
             // verify that rule is broken
             VerifyThatRuleIsBroken();
@@ -125,10 +150,10 @@ namespace GasyTek.Lakana.Mvvm.Tests
         public void CanEvaluateNullRule()
         {
             // define the rule
-            Given(_fluentApi.Property(vm => vm.Code).Is.Null());
+            Given(FluentApi.Property(vm => vm.Code).Is.Null());
 
             // break the rule
-            _fakeEditableViewModel.Code.Value = "abc";
+            FakeEditableViewModel.Code.Value = "abc";
 
             // verify that rule is broken
             VerifyThatRuleIsBroken();
@@ -138,10 +163,10 @@ namespace GasyTek.Lakana.Mvvm.Tests
         public void CanEvaluateNullOrEmptyRule()
         {
             // define the rule
-            Given(_fluentApi.Property(vm => vm.Code).Is.NullOrEmpty());
+            Given(FluentApi.Property(vm => vm.Code).Is.NullOrEmpty());
 
             // break the rule
-            _fakeEditableViewModel.Code.Value = "abc";
+            FakeEditableViewModel.Code.Value = "abc";
 
             // verify that rule is broken
             VerifyThatRuleIsBroken();
@@ -151,10 +176,10 @@ namespace GasyTek.Lakana.Mvvm.Tests
         public void CanEvaluateValidEmailRule()
         {
             // define the rule
-            Given(_fluentApi.Property(vm => vm.SellerEmail).Is.ValidEmail());
+            Given(FluentApi.Property(vm => vm.SellerEmail).Is.ValidEmail());
 
             // break the rule
-            _fakeEditableViewModel.SellerEmail.Value = "abc@";
+            FakeEditableViewModel.SellerEmail.Value = "abc@";
 
             // verify that rule is broken
             VerifyThatRuleIsBroken();
@@ -164,10 +189,10 @@ namespace GasyTek.Lakana.Mvvm.Tests
         public void CanEvaluateStartingWithRule()
         {
             // define the rule
-            Given(_fluentApi.Property(vm => vm.SellerEmail).Is.StartingWith("ab"));
+            Given(FluentApi.Property(vm => vm.SellerEmail).Is.StartingWith("ab"));
 
             // break the rule
-            _fakeEditableViewModel.SellerEmail.Value = "bc@bc.com";
+            FakeEditableViewModel.SellerEmail.Value = "bc@bc.com";
 
             // verify that rule is broken
             VerifyThatRuleIsBroken();
@@ -177,10 +202,10 @@ namespace GasyTek.Lakana.Mvvm.Tests
         public void CanEvaluateEndingWithRule()
         {
             // define the rule
-            Given(_fluentApi.Property(vm => vm.SellerEmail).Is.EndingWith(".com"));
+            Given(FluentApi.Property(vm => vm.SellerEmail).Is.EndingWith(".com"));
 
             // break the rule
-            _fakeEditableViewModel.SellerEmail.Value = "bc@bc.net";
+            FakeEditableViewModel.SellerEmail.Value = "bc@bc.net";
 
             // verify that rule is broken
             VerifyThatRuleIsBroken();
@@ -190,10 +215,10 @@ namespace GasyTek.Lakana.Mvvm.Tests
         public void CanEvaluateRequiredRule()
         {
             // define the rule
-            Given(_fluentApi.Property(vm => vm.Code).Is.Required());
+            Given(FluentApi.Property(vm => vm.Code).Is.Required());
 
             // break the rule
-            _fakeEditableViewModel.Code.Value = "";
+            FakeEditableViewModel.Code.Value = "";
 
             // verify that rule is broken
             VerifyThatRuleIsBroken();
@@ -204,10 +229,10 @@ namespace GasyTek.Lakana.Mvvm.Tests
         public void CanEvaluateDifferentOfRule()
         {
             // define the rule
-            Given(_fluentApi.Property(vm => vm.Code).Is.DifferentOf("xyz"));
+            Given(FluentApi.Property(vm => vm.Code).Is.DifferentOf("xyz"));
 
             // break the rule
-            _fakeEditableViewModel.Code.Value = "xyz";
+            FakeEditableViewModel.Code.Value = "xyz";
 
             // verify that rule is broken
             VerifyThatRuleIsBroken();
@@ -217,11 +242,11 @@ namespace GasyTek.Lakana.Mvvm.Tests
         public void CanEvaluateDifferentOfRuleAgainstProperty()
         {
             // define the rule
-            Given(_fluentApi.Property(vm => vm.PurchasingPrice).Is.DifferentOf(vm => vm.SellingPrice));
+            Given(FluentApi.Property(vm => vm.PurchasingPrice).Is.DifferentOf(vm => vm.SellingPrice));
 
             // break the rule
-            _fakeEditableViewModel.PurchasingPrice.Value = 10;
-            _fakeEditableViewModel.SellingPrice.Value = 10;
+            FakeEditableViewModel.PurchasingPrice.Value = 10;
+            FakeEditableViewModel.SellingPrice.Value = 10;
 
             // verify that rule is broken
             VerifyThatRuleIsBroken();
@@ -231,10 +256,10 @@ namespace GasyTek.Lakana.Mvvm.Tests
         public void CanEvaluateBetweenRule()
         {
             // define the rule
-            Given(_fluentApi.Property(vm => vm.Quantity).Is.Between(5,8));
+            Given(FluentApi.Property(vm => vm.Quantity).Is.Between(5,8));
 
             // break the rule
-            _fakeEditableViewModel.Quantity.Value = 9;
+            FakeEditableViewModel.Quantity.Value = 9;
 
             // verify that rule is broken
             VerifyThatRuleIsBroken();
@@ -244,12 +269,12 @@ namespace GasyTek.Lakana.Mvvm.Tests
         public void CanEvaluateBetweenRuleAgainstProperties()
         {
             // define the rule
-            Given(_fluentApi.Property(vm => vm.Quantity).Is.BetweenPoperties(vm => vm.PurchasingPrice, vm => vm.SellingPrice));
+            Given(FluentApi.Property(vm => vm.Quantity).Is.BetweenPoperties(vm => vm.PurchasingPrice, vm => vm.SellingPrice));
 
             // break the rule
-            _fakeEditableViewModel.Quantity.Value = 5;
-            _fakeEditableViewModel.PurchasingPrice.Value = 8;
-            _fakeEditableViewModel.SellingPrice.Value = 10;
+            FakeEditableViewModel.Quantity.Value = 5;
+            FakeEditableViewModel.PurchasingPrice.Value = 8;
+            FakeEditableViewModel.SellingPrice.Value = 10;
 
             // verify that rule is broken
             VerifyThatRuleIsBroken();

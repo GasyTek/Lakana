@@ -8,14 +8,25 @@ namespace GasyTek.Lakana.Mvvm.Tests
     [TestClass]
     public class EditViewModelBaseFixture
     {
-        private FakeEditableViewModel _fakeEditableViewModel;
+        private const string FakeEditableViewModelProperty = "FakeEditableViewModelProperty";
+
+        public TestContext TestContext { get; set; }
 
         [TestInitialize]
         public void OnSetup()
         {
-            _fakeEditableViewModel = new FakeEditableViewModel();
-            _fakeEditableViewModel.ValidationEngineProvider = () => new DataAnnotationValidationEngine();
-            _fakeEditableViewModel.Model = new Product {Code = "PR001", Quantity = 10};
+            var fakeEditableViewModel = new FakeEditableViewModel();
+            fakeEditableViewModel.ValidationEngineProvider = () => new DataAnnotationValidationEngine();
+            fakeEditableViewModel.Model = new Product { Code = "PR001", Quantity = 10 };
+
+            TestContext.Properties.Add(FakeEditableViewModelProperty, fakeEditableViewModel);
+        }
+
+        #region Helper methods
+
+        private FakeEditableViewModel FakeEditableViewModel
+        {
+            get { return (FakeEditableViewModel)TestContext.Properties[FakeEditableViewModelProperty]; }
         }
 
         private void ConfigureThread()
@@ -25,6 +36,8 @@ namespace GasyTek.Lakana.Mvvm.Tests
             SynchronizationContext.SetSynchronizationContext(new SynchronizationContext());
         }
 
+        #endregion
+
         [TestMethod]
         public void ViewModelHasChangedIfAtLeastOnePropertyHasChanged()
         {
@@ -32,11 +45,11 @@ namespace GasyTek.Lakana.Mvvm.Tests
             ConfigureThread();
 
             // Act
-            _fakeEditableViewModel.Code.Value = "new value";
-            _fakeEditableViewModel.SynchronizationTask.Wait();
+            FakeEditableViewModel.Code.Value = "new value";
+            FakeEditableViewModel.SynchronizationTask.Wait();
 
             // Verify
-            Assert.IsTrue(_fakeEditableViewModel.HasChanged);
+            Assert.IsTrue(FakeEditableViewModel.HasChanged);
         }
 
         [TestMethod]
@@ -46,11 +59,11 @@ namespace GasyTek.Lakana.Mvvm.Tests
             ConfigureThread();
 
             // Act
-            _fakeEditableViewModel.Code.Value = null;
-            _fakeEditableViewModel.SynchronizationTask.Wait();
+            FakeEditableViewModel.Code.Value = null;
+            FakeEditableViewModel.SynchronizationTask.Wait();
 
             // Verify
-            Assert.IsFalse(_fakeEditableViewModel.IsValid);
+            Assert.IsFalse(FakeEditableViewModel.IsValid);
         }
 
     }

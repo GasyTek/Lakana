@@ -10,19 +10,50 @@ namespace GasyTek.Lakana.Mvvm.Tests
     [TestClass]
     public class ParserFixture
     {
-        private IFluentProperty<FakeEditableViewModel> _fluentProperty;
-        private List<ExpressionNode> _tokens;
-        private Parser _parser;
-        private FakeEditableViewModel _fakeEditableViewModel;
+        private const string FakeEditableViewModelProperty = "FakeEditableViewModelProperty";
+        private const string ParserProperty = "ParserProperty";
+        private const string FluentApiProperty = "FluentApiProperty";
+        private const string TokensProperty = "TokensProperty";
+
+        public TestContext TestContext { get; set; }
 
         [TestInitialize]
         public void OnSetup()
         {
-            _fakeEditableViewModel = new FakeEditableViewModel { Model = new Product { Code = "PR001", Quantity = 20} };
-            _fluentProperty = new FluentImplementer<FakeEditableViewModel>(_fakeEditableViewModel);
-            _tokens = ((FluentImplementer<FakeEditableViewModel>)_fluentProperty).InternalTokens;
-            _parser = new Parser();
+            var fakeEditableViewModel = new FakeEditableViewModel { Model = new Product { Code = "PR001", Quantity = 20} };
+            var fluentApi = new FluentImplementer<FakeEditableViewModel>(fakeEditableViewModel);
+            var tokens = fluentApi.InternalTokens;
+            var parser = new Parser();
+
+            TestContext.Properties.Add(FakeEditableViewModelProperty, fakeEditableViewModel);
+            TestContext.Properties.Add(FluentApiProperty, fluentApi);
+            TestContext.Properties.Add(TokensProperty, tokens);
+            TestContext.Properties.Add(ParserProperty, parser);
         }
+
+        #region Helper methods
+
+        private FakeEditableViewModel FakeEditableViewModel
+        {
+            get { return (FakeEditableViewModel)TestContext.Properties[FakeEditableViewModelProperty]; }
+        }
+
+        private IFluentProperty<FakeEditableViewModel> FluentApi
+        {
+            get { return (FluentImplementer<FakeEditableViewModel>)TestContext.Properties[FluentApiProperty]; }
+        }
+
+        private Parser Parser
+        {
+            get { return (Parser)TestContext.Properties[ParserProperty]; }
+        }
+
+        private List<ExpressionNode> Tokens
+        {
+            get { return (List<ExpressionNode>)TestContext.Properties[TokensProperty]; }
+        }
+
+        #endregion
 
         [TestClass]
         public class TranslateInfixToPostfix : ParserFixture
@@ -34,7 +65,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
                 // Prepare
 
                 // Act
-                _parser.TransformInfixToPostfix(null);
+                Parser.TransformInfixToPostfix(null);
 
                 // Verify
             }
@@ -44,10 +75,10 @@ namespace GasyTek.Lakana.Mvvm.Tests
             {
                 // Prepare
                 var x = new FakeEvaluableExpression();
-                _tokens.Add(x);
+                Tokens.Add(x);
 
                 // Act
-                var result = _parser.TransformInfixToPostfix(_tokens).ToList();
+                var result = Parser.TransformInfixToPostfix(Tokens).ToList();
 
                 // Verify
                 Assert.IsNotNull(result);
@@ -61,11 +92,11 @@ namespace GasyTek.Lakana.Mvvm.Tests
                 // Prepare (NOT x)
                 var x = new FakeEvaluableExpression();
                 var not = new NotExpression();
-                _tokens.Add(not);
-                _tokens.Add(x);
+                Tokens.Add(not);
+                Tokens.Add(x);
 
                 // Act
-                var result = _parser.TransformInfixToPostfix(_tokens).ToList();
+                var result = Parser.TransformInfixToPostfix(Tokens).ToList();
 
                 // Verify
                 Assert.AreSame(x, result[0]);
@@ -79,12 +110,12 @@ namespace GasyTek.Lakana.Mvvm.Tests
                 var x = new FakeEvaluableExpression();
                 var not1 = new NotExpression();
                 var not2 = new NotExpression();
-                _tokens.Add(not1);
-                _tokens.Add(not2);
-                _tokens.Add(x);
+                Tokens.Add(not1);
+                Tokens.Add(not2);
+                Tokens.Add(x);
 
                 // Act
-                var result = _parser.TransformInfixToPostfix(_tokens).ToList();
+                var result = Parser.TransformInfixToPostfix(Tokens).ToList();
 
                 // Verify
                 Assert.AreSame(x, result[0]);
@@ -99,12 +130,12 @@ namespace GasyTek.Lakana.Mvvm.Tests
                 var x = new FakeEvaluableExpression();
                 var y = new FakeEvaluableExpression();
                 var and = new AndExpression();
-                _tokens.Add(x);
-                _tokens.Add(and);
-                _tokens.Add(y);
+                Tokens.Add(x);
+                Tokens.Add(and);
+                Tokens.Add(y);
 
                 // Act
-                var result = _parser.TransformInfixToPostfix(_tokens).ToList();
+                var result = Parser.TransformInfixToPostfix(Tokens).ToList();
 
                 // Verify
                 Assert.AreSame(x, result[0]);
@@ -121,14 +152,14 @@ namespace GasyTek.Lakana.Mvvm.Tests
                 var z = new FakeEvaluableExpression();
                 var and1 = new AndExpression();
                 var and2 = new AndExpression();
-                _tokens.Add(x);
-                _tokens.Add(and1);
-                _tokens.Add(y);
-                _tokens.Add(and2);
-                _tokens.Add(z);
+                Tokens.Add(x);
+                Tokens.Add(and1);
+                Tokens.Add(y);
+                Tokens.Add(and2);
+                Tokens.Add(z);
 
                 // Act
-                var result = _parser.TransformInfixToPostfix(_tokens).ToList();
+                var result = Parser.TransformInfixToPostfix(Tokens).ToList();
 
                 // Verify
                 Assert.AreSame(x, result[0]);
@@ -147,14 +178,14 @@ namespace GasyTek.Lakana.Mvvm.Tests
                 var z = new FakeEvaluableExpression();
                 var or = new OrExpression();
                 var and = new AndExpression();
-                _tokens.Add(x);
-                _tokens.Add(or);
-                _tokens.Add(y);
-                _tokens.Add(and);
-                _tokens.Add(z);
+                Tokens.Add(x);
+                Tokens.Add(or);
+                Tokens.Add(y);
+                Tokens.Add(and);
+                Tokens.Add(z);
 
                 // Act
-                var result = _parser.TransformInfixToPostfix(_tokens).ToList();
+                var result = Parser.TransformInfixToPostfix(Tokens).ToList();
 
                 // Verify
                 Assert.AreSame(x, result[0]);
@@ -174,15 +205,15 @@ namespace GasyTek.Lakana.Mvvm.Tests
                 var not = new NotExpression();
                 var and1 = new AndExpression();
                 var and2 = new AndExpression();
-                _tokens.Add(x);
-                _tokens.Add(and1);
-                _tokens.Add(not);
-                _tokens.Add(y);
-                _tokens.Add(and2);
-                _tokens.Add(z);
+                Tokens.Add(x);
+                Tokens.Add(and1);
+                Tokens.Add(not);
+                Tokens.Add(y);
+                Tokens.Add(and2);
+                Tokens.Add(z);
 
                 // Act
-                var result = _parser.TransformInfixToPostfix(_tokens).ToList();
+                var result = Parser.TransformInfixToPostfix(Tokens).ToList();
 
                 // Verify
                 Assert.AreSame(x, result[0]);
@@ -200,12 +231,12 @@ namespace GasyTek.Lakana.Mvvm.Tests
                 var x = new FakeEvaluableExpression();
                 var lp = new LeftParenthesis();
                 var rp = new RightParenthesis();
-                _tokens.Add(lp);
-                _tokens.Add(x);
-                _tokens.Add(rp);
+                Tokens.Add(lp);
+                Tokens.Add(x);
+                Tokens.Add(rp);
 
                 // Act
-                var result = _parser.TransformInfixToPostfix(_tokens).ToList();
+                var result = Parser.TransformInfixToPostfix(Tokens).ToList();
 
                 // Verify
                 Assert.IsTrue(result.Count == 1);
@@ -220,13 +251,13 @@ namespace GasyTek.Lakana.Mvvm.Tests
                 var not = new NotExpression();
                 var lp = new LeftParenthesis();
                 var rp = new RightParenthesis();
-                _tokens.Add(lp);
-                _tokens.Add(not);
-                _tokens.Add(x);
-                _tokens.Add(rp);
+                Tokens.Add(lp);
+                Tokens.Add(not);
+                Tokens.Add(x);
+                Tokens.Add(rp);
 
                 // Act
-                var result = _parser.TransformInfixToPostfix(_tokens).ToList();
+                var result = Parser.TransformInfixToPostfix(Tokens).ToList();
 
                 // Verify
                 Assert.IsTrue(result.Count == 2);
@@ -243,14 +274,14 @@ namespace GasyTek.Lakana.Mvvm.Tests
                 var and = new AndExpression();
                 var lp = new LeftParenthesis();
                 var rp = new RightParenthesis();
-                _tokens.Add(lp);
-                _tokens.Add(x);
-                _tokens.Add(and);
-                _tokens.Add(y);
-                _tokens.Add(rp);
+                Tokens.Add(lp);
+                Tokens.Add(x);
+                Tokens.Add(and);
+                Tokens.Add(y);
+                Tokens.Add(rp);
 
                 // Act
-                var result = _parser.TransformInfixToPostfix(_tokens).ToList();
+                var result = Parser.TransformInfixToPostfix(Tokens).ToList();
 
                 // Verify
                 Assert.IsTrue(result.Count == 3);
@@ -270,16 +301,16 @@ namespace GasyTek.Lakana.Mvvm.Tests
                 var or = new OrExpression();
                 var lp = new LeftParenthesis();
                 var rp = new RightParenthesis();
-                _tokens.Add(lp);
-                _tokens.Add(x);
-                _tokens.Add(or);
-                _tokens.Add(y);
-                _tokens.Add(rp);
-                _tokens.Add(and);
-                _tokens.Add(z);
+                Tokens.Add(lp);
+                Tokens.Add(x);
+                Tokens.Add(or);
+                Tokens.Add(y);
+                Tokens.Add(rp);
+                Tokens.Add(and);
+                Tokens.Add(z);
 
                 // Act
-                var result = _parser.TransformInfixToPostfix(_tokens).ToList();
+                var result = Parser.TransformInfixToPostfix(Tokens).ToList();
 
                 // Verify
                 Assert.IsTrue(result.Count == 5);
@@ -300,21 +331,21 @@ namespace GasyTek.Lakana.Mvvm.Tests
                 // Prepare
 
                 // Act
-                _fluentProperty.Property(vm => vm.Quantity).Is.EqualTo(20);
+                FluentApi.Property(vm => vm.Quantity).Is.EqualTo(20);
 
                 // Verify
-                Assert.IsNotNull(_tokens);
-                Assert.IsTrue(_tokens.Count == 1);
+                Assert.IsNotNull(Tokens);
+                Assert.IsTrue(Tokens.Count == 1);
             }
 
             [TestMethod]
             public void CanInterpretSyntaxToExpression()
             {
                 // Prepare
-                _fluentProperty.Property(vm => vm.Quantity).Is.EqualTo(20);
+                FluentApi.Property(vm => vm.Quantity).Is.EqualTo(20);
 
                 // Act
-                var expressionBase = _parser.Parse(_tokens);
+                var expressionBase = Parser.Parse(Tokens);
 
                 // Verify
                 Assert.IsNotNull(expressionBase);
@@ -324,10 +355,10 @@ namespace GasyTek.Lakana.Mvvm.Tests
             public void CanInterpretSimpleRule()
             {
                 // Prepare
-                _fluentProperty.Property(vm => vm.Quantity).Is.EqualTo(10);
+                FluentApi.Property(vm => vm.Quantity).Is.EqualTo(10);
 
                 // Act
-                var expressionBase = _parser.Parse(_tokens);
+                var expressionBase = Parser.Parse(Tokens);
                 var taskResult = expressionBase.Evaluate();
                 taskResult.Start();
 
@@ -340,10 +371,10 @@ namespace GasyTek.Lakana.Mvvm.Tests
             public void CanInterpretRuleWithUnaryOperator()
             {
                 // Prepare
-                _fluentProperty.Property(vm => vm.Quantity).IsNot.EqualTo(10);
+                FluentApi.Property(vm => vm.Quantity).IsNot.EqualTo(10);
 
                 // Act
-                var expressionBase = _parser.Parse(_tokens);
+                var expressionBase = Parser.Parse(Tokens);
                 var taskResult = expressionBase.Evaluate();
                 taskResult.Start();
 
@@ -357,10 +388,10 @@ namespace GasyTek.Lakana.Mvvm.Tests
             public void CanInterpretRuleWithAndOperator()
             {
                 // Prepare
-                _fluentProperty.Property(vm => vm.Quantity).IsNot.EqualTo(10).And.Is.EqualTo(20);
+                FluentApi.Property(vm => vm.Quantity).IsNot.EqualTo(10).And.Is.EqualTo(20);
 
                 // Act
-                var expressionBase = _parser.Parse(_tokens);
+                var expressionBase = Parser.Parse(Tokens);
                 var taskResult = expressionBase.Evaluate();
                 taskResult.Start();
 
@@ -373,14 +404,14 @@ namespace GasyTek.Lakana.Mvvm.Tests
             public void CanInterpretRuleWithManyAndOperator()
             {
                 // Prepare
-                _fluentProperty.
+                FluentApi.
                     Property(vm => vm.Quantity).
                         IsNot.EqualTo(10).
                         And.Is.EqualTo(20).
                         And.IsNot.EqualTo(5);
 
                 // Act
-                var expressionBase = _parser.Parse(_tokens);
+                var expressionBase = Parser.Parse(Tokens);
                 var taskResult = expressionBase.Evaluate();
                 taskResult.Start();
 
@@ -393,10 +424,10 @@ namespace GasyTek.Lakana.Mvvm.Tests
             public void CanInterpretRuleWithOrOperator()
             {
                 // Prepare
-                _fluentProperty.Property(vm => vm.Quantity).IsNot.EqualTo(20).Or.Is.EqualTo(5);
+                FluentApi.Property(vm => vm.Quantity).IsNot.EqualTo(20).Or.Is.EqualTo(5);
 
                 // Act
-                var expressionBase = _parser.Parse(_tokens);
+                var expressionBase = Parser.Parse(Tokens);
                 var taskResult = expressionBase.Evaluate();
                 taskResult.Start();
 
@@ -409,14 +440,14 @@ namespace GasyTek.Lakana.Mvvm.Tests
             public void CanInterpretRuleWithManyOrOperator()
             {
                 // Prepare
-                _fluentProperty.
+                FluentApi.
                     Property(vm => vm.Quantity).
                         IsNot.EqualTo(20).
                         Or.Is.EqualTo(10).
                         Or.Is.EqualTo(5);
 
                 // Act
-                var expressionBase = _parser.Parse(_tokens);
+                var expressionBase = Parser.Parse(Tokens);
                 var taskResult = expressionBase.Evaluate();
                 taskResult.Start();
 
@@ -429,10 +460,10 @@ namespace GasyTek.Lakana.Mvvm.Tests
             public void CanInterpretUsingOperatorPrecedence()
             {
                 // Prepare
-                _fluentProperty.Property(vm => vm.Quantity).Is.EqualTo(5).Or.IsNot.EqualTo(5).And.Is.EqualTo(6);
+                FluentApi.Property(vm => vm.Quantity).Is.EqualTo(5).Or.IsNot.EqualTo(5).And.Is.EqualTo(6);
 
                 // Act
-                var expressionBase = _parser.Parse(_tokens);
+                var expressionBase = Parser.Parse(Tokens);
                 var taskResult = expressionBase.Evaluate();
                 taskResult.Start();
 
