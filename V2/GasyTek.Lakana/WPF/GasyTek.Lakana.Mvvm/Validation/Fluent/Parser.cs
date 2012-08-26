@@ -5,7 +5,7 @@ using System.Linq;
 namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 {
     /// <summary>
-    /// Operators precedence and associativity follow rules defined at : http://msdn.microsoft.com/en-us/library/aa691310%28v=vs.71%29.aspx
+    /// Operators precedence and associativity follow rules defined at : http://msdn.microsoft.com/en-us/library/aa691310%28v=vs.71%29.aspx.
     /// </summary>
     internal class Parser
     {

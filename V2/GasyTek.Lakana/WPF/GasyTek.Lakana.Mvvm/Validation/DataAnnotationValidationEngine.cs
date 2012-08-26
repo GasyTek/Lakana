@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace GasyTek.Lakana.Mvvm.Validation
 {
@@ -10,7 +11,18 @@ namespace GasyTek.Lakana.Mvvm.Validation
     /// </summary>
     public class DataAnnotationValidationEngine : ValidationEngineBase
     {
-        protected override void OnValidateAsync(PropertyInfo property, object propertyValue)
+        protected override void OnValidate(PropertyInfo property, object propertyValue)
+        {
+            Task.Factory.StartNew(() => ValidateAsync(property, propertyValue))
+                .ContinueWith(t =>
+                        {
+                            if (t.Result)
+                                OnRaiseErrorsChangedEvent(property.Name);
+                        },
+                    TaskScheduler.FromCurrentSynchronizationContext());
+        }
+
+        private bool ValidateAsync(PropertyInfo property, object propertyValue)
         {
             var validationAttributes = property.GetCustomAttributes(true).OfType<ValidationAttribute>().ToList();
             if (validationAttributes.Any())
@@ -32,9 +44,9 @@ namespace GasyTek.Lakana.Mvvm.Validation
                     List<string> propertyErrors;
                     Errors.TryRemove(property.Name, out propertyErrors);
                 }
-
-                OnRaiseErrorsChangedEvent(property.Name);
+                return true;
             }
+            return false;
         }
     }
 }

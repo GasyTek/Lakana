@@ -14,7 +14,7 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation
     [Export(typeof(IValidationEngine))]
     internal class CustomValidationEngine : ValidationEngineBase
     {
-        protected override void OnValidateAsync(PropertyInfo property, object propertyValue)
+        protected override void OnValidate(PropertyInfo property, object propertyValue)
         {
             var tsk = Task<bool>.Factory.StartNew(() =>
                                                       {

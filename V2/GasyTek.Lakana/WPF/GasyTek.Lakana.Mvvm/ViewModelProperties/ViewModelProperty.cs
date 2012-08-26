@@ -158,16 +158,20 @@ namespace GasyTek.Lakana.Mvvm.ViewModelProperties
             }
         }
         
-        protected void OnValidatePropertyValueAsync(object oldValue, object newValue)
+        protected void OnValidatePropertyValue(object oldValue, object newValue, Type valueType)
         {
-            // TODO : consider string.empty == null
+            // strings are special case where null = empty
+            if (valueType == typeof(String))
+                if (String.IsNullOrEmpty((string)oldValue) && String.IsNullOrEmpty((string)newValue))
+                    return;
+
             if(Equals(oldValue, newValue)) return;
 
             // process an async validation
             var veng = (IHasValidationEngine)this;
             var inpmeta = (IHasPropertyMetadata)this;
             if (veng.InternalObservableValidationEngine.Object != null && inpmeta.InternalPropertyMetadata != null)
-                veng.InternalObservableValidationEngine.Object.ValidateAsync(inpmeta.InternalPropertyMetadata, newValue);
+                veng.InternalObservableValidationEngine.Object.Validate(inpmeta.InternalPropertyMetadata, newValue);
         }
 
         #region Overridable methods

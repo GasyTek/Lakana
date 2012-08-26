@@ -47,11 +47,19 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         bool Equals(object other);
     }
 
+    /// <summary>
+    /// The first fluent api part that must be used. It defines the property to configure.
+    /// </summary>
+    /// <typeparam name="TViewModel">The type of the view model.</typeparam>
     public interface IFluentProperty<TViewModel> : IFluentInterface where TViewModel : ViewModelBase
     {
         IFluentVerb<TViewModel> Property(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression);
     }
 
+    /// <summary>
+    /// The equivalent of verb part in the world of fluent api.
+    /// </summary>
+    /// <typeparam name="TViewModel">The type of the view model.</typeparam>
     public interface IFluentVerb<TViewModel> : IFluentInterface where TViewModel : ViewModelBase
     {
         IFluentEvaluable<TViewModel> Is { get; }
@@ -60,6 +68,10 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         IFluentEvaluable<TViewModel> HasNot { get; }
     }
 
+    /// <summary>
+    /// Evaluable expressions that is used with fluent api.
+    /// </summary>
+    /// <typeparam name="TViewModel">The type of the view model.</typeparam>
     public interface IFluentEvaluable<TViewModel> : IFluentInterface where TViewModel : ViewModelBase
     {
         IFluentOtherwise<TViewModel> GreaterThan(object value);
