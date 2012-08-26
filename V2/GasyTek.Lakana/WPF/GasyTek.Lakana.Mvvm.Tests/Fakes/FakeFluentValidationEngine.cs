@@ -20,7 +20,7 @@ namespace GasyTek.Lakana.Mvvm.Tests.Fakes
                 DefineRulesAction();
         }
 
-        public IFluentVerb<FakeEditableViewModel> RequiresThat2(Expression<Func<FakeEditableViewModel, IViewModelProperty>> propertyExpression)
+        public IFluentVerb<FakeEditableViewModel> TestProperty(Expression<Func<FakeEditableViewModel, IViewModelProperty>> propertyExpression)
         {
             return Property(propertyExpression);
         }

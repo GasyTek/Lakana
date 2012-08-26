@@ -53,7 +53,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
     {
         public abstract Associativity Associativity { get; }
         public abstract OperatorType OperatorType { get; }
-        public abstract byte Precedence { get; }
+        public byte Precedence { get { return OperatorPrecedence.GetPrecedence(this); }}
 
         public ExpressionNode Left { get; set; }
         public ExpressionNode Right { get; set; }
@@ -86,11 +86,6 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             get { return OperatorType.Binary; }
         }
 
-        public override byte Precedence
-        {
-            get { return 2; }
-        }
-
         public override Task<bool> Evaluate()
         {
             EnsureBinaryOperandsInitialized();
@@ -102,9 +97,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
                 leftTask.Start();
                 rightTask.Start();
-
-                Task.WaitAll(leftTask, rightTask);
-
+                
                 return leftTask.Result && rightTask.Result;
             });
         }
@@ -125,11 +118,6 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             get { return OperatorType.Binary; }
         }
 
-        public override byte Precedence
-        {
-            get { return 1; }
-        }
-
         public override Task<bool> Evaluate()
         {
             EnsureBinaryOperandsInitialized();
@@ -141,9 +129,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
                 leftTask.Start();
                 rightTask.Start();
-
-                Task.WaitAll(leftTask, rightTask);
-
+                
                 return leftTask.Result || rightTask.Result;
             });
         }
@@ -164,11 +150,6 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             get { return OperatorType.Unary; }
         }
 
-        public override byte Precedence
-        {
-            get { return 3; }
-        }
-
         public override Task<bool> Evaluate()
         {
             EnsureUnaryOperandInitialized();
@@ -178,10 +159,54 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
                 var leftTask = Left.Evaluate();
                 leftTask.Start();
 
-                leftTask.Wait();
-
                 return !leftTask.Result;
             });
+        }
+    }
+
+    /// <summary>
+    /// "If Then Else" operator.
+    /// </summary>
+    internal class ConditionalOperator : OperatorExpression
+    {
+        public ExpressionNode Condition { get; set; }
+
+        public override Associativity Associativity
+        {
+            get { return Associativity.Right;}
+        }
+
+        public override OperatorType OperatorType
+        {
+            get { return OperatorType.Ternary; }
+        }
+
+        public override Task<bool> Evaluate()
+        {
+            EnsureTernaryOperandsInitialized();
+
+            return new Task<bool>(() =>
+            {
+                var conditionTask = Condition.Evaluate();
+                if(conditionTask.Result)
+                {
+                    var leftTask = Left.Evaluate();
+                    leftTask.Start();
+                    return leftTask.Result;
+                }
+                else
+                {
+                    var rightTask = Right.Evaluate();
+                    rightTask.Start();
+                    return rightTask.Result;
+                }
+            });
+        }
+
+        protected void EnsureTernaryOperandsInitialized()
+        {
+            if (Condition == null || Left == null || Right == null)
+                throw new InvalidOperationException("Condition, Left and Right operands have to be initialized");
         }
     }
 
@@ -228,6 +253,23 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
     internal enum OperatorType
     {
         Unary,
-        Binary
+        Binary,
+        Ternary
+    }
+
+    /// <summary>
+    /// Defines operator precedence.
+    /// </summary>
+    internal static class OperatorPrecedence
+    {
+        public static byte GetPrecedence(OperatorExpression @operator)
+        {
+            if (@operator is NotExpression) return 4;
+            if (@operator is AndExpression) return 3;
+            if (@operator is OrExpression) return 2;
+            if (@operator is ConditionalOperator) return 1;
+
+            throw new InvalidOperationException("Unknown operator " + @operator.GetType().Name);
+        }
     }
 }
