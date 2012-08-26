@@ -1,4 +1,5 @@
-﻿using GasyTek.Lakana.Mvvm.Tests.Fakes;
+﻿using System;
+using GasyTek.Lakana.Mvvm.Tests.Fakes;
 using GasyTek.Lakana.Mvvm.Validation.Fluent;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -18,11 +19,15 @@ namespace GasyTek.Lakana.Mvvm.Tests
         {
             var fakeEditableViewModel = new FakeEditableViewModel
                                          {
-                                                Model = new Product
-                                                            {
-                                                                Code = "PR001", Quantity = 2, PurchasingPrice = 30, SellingPrice = 50, SellerEmail = "abc@abc.com"
-                                                            }
-                                            };
+                                             Model = new Product
+                                                         {
+                                                             Code = "PR001",
+                                                             Quantity = 2,
+                                                             PurchasingPrice = 30,
+                                                             SellingPrice = 50,
+                                                             SellerEmail = "abc@abc.com"
+                                                         }
+                                         };
             var fluentApi = new FluentImplementer<FakeEditableViewModel>(fakeEditableViewModel);
             var parser = new Parser();
 
@@ -41,8 +46,8 @@ namespace GasyTek.Lakana.Mvvm.Tests
         private IFluentProperty<FakeEditableViewModel> FluentApi
         {
             get { return (FluentImplementer<FakeEditableViewModel>)TestContext.Properties[FluentApiProperty]; }
-        }        
-        
+        }
+
         private Parser Parser
         {
             get { return (Parser)TestContext.Properties[ParserProperty]; }
@@ -50,12 +55,12 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
         private void Given(IFluentOtherwise<FakeEditableViewModel> expression)
         {
-            
+
         }
 
         private void VerifyThatRuleIsBroken()
         {
-            var expressionNode = Parser.Parse(((FluentImplementer<FakeEditableViewModel>) FluentApi).InternalTokens);
+            var expressionNode = Parser.Parse(((FluentImplementer<FakeEditableViewModel>)FluentApi).InternalTokens);
             var task = expressionNode.Evaluate();
             task.Start();
 
@@ -63,221 +68,445 @@ namespace GasyTek.Lakana.Mvvm.Tests
             Assert.IsFalse(task.Result);
         }
 
+        private void VerifyThatRuleIsSatisfied()
+        {
+            var expressionNode = Parser.Parse(((FluentImplementer<FakeEditableViewModel>)FluentApi).InternalTokens);
+            var task = expressionNode.Evaluate();
+            task.Start();
+
+            Assert.IsTrue(task.Result);
+        }
+
         #endregion
 
-        [TestMethod]
-        public void CanEvaluateGreaterThanRule()
+        #region GreaterThan
+
+        [TestClass]
+        public class GreaterThan : FluentApiFixture
         {
-            // define the rule
-            Given(FluentApi.Property(vm => vm.Quantity).IsNot.GreaterThan(5));
+            [TestMethod]
+            public void CanEvaluateGreaterThanRule()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.Quantity).IsNot.GreaterThan(5));
 
-            // break the rule
-            FakeEditableViewModel.Quantity.Value = 10;
+                // break the rule
+                FakeEditableViewModel.Quantity.Value = 10;
 
-            // verify that rule is broken
-            VerifyThatRuleIsBroken();
+                // verify that rule is broken
+                VerifyThatRuleIsBroken();
+            }
+
+            [TestMethod]
+            public void CanEvaluateGreaterThanRuleAgainstProperty()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.SellingPrice).Is.GreaterThan(vm => vm.PurchasingPrice));
+
+                // break the rule
+                FakeEditableViewModel.PurchasingPrice.Value = 20;
+                FakeEditableViewModel.SellingPrice.Value = 15;
+
+                // verify that rule is broken
+                VerifyThatRuleIsBroken();
+            } 
+        }
+        
+        #endregion
+
+        #region LessThan
+
+        [TestClass]
+        public class LessThan : FluentApiFixture
+        {
+            [TestMethod]
+            public void CanEvaluateLessThanRule()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.Quantity).Is.LessThan(20));
+
+                // break the rule
+                FakeEditableViewModel.Quantity.Value = 25;
+
+                // verify that rule is broken
+                VerifyThatRuleIsBroken();
+            }
+
+            [TestMethod]
+            public void CanEvaluateLessThanRuleAgainstProperty()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.PurchasingPrice).Is.LessThan(vm => vm.SellingPrice));
+
+                // break the rule
+                FakeEditableViewModel.PurchasingPrice.Value = 20;
+                FakeEditableViewModel.SellingPrice.Value = 15;
+
+                // verify that rule is broken
+                VerifyThatRuleIsBroken();
+            }    
         }
 
-        [TestMethod]
-        public void CanEvaluateGreaterThanRuleAgainstProperty()
+        #endregion
+
+        #region EqualTo
+
+        [TestClass]
+        public class EqualTo : FluentApiFixture
         {
-            // define the rule
-            Given(FluentApi.Property(vm => vm.SellingPrice).Is.GreaterThan(vm => vm.PurchasingPrice));
+            [TestMethod]
+            public void CanEvaluateEqualToRule()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.Quantity).Is.EqualTo(10));
 
-            // break the rule
-            FakeEditableViewModel.PurchasingPrice.Value = 20;
-            FakeEditableViewModel.SellingPrice.Value = 15;
+                // break the rule
+                FakeEditableViewModel.Quantity.Value = 20;
 
-            // verify that rule is broken
-            VerifyThatRuleIsBroken();
+                // verify that rule is broken
+                VerifyThatRuleIsBroken();
+            }
+
+            [TestMethod]
+            public void CanEvaluateEqualToRuleAgainstProperty()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.PurchasingPrice).Is.EqualTo(vm => vm.SellingPrice));
+
+                // break the rule
+                FakeEditableViewModel.SellingPrice.Value = 15;
+                FakeEditableViewModel.PurchasingPrice.Value = 10;
+
+                // verify that rule is broken
+                VerifyThatRuleIsBroken();
+            }             
         }
 
-        [TestMethod]
-        public void CanEvaluateLessThanRule()
+        #endregion
+
+        #region Null
+
+        [TestClass]
+        public class Null : FluentApiFixture
         {
-            // define the rule
-            Given(FluentApi.Property(vm => vm.Quantity).Is.LessThan(20));
+            [TestMethod]
+            public void CanEvaluateNullRule()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.Code).Is.Null());
 
-            // break the rule
-            FakeEditableViewModel.Quantity.Value = 25;
+                // break the rule
+                FakeEditableViewModel.Code.Value = "abc";
 
-            // verify that rule is broken
-            VerifyThatRuleIsBroken();
+                // verify that rule is broken
+                VerifyThatRuleIsBroken();
+            } 
         }
 
-        [TestMethod]
-        public void CanEvaluateLessThanRuleAgainstProperty()
+        #endregion
+
+        #region NullOrEmpty
+
+        [TestClass]
+        public class NullOrEmpty : FluentApiFixture
         {
-            // define the rule
-            Given(FluentApi.Property(vm => vm.PurchasingPrice).Is.LessThan(vm => vm.SellingPrice));
+            [TestMethod]
+            public void CanEvaluateNullOrEmptyRule()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.Code).Is.NullOrEmpty());
 
-            // break the rule
-            FakeEditableViewModel.PurchasingPrice.Value = 20;
-            FakeEditableViewModel.SellingPrice.Value = 15;
+                // break the rule
+                FakeEditableViewModel.Code.Value = "abc";
 
-            // verify that rule is broken
-            VerifyThatRuleIsBroken();
+                // verify that rule is broken
+                VerifyThatRuleIsBroken();
+            }
         }
 
-        [TestMethod]
-        public void CanEvaluateEqualToRule()
+        #endregion
+
+        #region ValidEmail
+
+        [TestClass]
+        public class ValidEmail : FluentApiFixture
         {
-            // define the rule
-            Given(FluentApi.Property(vm => vm.Quantity).Is.EqualTo(10));
+            [TestMethod]
+            public void CanEvaluateValidEmailRule()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.SellerEmail).Is.ValidEmail());
 
-            // break the rule
-            FakeEditableViewModel.Quantity.Value = 20;
+                // break the rule
+                FakeEditableViewModel.SellerEmail.Value = "abc@";
 
-            // verify that rule is broken
-            VerifyThatRuleIsBroken();
+                // verify that rule is broken
+                VerifyThatRuleIsBroken();
+            }
         }
 
-        [TestMethod]
-        public void CanEvaluateEqualToRuleAgainstProperty()
+        #endregion
+
+        #region StartingWith
+
+        [TestClass]
+        public class StartingWith : FluentApiFixture
         {
-            // define the rule
-            Given(FluentApi.Property(vm => vm.PurchasingPrice).Is.EqualTo(vm => vm.SellingPrice));
+            [TestMethod]
+            public void CanEvaluateStartingWithRule()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.SellerEmail).Is.StartingWith("ab"));
 
-            // break the rule
-            FakeEditableViewModel.SellingPrice.Value = 15;
-            FakeEditableViewModel.PurchasingPrice.Value = 10;
+                // break the rule
+                FakeEditableViewModel.SellerEmail.Value = "bc@bc.com";
 
-            // verify that rule is broken
-            VerifyThatRuleIsBroken();
+                // verify that rule is broken
+                VerifyThatRuleIsBroken();
+            }
         }
 
-        [TestMethod]
-        public void CanEvaluateNullRule()
+        #endregion
+
+        #region EndingWith
+
+        [TestClass]
+        public class EndingWith : FluentApiFixture
         {
-            // define the rule
-            Given(FluentApi.Property(vm => vm.Code).Is.Null());
+            [TestMethod]
+            public void CanEvaluateEndingWithRule()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.SellerEmail).Is.EndingWith(".com"));
 
-            // break the rule
-            FakeEditableViewModel.Code.Value = "abc";
+                // break the rule
+                FakeEditableViewModel.SellerEmail.Value = "bc@bc.net";
 
-            // verify that rule is broken
-            VerifyThatRuleIsBroken();
+                // verify that rule is broken
+                VerifyThatRuleIsBroken();
+            }
         }
 
-        [TestMethod]
-        public void CanEvaluateNullOrEmptyRule()
+        #endregion
+
+        #region Required
+
+        [TestClass]
+        public class Required : FluentApiFixture
         {
-            // define the rule
-            Given(FluentApi.Property(vm => vm.Code).Is.NullOrEmpty());
+            [TestMethod]
+            public void CanEvaluateRequiredRule()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.Code).Is.Required());
 
-            // break the rule
-            FakeEditableViewModel.Code.Value = "abc";
+                // break the rule
+                FakeEditableViewModel.Code.Value = "";
 
-            // verify that rule is broken
-            VerifyThatRuleIsBroken();
+                // verify that rule is broken
+                VerifyThatRuleIsBroken();
+            }
         }
 
-        [TestMethod]
-        public void CanEvaluateValidEmailRule()
+        #endregion
+
+        #region DifferentOf
+
+        [TestClass]
+        public class DifferentOf : FluentApiFixture
         {
-            // define the rule
-            Given(FluentApi.Property(vm => vm.SellerEmail).Is.ValidEmail());
+            [TestMethod]
+            public void CanEvaluateDifferentOfRule()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.Code).Is.DifferentOf("xyz"));
 
-            // break the rule
-            FakeEditableViewModel.SellerEmail.Value = "abc@";
+                // break the rule
+                FakeEditableViewModel.Code.Value = "xyz";
 
-            // verify that rule is broken
-            VerifyThatRuleIsBroken();
+                // verify that rule is broken
+                VerifyThatRuleIsBroken();
+            }
+
+            [TestMethod]
+            public void CanEvaluateDifferentOfRuleAgainstProperty()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.PurchasingPrice).Is.DifferentOf(vm => vm.SellingPrice));
+
+                // break the rule
+                FakeEditableViewModel.PurchasingPrice.Value = 10;
+                FakeEditableViewModel.SellingPrice.Value = 10;
+
+                // verify that rule is broken
+                VerifyThatRuleIsBroken();
+            }
+        }
+        
+        #endregion
+
+        #region Between
+
+        [TestClass]
+        public class Between : FluentApiFixture
+        {
+            [TestMethod]
+            public void CanEvaluateBetweenRule()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.Quantity).Is.Between(5, 8));
+
+                // break the rule
+                FakeEditableViewModel.Quantity.Value = 9;
+
+                // verify that rule is broken
+                VerifyThatRuleIsBroken();
+            }
         }
 
-        [TestMethod]
-        public void CanEvaluateStartingWithRule()
+        #endregion
+
+        #region BetweenPoperties
+
+        [TestClass]
+        public class BetweenProperties : FluentApiFixture
         {
-            // define the rule
-            Given(FluentApi.Property(vm => vm.SellerEmail).Is.StartingWith("ab"));
+            [TestMethod]
+            public void CanEvaluateBetweenRuleAgainstProperties()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.Quantity).Is.BetweenPoperties(vm => vm.PurchasingPrice, vm => vm.SellingPrice));
 
-            // break the rule
-            FakeEditableViewModel.SellerEmail.Value = "bc@bc.com";
+                // break the rule
+                FakeEditableViewModel.Quantity.Value = 5;
+                FakeEditableViewModel.PurchasingPrice.Value = 8;
+                FakeEditableViewModel.SellingPrice.Value = 10;
 
-            // verify that rule is broken
-            VerifyThatRuleIsBroken();
+                // verify that rule is broken
+                VerifyThatRuleIsBroken();
+            }
         }
 
-        [TestMethod]
-        public void CanEvaluateEndingWithRule()
+        #endregion
+
+        #region MaxLength
+
+        [TestClass]
+        public class MaxLength : FluentApiFixture
         {
-            // define the rule
-            Given(FluentApi.Property(vm => vm.SellerEmail).Is.EndingWith(".com"));
+            [TestMethod]
+            public void CanEvaluateMaxLengthRule()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.Code).Has.MaxLength(3));
 
-            // break the rule
-            FakeEditableViewModel.SellerEmail.Value = "bc@bc.net";
+                // break the rule
+                FakeEditableViewModel.Code.Value = "ABCD";
 
-            // verify that rule is broken
-            VerifyThatRuleIsBroken();
+                // verify that rule is broken
+                VerifyThatRuleIsBroken();
+            }
+
+            [TestMethod]
+            [ExpectedException(typeof(InvalidOperationException))]
+            public void CannotEvaluateMaxLengthRuleWhenParameterIsNegative()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.Code).Has.MaxLength(-3));
+
+                // break the rule
+                FakeEditableViewModel.Code.Value = "ABCD";
+
+                // verify that rule is broken
+            }
+
+            [TestMethod]
+            public void CanEvaluateMaxLengthRuleWhenPropertyValueIsNull()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.Code).Has.MaxLength(3));
+
+                // break the rule
+                FakeEditableViewModel.Code.Value = null;
+
+                // verify that rule is broken
+                VerifyThatRuleIsSatisfied();
+            }
+
+            [TestMethod]
+            public void CanEvaluateMaxLengthRuleWhenPropertyValueIsEmpty()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.Code).Has.MaxLength(3));
+
+                // break the rule
+                FakeEditableViewModel.Code.Value = "";
+
+                // verify that rule is broken
+                VerifyThatRuleIsSatisfied();
+            }
         }
 
-        [TestMethod]
-        public void CanEvaluateRequiredRule()
+        #endregion
+
+        #region MinLength
+
+        [TestClass]
+        public class MinLength : FluentApiFixture
         {
-            // define the rule
-            Given(FluentApi.Property(vm => vm.Code).Is.Required());
+            [TestMethod]
+             public void CanEvaluateMinLengthRule()
+             {
+                 // define the rule
+                 Given(FluentApi.Property(vm => vm.Code).Has.MinLength(3));
 
-            // break the rule
-            FakeEditableViewModel.Code.Value = "";
+                 // break the rule
+                 FakeEditableViewModel.Code.Value = "AB";
 
-            // verify that rule is broken
-            VerifyThatRuleIsBroken();
-            
+                 // verify that rule is broken
+                 VerifyThatRuleIsBroken();
+             }
+
+            [TestMethod]
+            [ExpectedException(typeof(InvalidOperationException))]
+            public void CannotEvaluateMinLengthRuleWhenParameterIsNegative()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.Code).Has.MinLength(-3));
+
+                // break the rule
+                FakeEditableViewModel.Code.Value = "AB";
+
+                // verify that rule is broken
+            }
+
+            [TestMethod]
+            public void CanEvaluateMinLengthRuleWhenPropertyValueIsNull()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.Code).Has.MinLength(3));
+
+                // break the rule
+                FakeEditableViewModel.Code.Value = null;
+
+                // verify that rule is broken
+                VerifyThatRuleIsBroken();
+            }
+
+            [TestMethod]
+            public void CanEvaluateMinLengthRuleWhenPropertyValueIsEmpty()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.Code).Has.MinLength(3));
+
+                // break the rule
+                FakeEditableViewModel.Code.Value = "";
+
+                // verify that rule is broken
+                VerifyThatRuleIsBroken();
+            }
         }
 
-        [TestMethod]
-        public void CanEvaluateDifferentOfRule()
-        {
-            // define the rule
-            Given(FluentApi.Property(vm => vm.Code).Is.DifferentOf("xyz"));
-
-            // break the rule
-            FakeEditableViewModel.Code.Value = "xyz";
-
-            // verify that rule is broken
-            VerifyThatRuleIsBroken();
-        }
-
-        [TestMethod]
-        public void CanEvaluateDifferentOfRuleAgainstProperty()
-        {
-            // define the rule
-            Given(FluentApi.Property(vm => vm.PurchasingPrice).Is.DifferentOf(vm => vm.SellingPrice));
-
-            // break the rule
-            FakeEditableViewModel.PurchasingPrice.Value = 10;
-            FakeEditableViewModel.SellingPrice.Value = 10;
-
-            // verify that rule is broken
-            VerifyThatRuleIsBroken();
-        }
-
-        [TestMethod]
-        public void CanEvaluateBetweenRule()
-        {
-            // define the rule
-            Given(FluentApi.Property(vm => vm.Quantity).Is.Between(5,8));
-
-            // break the rule
-            FakeEditableViewModel.Quantity.Value = 9;
-
-            // verify that rule is broken
-            VerifyThatRuleIsBroken();
-        }
-
-        [TestMethod]
-        public void CanEvaluateBetweenRuleAgainstProperties()
-        {
-            // define the rule
-            Given(FluentApi.Property(vm => vm.Quantity).Is.BetweenPoperties(vm => vm.PurchasingPrice, vm => vm.SellingPrice));
-
-            // break the rule
-            FakeEditableViewModel.Quantity.Value = 5;
-            FakeEditableViewModel.PurchasingPrice.Value = 8;
-            FakeEditableViewModel.SellingPrice.Value = 10;
-
-            // verify that rule is broken
-            VerifyThatRuleIsBroken();
-        }
+        #endregion
     }
 }

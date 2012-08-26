@@ -53,6 +53,11 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
     /// <typeparam name="TViewModel">The type of the view model.</typeparam>
     public interface IFluentProperty<TViewModel> : IFluentInterface where TViewModel : ViewModelBase
     {
+        /// <summary>
+        /// Defines the view model property.
+        /// </summary>
+        /// <param name="propertyExpression">The expression that retrieve the view model property.</param>
+        /// <returns></returns>
         IFluentVerb<TViewModel> Property(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression);
     }
 
@@ -84,10 +89,11 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         IFluentOtherwise<TViewModel> NullOrEmpty();
         IFluentOtherwise<TViewModel> Matching(string pattern);
         
-
         IFluentOtherwise<TViewModel> ValidEmail();
         IFluentOtherwise<TViewModel> StartingWith(string start);
         IFluentOtherwise<TViewModel> EndingWith(string end);
+        IFluentOtherwise<TViewModel> MaxLength(int maxLength);
+        IFluentOtherwise<TViewModel> MinLength(int minLength);
         IFluentOtherwise<TViewModel> Required();
         IFluentOtherwise<TViewModel> DifferentOf(object value);
         IFluentOtherwise<TViewModel> DifferentOf(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression);

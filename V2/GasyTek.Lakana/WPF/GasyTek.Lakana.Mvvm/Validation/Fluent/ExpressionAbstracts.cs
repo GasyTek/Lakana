@@ -11,6 +11,30 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         public abstract Task<bool> Evaluate();
     }
 
+    #region Constants
+
+    internal abstract class ConstantExpression : ExpressionNode
+    {
+    }
+
+    internal class TrueExpression : ConstantExpression
+    {
+        public override Task<bool> Evaluate()
+        {
+            return new Task<bool>(() => true);
+        }
+    }
+
+    internal class FalseExpression : ConstantExpression
+    {
+        public override Task<bool> Evaluate()
+        {
+            return new Task<bool>(() => false);
+        }
+    }
+
+    #endregion
+
     #region Parenthesis
 
     /// <summary>
@@ -23,7 +47,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
     /// <summary>
     /// Reprensents left parenthesis.
     /// </summary>
-    internal class LeftParenthesis : ParenthesisExpression
+    internal class OpenParenthesis : ParenthesisExpression
     {
         public override Task<bool> Evaluate()
         {
@@ -34,7 +58,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
     /// <summary>
     /// Reprensents right parenthesis.
     /// </summary>
-    internal class RightParenthesis : ParenthesisExpression
+    internal class CloseParenthesis : ParenthesisExpression
     {
         public override Task<bool> Evaluate()
         {

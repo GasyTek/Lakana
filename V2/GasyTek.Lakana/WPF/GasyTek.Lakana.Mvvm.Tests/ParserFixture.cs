@@ -229,8 +229,8 @@ namespace GasyTek.Lakana.Mvvm.Tests
             {
                 // Prepare (x)
                 var x = new FakeEvaluableExpression();
-                var lp = new LeftParenthesis();
-                var rp = new RightParenthesis();
+                var lp = new OpenParenthesis();
+                var rp = new CloseParenthesis();
                 Tokens.Add(lp);
                 Tokens.Add(x);
                 Tokens.Add(rp);
@@ -249,8 +249,8 @@ namespace GasyTek.Lakana.Mvvm.Tests
                 // Prepare (NOT x)
                 var x = new FakeEvaluableExpression();
                 var not = new NotExpression();
-                var lp = new LeftParenthesis();
-                var rp = new RightParenthesis();
+                var lp = new OpenParenthesis();
+                var rp = new CloseParenthesis();
                 Tokens.Add(lp);
                 Tokens.Add(not);
                 Tokens.Add(x);
@@ -272,8 +272,8 @@ namespace GasyTek.Lakana.Mvvm.Tests
                 var x = new FakeEvaluableExpression();
                 var y = new FakeEvaluableExpression();
                 var and = new AndExpression();
-                var lp = new LeftParenthesis();
-                var rp = new RightParenthesis();
+                var lp = new OpenParenthesis();
+                var rp = new CloseParenthesis();
                 Tokens.Add(lp);
                 Tokens.Add(x);
                 Tokens.Add(and);
@@ -299,8 +299,8 @@ namespace GasyTek.Lakana.Mvvm.Tests
                 var z = new FakeEvaluableExpression();
                 var and = new AndExpression();
                 var or = new OrExpression();
-                var lp = new LeftParenthesis();
-                var rp = new RightParenthesis();
+                var lp = new OpenParenthesis();
+                var rp = new CloseParenthesis();
                 Tokens.Add(lp);
                 Tokens.Add(x);
                 Tokens.Add(or);

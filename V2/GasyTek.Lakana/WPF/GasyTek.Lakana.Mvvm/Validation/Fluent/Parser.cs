@@ -78,12 +78,12 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             {
                 if (iToken is ParenthesisExpression)
                 {
-                    if (iToken is LeftParenthesis) stack.Push(iToken);
+                    if (iToken is OpenParenthesis) stack.Push(iToken);
                     else
                     {
                         while (stack.Count > 0)
                         {
-                            var currentToken = stack.Peek() as LeftParenthesis;
+                            var currentToken = stack.Peek() as OpenParenthesis;
                             if (currentToken == null)
                                 outputTokens.Add(stack.Pop());
                             else
