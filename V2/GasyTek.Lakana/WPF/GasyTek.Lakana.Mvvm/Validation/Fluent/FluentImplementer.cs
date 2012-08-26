@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
 using GasyTek.Lakana.Mvvm.ViewModelProperties;
@@ -51,7 +50,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             if (_internalTokens.Count > 0)
             {
                 var lastToken = _internalTokens.Last();
-                if (lastToken is RightParenthesis) return true;
+                if (lastToken is CloseParenthesis) return true;
                 if (lastToken is EvaluableExpression) return true;
             }
             return false;
@@ -100,6 +99,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         public IFluentOtherwise<TViewModel> GreaterThan(object value)
         {
             EnsureContextCurrentPropertyIsNotNull();
+            EnsureContextCurrentPropertyValueIsOfType(typeof(IComparable), "GreaterThan");
 
             AddToken(GreaterThanExpression.CreateUsingValue(_context.CurrentProperty, value));
             return this;
@@ -108,6 +108,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         public IFluentOtherwise<TViewModel> GreaterThan(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
         {
             EnsureContextCurrentPropertyIsNotNull();
+            EnsureContextCurrentPropertyValueIsOfType(typeof(IComparable), "GreaterThan");
 
             UpdateContext(propertyExpression);
 
@@ -118,6 +119,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         public IFluentOtherwise<TViewModel> LessThan(object value)
         {
             EnsureContextCurrentPropertyIsNotNull();
+            EnsureContextCurrentPropertyValueIsOfType(typeof(IComparable), "LessThan");
 
             AddToken(LessThanExpression.CreateUsingValue(_context.CurrentProperty, value));
             return this;
@@ -126,6 +128,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         public IFluentOtherwise<TViewModel> LessThan(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
         {
             EnsureContextCurrentPropertyIsNotNull();
+            EnsureContextCurrentPropertyValueIsOfType(typeof(IComparable), "LessThan");
 
             UpdateContext(propertyExpression);
 
@@ -177,6 +180,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         public IFluentOtherwise<TViewModel> Matching(string pattern)
         {
             EnsureContextCurrentPropertyIsNotNull();
+            EnsureContextCurrentPropertyValueIsOfType(typeof(string), "Matching");
 
             AddToken(MatchingExpression.CreateUsingProperty(_context.CurrentProperty, pattern));
             return this;
@@ -197,17 +201,65 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return Matching(string.Format("({0})$", end));
         }
 
+        public IFluentOtherwise<TViewModel> MaxLength(int maxLength)
+        {
+            EnsureContextCurrentPropertyIsNotNull();
+            EnsureContextCurrentPropertyValueIsOfType(typeof(string), "MaxLength");
+
+            if (maxLength <= 0)
+                throw new InvalidOperationException("maxLength must be greater than 0");
+
+            var evaluatedValueProvider = new Func<object>(() =>
+            {
+                var value = (string)_context.CurrentProperty.GetValue();
+                return value == null ? 0 : value.Length;
+            });
+            var valueProvider = new Func<object>(() => maxLength);
+
+            AddToken(new OpenParenthesis());
+            AddToken(LessThanExpression.CreateGeneric(evaluatedValueProvider, valueProvider));
+            AddToken(new OrExpression());
+            AddToken(EqualToExpression.CreateGeneric(evaluatedValueProvider, valueProvider));
+            AddToken(new CloseParenthesis());
+
+            return this;
+        }
+
+        public IFluentOtherwise<TViewModel> MinLength(int minLength)
+        {
+            EnsureContextCurrentPropertyIsNotNull();
+            EnsureContextCurrentPropertyValueIsOfType(typeof(string), "MinLength");
+
+            if (minLength <= 0)
+                throw new InvalidOperationException("minLength must be greater than 0");
+
+            var evaluatedValueProvider = new Func<object>(() =>
+            {
+                var value = (string)_context.CurrentProperty.GetValue();
+                return value == null ? 0 : value.Length;
+            });
+            var valueProvider = new Func<object>(() => minLength);
+
+            AddToken(new OpenParenthesis());
+            AddToken(GreaterThanExpression.CreateGeneric(evaluatedValueProvider, valueProvider));
+            AddToken(new OrExpression());
+            AddToken(EqualToExpression.CreateGeneric(evaluatedValueProvider, valueProvider));
+            AddToken(new CloseParenthesis());
+
+            return this;
+        }
+
         public IFluentOtherwise<TViewModel> Required()
         {
             EnsureContextCurrentPropertyIsNotNull();
             
             // required = is neither null nor empty
             AddToken(new NotExpression());
-            AddToken(new LeftParenthesis());
+            AddToken(new OpenParenthesis());
             AddToken(EqualToExpression.CreateUsingValue(_context.CurrentProperty, null));
             AddToken(new OrExpression());
             AddToken(EqualToExpression.CreateUsingValue(_context.CurrentProperty, string.Empty));
-            AddToken(new RightParenthesis());
+            AddToken(new CloseParenthesis());
             return this;
         }
 
@@ -238,11 +290,11 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             EnsureContextCurrentPropertyIsNotNull();
 
             // uses parenthesis to satisfy syntax : IsNot.Between (...)
-            AddToken(new LeftParenthesis());
+            AddToken(new OpenParenthesis());
             AddToken(GreaterThanExpression.CreateUsingValue(_context.CurrentProperty, @from));
             AddToken(new AndExpression());
             AddToken(LessThanExpression.CreateUsingValue(_context.CurrentProperty, to));
-            AddToken(new RightParenthesis());
+            AddToken(new CloseParenthesis());
 
             return this;
         }
@@ -255,11 +307,11 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             UpdateContext(to);
 
             // uses parenthesis to satisfy syntax : IsNot.Between (...)
-            AddToken(new LeftParenthesis());
+            AddToken(new OpenParenthesis());
             AddToken(GreaterThanExpression.CreateUsingProperty(_context.CurrentProperty, @from.Compile()(_viewModel)));
             AddToken(new AndExpression());
             AddToken(LessThanExpression.CreateUsingProperty(_context.CurrentProperty, to.Compile()(_viewModel)));
-            AddToken(new RightParenthesis());
+            AddToken(new CloseParenthesis());
 
             return this;
         }
@@ -305,6 +357,8 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
         #endregion
 
+        #region Private methods
+
         private void AddToken(ExpressionNode token)
         {
             _internalTokens.Add(token) ;
@@ -325,5 +379,15 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             if (_context.CurrentProperty == null)
                 throw new InvalidOperationException("The current property must not be null.");
         }
+
+        private void EnsureContextCurrentPropertyValueIsOfType(Type expectedType, string currentOperatorName)
+        {
+            var valueType = _context.CurrentProperty.GetValueType();
+            if (expectedType.IsAssignableFrom(valueType) == false)
+                throw new InvalidOperationException(String.Format("The type of the value of the property [{0}] do not support the operator [{1}].", 
+                    _context.CurrentProperty.GetValueType().FullName, currentOperatorName));
+        }
+
+        #endregion
     }
 }

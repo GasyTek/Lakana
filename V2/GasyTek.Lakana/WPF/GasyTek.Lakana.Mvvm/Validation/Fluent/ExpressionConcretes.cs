@@ -23,16 +23,6 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             _valueProvider = valueProvider;
         }
 
-        private EqualToExpression(IViewModelProperty evaluatedProperty, object value)
-            : this(evaluatedProperty.GetValue, () => value)
-        {
-        }
-
-        private EqualToExpression(IViewModelProperty evaluatedProperty, IViewModelProperty valueProperty)
-            : this(evaluatedProperty.GetValue, valueProperty.GetValue)
-        {
-        }
-
         #region Factory methods
 
         public static EqualToExpression CreateGeneric(Func<object> evaluatedValueProvider, Func<object> valueProvider)
@@ -42,12 +32,16 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
         public static EqualToExpression CreateUsingValue(IViewModelProperty evaluatedProperty, object value)
         {
-            return new EqualToExpression(evaluatedProperty, value);
+            var evaluatedValueProvider = new Func<object>(evaluatedProperty.GetValue);
+            var valueProvider = new Func<object>(() => value);
+            return CreateGeneric(evaluatedValueProvider, valueProvider);
         }
 
         public static EqualToExpression CreateUsingProperty(IViewModelProperty evaluatedProperty, IViewModelProperty valueProperty)
         {
-            return new EqualToExpression(evaluatedProperty, valueProperty);
+            var evaluatedValueProvider = new Func<object>(evaluatedProperty.GetValue);
+            var valueProvider = new Func<object>(valueProperty.GetValue);
+            return CreateGeneric(evaluatedValueProvider, valueProvider);
         }
 
         #endregion
@@ -77,16 +71,6 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             _valueProvider = valueProvider;
         }
 
-        private GreaterThanExpression(IViewModelProperty evaluatedProperty, object value)
-            : this(evaluatedProperty.GetValue, () => value)
-        {
-        }
-
-        private GreaterThanExpression(IViewModelProperty evaluatedProperty, IViewModelProperty valueProperty)
-            : this(evaluatedProperty.GetValue, valueProperty.GetValue)
-        {
-        }
-
         #region Factory methods
 
         public static GreaterThanExpression CreateGeneric(Func<object> evaluatedValueProvider, Func<object> valueProvider)
@@ -96,12 +80,16 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
         public static GreaterThanExpression CreateUsingValue(IViewModelProperty evaluatedProperty, object value)
         {
-            return new GreaterThanExpression(evaluatedProperty, value);
+            var evaluatedValueProvider = new Func<object>(evaluatedProperty.GetValue);
+            var valueProvider = new Func<object>(() => value);
+            return CreateGeneric(evaluatedValueProvider, valueProvider);
         }
 
         public static GreaterThanExpression CreateUsingProperty(IViewModelProperty evaluatedProperty, IViewModelProperty valueProperty)
         {
-            return new GreaterThanExpression(evaluatedProperty, valueProperty);
+            var evaluatedValueProvider = new Func<object>(evaluatedProperty.GetValue);
+            var valueProvider = new Func<object>(valueProperty.GetValue);
+            return CreateGeneric(evaluatedValueProvider, valueProvider);
         }
 
         #endregion
@@ -138,16 +126,6 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             _valueProvider = valueProvider;
         }
 
-        private LessThanExpression(IViewModelProperty evaluatedProperty, object value)
-            : this(evaluatedProperty.GetValue, () => value)
-        {
-        }
-
-        private LessThanExpression(IViewModelProperty evaluatedProperty, IViewModelProperty valueProperty)
-            : this(evaluatedProperty.GetValue, valueProperty.GetValue)
-        {
-        }
-
         #region Factory methods
 
         public static LessThanExpression CreateGeneric(Func<object> evaluatedValueProvider, Func<object> valueProvider)
@@ -157,12 +135,16 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
         public static LessThanExpression CreateUsingValue(IViewModelProperty evaluatedProperty, object value)
         {
-            return new LessThanExpression(evaluatedProperty, value);
+            var evaluatedValueProvider = new Func<object>(evaluatedProperty.GetValue);
+            var valueProvider = new Func<object>(() => value);
+            return CreateGeneric(evaluatedValueProvider, valueProvider);
         }
 
         public static LessThanExpression CreateUsingProperty(IViewModelProperty evaluatedProperty, IViewModelProperty valueProperty)
         {
-            return new LessThanExpression(evaluatedProperty, valueProperty);
+            var evaluatedValueProvider = new Func<object>(evaluatedProperty.GetValue);
+            var valueProvider = new Func<object>(valueProperty.GetValue);
+            return CreateGeneric(evaluatedValueProvider, valueProvider);
         }
 
         #endregion
@@ -194,11 +176,6 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             Pattern = pattern;
         }
 
-        private MatchingExpression(IViewModelProperty evaluatedProperty, string pattern)
-            : this(evaluatedProperty.GetValue, pattern)
-        {
-        }
-
         #region Factory methods
 
         public static MatchingExpression CreateGeneric(Func<object> evaluatedValueProvider, string pattern)
@@ -208,7 +185,8 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
         public static MatchingExpression CreateUsingProperty(IViewModelProperty evaluatedProperty, string pattern)
         {
-            return new MatchingExpression(evaluatedProperty, pattern);
+            var evaluatedValueProvider = new Func<object>(evaluatedProperty.GetValue);
+            return CreateGeneric(evaluatedValueProvider, pattern);
         }
 
         #endregion
