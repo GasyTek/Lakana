@@ -12,7 +12,7 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation
         {
             InitializeComponent();
 
-            var product = new Product() { Code = "aaa", BeginDistributionDate = DateTime.Now.AddDays(-3), EndDistributionDate = DateTime.Now.AddDays(3) };
+            var product = new Model() { Code = "aaa", BeginDistributionDate = DateTime.Now.AddDays(-3), EndDistributionDate = DateTime.Now.AddDays(3) };
 
             DataContext = new ProductRegistrationViewModel { Model = product };
         }

@@ -1,15 +1,14 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Globalization;
-using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using GasyTek.Lakana.Mvvm.Validation;
+using GasyTek.Lakana.Mvvm.ViewModels;
 
-namespace Samples.GasyTek.Lakana.Mvvm.Validation
+namespace Samples.GasyTek.Lakana.Mvvm.Validation.Custom
 {
     [Export(typeof(IValidationEngine))]
     internal class CustomValidationEngine : ValidationEngineBase
@@ -25,7 +24,5 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation
                                                       });
             tsk.ContinueWith(t => OnRaiseErrorsChangedEvent(property.Name), TaskScheduler.FromCurrentSynchronizationContext());
         }
-
-        
     }
 }

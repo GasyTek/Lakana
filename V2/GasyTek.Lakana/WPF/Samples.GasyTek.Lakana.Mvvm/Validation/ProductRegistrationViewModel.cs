@@ -7,7 +7,7 @@ using GasyTek.Lakana.Mvvm.ViewModels;
 
 namespace Samples.GasyTek.Lakana.Mvvm.Validation
 {
-    public class ProductRegistrationViewModel : EditViewModelBase<Product>
+    public class ProductRegistrationViewModel : EditableViewModelBase<Model>
     {
         [Required]
         public IViewModelProperty Code { get; private set; }

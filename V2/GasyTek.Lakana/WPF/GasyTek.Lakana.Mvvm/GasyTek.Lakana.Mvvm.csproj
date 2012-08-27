@@ -103,7 +103,7 @@
     <Compile Include="ViewModelProperties\ObservableValidationEngine.cs" />
     <Compile Include="ViewModelProperties\ValueViewModelProperty.cs" />
     <Compile Include="ViewModelProperties\ViewModelProperty.cs" />
-    <Compile Include="ViewModels\EditViewModelBase.cs" />
+    <Compile Include="ViewModels\EditableViewModelBase.cs" />
     <Compile Include="ViewModels\ViewModelBase.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

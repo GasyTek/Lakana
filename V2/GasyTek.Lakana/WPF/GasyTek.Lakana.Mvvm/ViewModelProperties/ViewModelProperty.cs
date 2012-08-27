@@ -30,6 +30,14 @@ namespace GasyTek.Lakana.Mvvm.ViewModelProperties
             get { return (UIMetadata != null) ? UIMetadata.Label : GlobalConstants.LocalizationNoText; }
         }
 
+        /// <summary>
+        /// Shortcut for description property of presentation metadata.
+        /// </summary>
+        public string Description
+        {
+            get { return (UIMetadata != null) ? UIMetadata.Description : GlobalConstants.LocalizationNoText; }
+        }
+
         public IUIMetadata UIMetadata
         {
             get { return _uiMetadata; }
