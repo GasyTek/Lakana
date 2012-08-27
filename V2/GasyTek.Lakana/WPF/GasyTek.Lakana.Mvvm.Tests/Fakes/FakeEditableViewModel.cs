@@ -7,7 +7,7 @@ using GasyTek.Lakana.Mvvm.ViewModels;
 
 namespace GasyTek.Lakana.Mvvm.Tests.Fakes
 {
-    class FakeEditableViewModel : EditViewModelBase<Product>
+    class FakeEditableViewModel : EditableViewModelBase<Product>
     {
         [Required]
         public IValueViewModelProperty<string> Code { get; private set; }

@@ -87,12 +87,34 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Validation\Product.cs" />
+    <Compile Include="Resources\Labels.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Labels.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Validation\Custom\SampleCustomValidationView.xaml.cs">
+      <DependentUpon>SampleCustomValidationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Validation\Custom\SampleCustomValidationViewModel.cs" />
+    <Compile Include="Validation\DataAnnotation\SampleDataAnnotationValidationView.xaml.cs">
+      <DependentUpon>SampleDataAnnotationValidationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Validation\DataAnnotation\SampleDataAnnotationValidationViewModel.cs" />
+    <Compile Include="Validation\Fluent\SampleFluentValidationView.xaml.cs">
+      <DependentUpon>SampleFluentValidationView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Validation\Fluent\SampleFluentValidationViewModel.cs" />
+    <Compile Include="Validation\Model.cs" />
     <Compile Include="Validation\ProductRegistrationView.xaml.cs">
       <DependentUpon>ProductRegistrationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Validation\ProductRegistrationViewModel.cs" />
-    <Compile Include="Validation\CustomValidationEngine.cs" />
+    <Compile Include="Validation\Custom\CustomValidationEngine.cs" />
+    <Compile Include="Model.cs" />
+    <Compile Include="VewModelProperties\SampleViewModelPropertyView.xaml.cs">
+      <DependentUpon>SampleViewModelPropertyView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="VewModelProperties\SampleViewModelPropertyViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -105,7 +127,23 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Validation\Custom\SampleCustomValidationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Validation\DataAnnotation\SampleDataAnnotationValidationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Validation\Fluent\SampleFluentValidationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Validation\ProductRegistrationView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="VewModelProperties\SampleViewModelPropertyView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -128,6 +166,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Labels.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Labels.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -143,6 +185,9 @@
       <Project>{18F144D7-1DA2-4E90-BA4A-4190B5D89A9F}</Project>
       <Name>GasyTek.Lakana.Mvvm</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\info.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

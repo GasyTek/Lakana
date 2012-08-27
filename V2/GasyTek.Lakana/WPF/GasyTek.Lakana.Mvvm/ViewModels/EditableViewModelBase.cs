@@ -10,7 +10,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
     /// You must assign a model to this class, in order to initialize it correctly.
     /// </summary>
     /// <typeparam name="TModel">The type of the model that will be the data source for this view model</typeparam>
-    public abstract class EditViewModelBase<TModel> : ViewModelBase where TModel : class, new() 
+    public abstract class EditableViewModelBase<TModel> : ViewModelBase where TModel : class, new() 
     {
         #region Fields
 
@@ -62,7 +62,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
 
         #region Constructor
 
-        protected EditViewModelBase()
+        protected EditableViewModelBase()
             : base (false)
         {
             
