@@ -4,6 +4,7 @@ namespace Samples.GasyTek.Lakana.Mvvm
 {
     public class Employee
     {
+        public string Code { get; set; }
         public int Age { get; set; }
         public Rank Rank { get; set; }
         public int CountryId { get; set; }

@@ -4,7 +4,7 @@ using GasyTek.Lakana.Mvvm.ViewModels;
 
 namespace Samples.GasyTek.Lakana.Mvvm.Validation.DataAnnotation
 {
-    public class SampleDataAnnotationValidationViewModel : EditableViewModelBase<Model>
+    public class SampleDataAnnotationValidationViewModel : EditableViewModelBase<Employee>
     {
         protected override void OnCreateViewModelProperties()
         {

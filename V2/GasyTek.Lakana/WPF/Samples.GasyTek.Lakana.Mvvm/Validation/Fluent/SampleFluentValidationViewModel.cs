@@ -4,7 +4,7 @@ using GasyTek.Lakana.Mvvm.ViewModels;
 
 namespace Samples.GasyTek.Lakana.Mvvm.Validation.Fluent
 {
-    public class SampleFluentValidationViewModel : EditableViewModelBase<Model>
+    public class SampleFluentValidationViewModel : EditableViewModelBase<Employee>
     {
         protected override void OnCreateViewModelProperties()
         {
