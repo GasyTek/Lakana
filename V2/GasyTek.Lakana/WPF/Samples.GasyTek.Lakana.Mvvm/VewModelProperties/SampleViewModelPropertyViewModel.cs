@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Windows;
 using GasyTek.Lakana.Common.UI;
 using GasyTek.Lakana.Mvvm.Validation;
 using GasyTek.Lakana.Mvvm.ViewModelProperties;
@@ -22,15 +23,15 @@ namespace Samples.GasyTek.Lakana.Mvvm.VewModelProperties
             Age.UIMetadata = new UIMetadata
             {
                 LabelProvider = () => "Age",
-                DescriptionProvider = () => "Description of Age property."
+                DescriptionProvider = () => "Description of 'Age' property."
             };
 
             // HOW TO : create a lookup value view model property
-            Country = CreateLookupProperty(objectToEdit.CountryId, GetCountries);
+            Country = CreateLookupProperty(objectToEdit.CountryId, GetCountriesLookupValues);
             Country.UIMetadata = new UIMetadata
             {
                 LabelProvider = () => "Country",
-                DescriptionProvider = () => "Description of Country property."
+                DescriptionProvider = () => "Description of 'Country' property."
             };
 
             // HOW TO : create an enum view model property
@@ -40,7 +41,7 @@ namespace Samples.GasyTek.Lakana.Mvvm.VewModelProperties
             Rank.UIMetadata = new UIMetadata
             {
                 LabelProvider = () => "Rank",
-                DescriptionProvider = () => "Description of Rank property."
+                DescriptionProvider = () => "Description of 'Rank' property."
             };
         }
 
@@ -51,15 +52,15 @@ namespace Samples.GasyTek.Lakana.Mvvm.VewModelProperties
 
         protected override void OnSave()
         {
-            throw new System.NotImplementedException();
+            MessageBox.Show("Modifications saved !", "", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         protected override void OnCancel()
         {
-            throw new System.NotImplementedException();
+            MessageBox.Show("Modifications canceled !", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
         }
 
-        private List<Country> GetCountries()
+        private List<Country> GetCountriesLookupValues()
         {
             return new List<Country>
                        {

@@ -1,60 +1,63 @@
 ﻿<UserControl x:Class="Samples.GasyTek.Lakana.Mvvm.VewModelProperties.SampleViewModelPropertyView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:ui="http://schemas.gasytek.com/wpf/ui"
-             mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" mc:Ignorable="d"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
              Loaded="UserControl_Loaded">
-    
+
     <UserControl.Resources>
-        
-        <Style x:Key="FieldTitleStyle" TargetType="TextBlock">
+
+        <Style x:Key="FieldTitleStyle"
+               TargetType="TextBlock">
             <Style.Triggers>
-                <DataTrigger Binding="{Binding HasChanged}" Value="True">
+                <DataTrigger Binding="{Binding HasChanged}"
+                             Value="True">
                     <Setter Property="FontWeight"
                             Value="Bold" />
                 </DataTrigger>
-            </Style.Triggers>            
+            </Style.Triggers>
         </Style>
-        
+
     </UserControl.Resources>
-    
-    <Grid VerticalAlignment="Center" HorizontalAlignment="Center">
+
+    <Grid VerticalAlignment="Center"
+          HorizontalAlignment="Center">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="5" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="5" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" MinWidth="120" />
+            <ColumnDefinition Width="Auto"
+                              MinWidth="120" />
             <ColumnDefinition Width="5" />
             <ColumnDefinition Width="180" />
             <ColumnDefinition Width="5" />
             <ColumnDefinition Width="20" />
         </Grid.ColumnDefinitions>
 
-        <!-- NOTE : in the below code
-            {ui:Binding Age.Value}
-            and
-            {Binding Age.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True} 
-            are strictly equivalent.
-        -->
-
         <!-- Age -->
         <TextBlock Text="{Binding Label}"
                    DataContext="{Binding Age}"
                    Style="{StaticResource FieldTitleStyle}" />
-        <TextBox Grid.Column="2"
-                 Text="{ui:Binding Age.Value}" />
+        <!--<TextBox Grid.Column="2"
+                 Text="{Binding Age.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=False}"
+                 ToolTip="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}"/>-->
+        <xctk:IntegerUpDown Grid.Column="2" 
+                            Value="{Binding Age.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=False}"
+                            AllowSpin="True" />
         <Image Grid.Column="4"
                RenderOptions.BitmapScalingMode="HighQuality"
                ToolTip="{Binding Age.Description}"
                Source="../Resources/info.png" />
-        
+
         <!-- Country -->
         <TextBlock Grid.Row="2"
                    Text="{Binding Label}"
@@ -63,8 +66,8 @@
         <ComboBox Grid.Row="2"
                   Grid.Column="2"
                   ItemsSource="{Binding Country.ItemsSource}"
-                  SelectedValue="{ui:Binding Country.SelectedValue}"
-                  SelectedValuePath="Id" 
+                  SelectedValue="{Binding Country.SelectedValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  SelectedValuePath="Id"
                   DisplayMemberPath="Name" />
         <Image Grid.Row="2"
                Grid.Column="4"
@@ -80,8 +83,8 @@
         <ComboBox Grid.Row="4"
                   Grid.Column="2"
                   ItemsSource="{Binding Rank.ItemsSource}"
-                  SelectedValue="{ui:Binding Rank.SelectedValue}"
-                  SelectedValuePath="Value" 
+                  SelectedValue="{Binding Rank.SelectedValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  SelectedValuePath="Value"
                   DisplayMemberPath="Label" />
         <Image Grid.Row="4"
                Grid.Column="4"
@@ -89,5 +92,20 @@
                ToolTip="{Binding Rank.Description}"
                Source="../Resources/info.png" />
 
+        <!-- Save / Cancel buttons -->
+        <Border Grid.Row="6" Grid.ColumnSpan="5">
+            <StackPanel>
+                <StackPanel HorizontalAlignment="Right"
+                            Orientation="Horizontal">
+                    <Button Content="Save"
+                            Width="120"
+                            Command="{Binding SaveCommand}" />
+                    <Button Content="Cancel"
+                            Width="80"
+                            Margin="6,0,0,0"
+                            Command="{Binding CancelCommand}" />
+                </StackPanel>
+            </StackPanel>
+        </Border>
     </Grid>
 </UserControl>

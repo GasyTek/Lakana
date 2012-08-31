@@ -4,7 +4,7 @@ using GasyTek.Lakana.Mvvm.ViewModels;
 
 namespace Samples.GasyTek.Lakana.Mvvm.Validation.Custom
 {
-    public class SampleCustomValidationViewModel : EditableViewModelBase<Model>
+    public class SampleCustomValidationViewModel : EditableViewModelBase<Employee>
     {
         protected override void OnCreateViewModelProperties()
         {
