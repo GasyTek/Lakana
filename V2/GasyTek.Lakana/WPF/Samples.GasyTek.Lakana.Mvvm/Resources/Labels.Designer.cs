@@ -61,11 +61,38 @@ namespace Samples.GasyTek.Lakana.Mvvm.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Age must be between 1 and 50..
+        /// </summary>
+        internal static string AgeMustBeBetween1and50 {
+            get {
+                return ResourceManager.GetString("AgeMustBeBetween1and50", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Patron.
         /// </summary>
         internal static string Boss_ResId {
             get {
                 return ResourceManager.GetString("Boss_ResId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Code is required..
+        /// </summary>
+        internal static string CodeIsRequired {
+            get {
+                return ResourceManager.GetString("CodeIsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Code must not exceed 3 characters..
+        /// </summary>
+        internal static string CodeMustNotExceed3Characters {
+            get {
+                return ResourceManager.GetString("CodeMustNotExceed3Characters", resourceCulture);
             }
         }
         

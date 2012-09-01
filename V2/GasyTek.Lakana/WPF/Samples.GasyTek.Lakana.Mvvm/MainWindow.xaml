@@ -5,19 +5,19 @@
         xmlns:DataAnnotation="clr-namespace:Samples.GasyTek.Lakana.Mvvm.Validation.DataAnnotation"
         xmlns:Fluent="clr-namespace:Samples.GasyTek.Lakana.Mvvm.Validation.Fluent"
         xmlns:Custom="clr-namespace:Samples.GasyTek.Lakana.Mvvm.Validation.Custom" Width="800" Height="600">
-    <TabControl Margin="5">
+    <TabControl Margin="5" >
 
         <TabItem Header="- Sample 1 : View model properties">
             <VewModelProperties:SampleViewModelPropertyView />
         </TabItem>
 
-        <TabItem Header="Sample 2 : Validation ">
+        <TabItem Header="- Sample 2 : Validation ">
             <TabControl>
                 <TabItem Header="DataAnnotation">
                     <DataAnnotation:SampleDataAnnotationValidationView />
                 </TabItem>
                 <TabItem Header="Fluent">
-                    <Fluent:SampleFluentValidationViewModel />
+                    <Fluent:SampleFluentValidationView />
                 </TabItem>
                 <TabItem Header="Custom">
                     <Custom:SampleCustomValidationView />

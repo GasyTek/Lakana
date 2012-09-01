@@ -1,8 +1,4 @@
-﻿using System;
-using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
-using System.Windows;
-using GasyTek.Lakana.Mvvm.Validation;
+﻿using System.Windows;
 
 namespace Samples.GasyTek.Lakana.Mvvm
 {
@@ -11,7 +7,6 @@ namespace Samples.GasyTek.Lakana.Mvvm
     /// </summary>
     public partial class App
     {
-        private CompositionContainer _container;
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {

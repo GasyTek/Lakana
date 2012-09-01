@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace Samples.GasyTek.Lakana.Mvvm.Validation.DataAnnotation
 {
     /// <summary>
-    /// A custom validator class that can used by System.ComponentModel.DataAnnotations.CustomValidation.
+    /// A custom validator class that can be used by System.ComponentModel.DataAnnotations.CustomValidation.
     /// See : http://msdn.microsoft.com/fr-fr/library/system.componentmodel.dataannotations.customvalidationattribute%28v=vs.100%29.aspx
     /// </summary>
     public class CountryValidator
