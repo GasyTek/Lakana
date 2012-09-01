@@ -10,10 +10,10 @@
             InitializeComponent();
         }
 
-        private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        private void UserControlLoaded(object sender, System.Windows.RoutedEventArgs e)
         {
             // 1 - create the model
-            var employee = new Employee() {Age = 32, CountryId = 4, Rank = Rank.Boss};
+            var employee = new Employee {Age = 32, Country = Database.GetCountry(4), Rank = Rank.Boss};
 
             // 2 - create the view model
              var sampleViewModelPropertyViewModel = new SampleViewModelPropertyViewModel();

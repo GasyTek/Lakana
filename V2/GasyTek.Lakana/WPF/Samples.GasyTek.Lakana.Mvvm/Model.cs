@@ -7,7 +7,7 @@ namespace Samples.GasyTek.Lakana.Mvvm
         public string Code { get; set; }
         public int Age { get; set; }
         public Rank Rank { get; set; }
-        public int CountryId { get; set; }
+        public Country Country { get; set; }
     }
 
     public class Country
