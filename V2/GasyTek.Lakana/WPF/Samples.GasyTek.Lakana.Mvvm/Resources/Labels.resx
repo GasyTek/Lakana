@@ -123,4 +123,13 @@
   <data name="Trainee_ResId" xml:space="preserve">
     <value>Apprenti</value>
   </data>
+  <data name="CodeIsRequired">
+    <value xml:space="preserve">Code is required.</value>
+  </data>
+  <data name="CodeMustNotExceed3Characters">
+    <value xml:space="preserve">Code must not exceed 3 characters.</value>
+  </data>
+  <data name="AgeMustBeBetween1and50">
+    <value xml:space="preserve">Age must be between 1 and 50.</value>
+  </data>
 </root>

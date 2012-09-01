@@ -1,14 +1,23 @@
 ﻿using System;
 
-namespace GasyTek.Tantana.Infrastructure.Extensions
+namespace GasyTek.Lakana.Common.Extensions
 {
     /// <summary>
     /// Enum that explicit the result of DateTime.CompareTo method.
     /// </summary>
     public enum DateComparisonResult
     {
+        /// <summary>
+        /// Earlier.
+        /// </summary>
         Earlier = -1,
+        /// <summary>
+        /// Later.
+        /// </summary>
         Later = 1,
+        /// <summary>
+        /// TheSame.
+        /// </summary>
         TheSame = 0
     };
 

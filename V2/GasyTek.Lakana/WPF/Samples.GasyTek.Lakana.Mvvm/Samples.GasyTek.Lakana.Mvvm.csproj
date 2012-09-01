@@ -67,7 +67,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -106,15 +105,12 @@
       <DependentUpon>SampleDataAnnotationValidationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Validation\DataAnnotation\SampleDataAnnotationValidationViewModel.cs" />
+    <Compile Include="Validation\Fluent\MyFluentValidationEngine.cs" />
     <Compile Include="Validation\Fluent\SampleFluentValidationView.xaml.cs">
       <DependentUpon>SampleFluentValidationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Validation\Fluent\SampleFluentValidationViewModel.cs" />
-    <Compile Include="Validation\ProductRegistrationView.xaml.cs">
-      <DependentUpon>ProductRegistrationView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Validation\ProductRegistrationViewModel.cs" />
-    <Compile Include="Validation\Custom\CustomValidationEngine.cs" />
+    <Compile Include="Validation\Custom\MyCustomValidationEngine.cs" />
     <Compile Include="Model.cs" />
     <Compile Include="VewModelProperties\SampleViewModelPropertyView.xaml.cs">
       <DependentUpon>SampleViewModelPropertyView.xaml</DependentUpon>
@@ -141,10 +137,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Validation\Fluent\SampleFluentValidationView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Validation\ProductRegistrationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -1,21 +1,19 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using GasyTek.Lakana.Common.UI;
 using GasyTek.Lakana.Mvvm.Validation;
 using GasyTek.Lakana.Mvvm.ViewModelProperties;
 using GasyTek.Lakana.Mvvm.ViewModels;
 using Samples.GasyTek.Lakana.Mvvm.Resources;
-using model = Samples.GasyTek.Lakana.Mvvm;
 
 namespace Samples.GasyTek.Lakana.Mvvm.Validation.DataAnnotation
 {
     public class SampleDataAnnotationValidationViewModel : EditableViewModelBase<Employee>
     {
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Code is required.")]
-        [StringLength(3, ErrorMessage = "Code must not exceed 3 characters.")]
+        [Required(AllowEmptyStrings = false, ErrorMessageResourceType = typeof(Labels), ErrorMessageResourceName = "CodeIsRequired")]
+        [StringLength(3, ErrorMessageResourceType = typeof(Labels), ErrorMessageResourceName = "CodeMustNotExceed3Characters")]
         public IValueViewModelProperty<string> Code { get; private set; }
 
-        [Range(1, 50, ErrorMessage = "Age must be between 1 and 50.")]
+        [Range(1, 50, ErrorMessageResourceType = typeof(Labels), ErrorMessageResourceName = "AgeMustBeBetween1and50")]
         public IValueViewModelProperty<int> Age { get; private set; }
 
         [CustomValidation(typeof(CountryValidator), "ValidateCountry")]
