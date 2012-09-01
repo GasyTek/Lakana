@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Windows;
 using GasyTek.Lakana.Common.UI;
 using GasyTek.Lakana.Mvvm.Validation;
@@ -11,7 +10,7 @@ namespace Samples.GasyTek.Lakana.Mvvm.VewModelProperties
     public class SampleViewModelPropertyViewModel : EditableViewModelBase<Employee>
     {
         public IValueViewModelProperty<int> Age { get; private set; }
-        public ILookupViewModelProperty<int, Country> Country { get; private set; }
+        public ILookupViewModelProperty<Country, Country> Country { get; private set; }
         public IEnumViewModelProperty<Rank> Rank { get; private set; }
 
         protected override void OnCreateViewModelProperties()
@@ -27,7 +26,7 @@ namespace Samples.GasyTek.Lakana.Mvvm.VewModelProperties
             };
 
             // HOW TO : create a lookup value view model property
-            Country = CreateLookupProperty(objectToEdit.CountryId, GetCountriesLookupValues);
+            Country = CreateLookupProperty(objectToEdit.Country, Database.GetCountriesLookupValues);
             Country.UIMetadata = new UIMetadata
             {
                 LabelProvider = () => "Country",
@@ -58,17 +57,6 @@ namespace Samples.GasyTek.Lakana.Mvvm.VewModelProperties
         protected override void OnCancel()
         {
             MessageBox.Show("Modifications canceled !", "", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-        }
-
-        private List<Country> GetCountriesLookupValues()
-        {
-            return new List<Country>
-                       {
-                           new Country {Id = 1,Name = "France"},
-                           new Country {Id = 2,Name = "USA"},
-                           new Country {Id = 3,Name = "China"},
-                           new Country {Id = 4,Name = "Madagascar"},
-                       };
         }
     }
 }

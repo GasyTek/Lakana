@@ -1,6 +1,4 @@
-﻿using System.Windows.Controls;
-
-namespace Samples.GasyTek.Lakana.Mvvm.Validation.DataAnnotation
+﻿namespace Samples.GasyTek.Lakana.Mvvm.Validation.DataAnnotation
 {
     /// <summary>
     /// Interaction logic for SampleDataAnnotationValidationView.xaml
@@ -12,9 +10,19 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.DataAnnotation
             InitializeComponent();
         }
 
-        private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        private void UserControlLoaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            DataContext = new SampleDataAnnotationValidationViewModel();
+            // 1 - create the model
+            var employee = new Employee { Code = "EMP", Age = 32, Country = Database.GetCountry(4), Rank = Rank.Boss };
+
+            // 2 - create the view model
+            var sampleDataAnnotationValidationViewModel = new SampleDataAnnotationValidationViewModel();
+
+            // 3 - attach him the model to edit
+            sampleDataAnnotationValidationViewModel.Model = employee;
+
+            // 4 - set the view model as datacontext of the viewss
+            DataContext = sampleDataAnnotationValidationViewModel;
         }
     }
 }

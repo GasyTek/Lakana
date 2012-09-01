@@ -6,12 +6,18 @@
              xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="300"
-             Loaded="UserControl_Loaded">
+             Loaded="UserControlLoaded">
 
     <UserControl.Resources>
 
         <Style x:Key="FieldTitleStyle"
                TargetType="TextBlock">
+            <Setter Property="HorizontalAlignment" 
+                    Value="Right" />
+            <Setter Property="VerticalAlignment"
+                    Value="Top" />
+            <Setter Property="Margin" 
+                    Value="0,0,5,0" />
             <Style.Triggers>
                 <DataTrigger Binding="{Binding HasChanged}"
                              Value="True">
@@ -47,9 +53,6 @@
         <TextBlock Text="{Binding Label}"
                    DataContext="{Binding Age}"
                    Style="{StaticResource FieldTitleStyle}" />
-        <!--<TextBox Grid.Column="2"
-                 Text="{Binding Age.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=False}"
-                 ToolTip="{Binding RelativeSource={x:Static RelativeSource.Self}, Path=(Validation.Errors)[0].ErrorContent}"/>-->
         <xctk:IntegerUpDown Grid.Column="2" 
                             Value="{Binding Age.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=False}"
                             AllowSpin="True" />
@@ -66,8 +69,7 @@
         <ComboBox Grid.Row="2"
                   Grid.Column="2"
                   ItemsSource="{Binding Country.ItemsSource}"
-                  SelectedValue="{Binding Country.SelectedValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                  SelectedValuePath="Id"
+                  SelectedItem="{Binding Country.SelectedValue, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                   DisplayMemberPath="Name" />
         <Image Grid.Row="2"
                Grid.Column="4"

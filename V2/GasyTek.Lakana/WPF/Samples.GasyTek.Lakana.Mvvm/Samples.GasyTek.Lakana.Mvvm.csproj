@@ -91,6 +91,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="DataBase.cs" />
     <Compile Include="Resources\Labels.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -100,6 +101,7 @@
       <DependentUpon>SampleCustomValidationView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Validation\Custom\SampleCustomValidationViewModel.cs" />
+    <Compile Include="Validation\DataAnnotation\CountryValidator.cs" />
     <Compile Include="Validation\DataAnnotation\SampleDataAnnotationValidationView.xaml.cs">
       <DependentUpon>SampleDataAnnotationValidationView.xaml</DependentUpon>
     </Compile>
