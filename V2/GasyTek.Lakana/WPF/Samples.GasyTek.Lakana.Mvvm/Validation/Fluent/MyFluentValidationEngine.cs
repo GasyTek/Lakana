@@ -20,6 +20,12 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.Fluent
             Property(vm => vm.Age).Is.Between(1, 50).Otherwise("Age must be between 1 and 50.");
             Property(vm => vm.Country).Is.EqualTo(Database.GetCountry(4)).Otherwise("Country other than Madagascar is not allowed.");
 
+            // Example of more complex Fluent rules
+            Property(vm => vm.DateOfBirth)
+                .IsNot.EqualTo(vm => vm.DateOfHire)
+                .And.Is.LessThan(vm => vm.DateOfHire)
+                .Otherwise("Date of Birth must preced the Date of Hire");
+
         }
     }
 }

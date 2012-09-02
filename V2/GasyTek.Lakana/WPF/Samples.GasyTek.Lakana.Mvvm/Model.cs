@@ -1,4 +1,5 @@
-﻿using GasyTek.Lakana.Common.Attributes;
+﻿using System;
+using GasyTek.Lakana.Common.Attributes;
 
 namespace Samples.GasyTek.Lakana.Mvvm
 {
@@ -8,6 +9,8 @@ namespace Samples.GasyTek.Lakana.Mvvm
         public int Age { get; set; }
         public Rank Rank { get; set; }
         public Country Country { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public DateTime DateOfHire { get; set; }
     }
 
     public class Country
