@@ -8,7 +8,7 @@
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="300"
-             Loaded="UserControl_Loaded">
+             Loaded="UserControlLoaded">
     <UserControl.Resources>
 
         <Style x:Key="FieldTitleStyle"
@@ -61,6 +61,10 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition MinHeight="30" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition MinHeight="30" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition MinHeight="30" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition MinHeight="50" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
@@ -74,9 +78,9 @@
                 </Grid.ColumnDefinitions>
 
                 <!--
-            NOTE : {ui:Binding Code.Value} is strictly equivalent to 
-                   {Binding Code.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=False}
-        -->
+                    NOTE : {ui:Binding Code.Value} is strictly equivalent to 
+                           {Binding Code.Value, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnExceptions=False}
+                -->
 
                 <!-- Code -->
                 <TextBlock Text="{Binding Label}"
@@ -141,8 +145,40 @@
                        ToolTip="{Binding Rank.Description}"
                        Source="../../Resources/info.png" />
 
+                <!-- DateOfBirth -->
+                <TextBlock Grid.Row="8"
+                           Text="{Binding Label}"
+                           DataContext="{Binding DateOfBirth}"
+                           Style="{StaticResource FieldTitleStyle}" />
+                <xctk:DateTimeUpDown Grid.Row="8"
+                                     Grid.Column="2"
+                                     Value="{ui:Binding DateOfBirth.Value}"
+                                     Format="ShortDate"
+                                     Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
+                <Image Grid.Row="8"
+                       Grid.Column="4"
+                       RenderOptions.BitmapScalingMode="HighQuality"
+                       ToolTip="{Binding DateOfBirth.Description}"
+                       Source="../../Resources/info.png" />
+
+                <!-- DateOfHire -->
+                <TextBlock Grid.Row="10"
+                           Text="{Binding Label}"
+                           DataContext="{Binding DateOfHire}"
+                           Style="{StaticResource FieldTitleStyle}" />
+                <xctk:DateTimeUpDown Grid.Row="10"
+                                     Grid.Column="2"
+                                     Value="{ui:Binding DateOfHire.Value}"
+                                     Format="ShortDate"
+                                     Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
+                <Image Grid.Row="10"
+                       Grid.Column="4"
+                       RenderOptions.BitmapScalingMode="HighQuality"
+                       ToolTip="{Binding DateOfHire.Description}"
+                       Source="../../Resources/info.png" />
+
                 <!-- Save / Cancel buttons -->
-                <Border Grid.Row="8"
+                <Border Grid.Row="12"
                         Grid.ColumnSpan="5">
                     <StackPanel>
                         <StackPanel HorizontalAlignment="Right"

@@ -13,6 +13,8 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.Fluent
         public IValueViewModelProperty<int> Age { get; private set; }
         public ILookupViewModelProperty<Country, Country> Country { get; private set; }
         public IEnumViewModelProperty<Rank> Rank { get; private set; }
+        public IValueViewModelProperty<DateTime> DateOfBirth { get; private set; }
+        public IValueViewModelProperty<DateTime> DateOfHire { get; private set; }
 
         protected override void OnCreateViewModelProperties()
         {
@@ -44,6 +46,20 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.Fluent
             {
                 LabelProvider = () => "Rank",
                 DescriptionProvider = () => "Description of 'Rank' property."
+            };
+
+            DateOfBirth = CreateValueProperty(objectToEdit.DateOfBirth);
+            DateOfBirth.UIMetadata = new UIMetadata
+            {
+                LabelProvider = () => "Date of Birth",
+                DescriptionProvider = () => "Description of 'DateOfBirth' property."
+            };
+
+            DateOfHire = CreateValueProperty(objectToEdit.DateOfHire);
+            DateOfHire.UIMetadata = new UIMetadata
+            {
+                LabelProvider = () => "Date of Hire",
+                DescriptionProvider = () => "Description of 'DateOfHire' property."
             };
         }
 

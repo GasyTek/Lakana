@@ -22,10 +22,17 @@ namespace GasyTek.Lakana.Mvvm.Validation
 
         protected abstract void OnValidate(PropertyInfo property, object propertyValue);
 
-        protected virtual void OnRaiseErrorsChangedEvent(string propertyName)
+        protected virtual void OnRaiseErrorsChangedEvent(string propertyName, params string [] optionalPropertyNames)
         {
             if (ErrorsChangedEvent != null)
-                ErrorsChangedEvent(this, new ErrorsChangedEventArgs(propertyName));
+            {
+                var propertyNames = new List<string> {propertyName};
+                propertyNames.AddRange(optionalPropertyNames);
+                foreach (var pName in propertyNames)
+                {
+                    ErrorsChangedEvent(this, new ErrorsChangedEventArgs(pName));
+                }
+            }
         }
 
         #region IValidationEngine members
