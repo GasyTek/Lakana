@@ -59,7 +59,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
         public void CanDetectIncompleteRules()
         {
             // Prepare
-            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.TestProperty(vm => vm.Quantity);    // incomplete rule
+            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty(vm => vm.Quantity);    // incomplete rule
 
             // Act
             FakeFluentValidationEngine.BuildRules();
@@ -70,21 +70,21 @@ namespace GasyTek.Lakana.Mvvm.Tests
         [TestMethod]
         public void CanDefineManyRulesOnOneProperty()
         {
+            // Prepare
             ConfigureThread();
 
-            // Prepare
             var propertyName = FakeEditableViewModel.Quantity.PropertyMetadata.Name;
             FakeFluentValidationEngine.DefineRulesAction = 
                 () =>
                     {
-                        FakeFluentValidationEngine.TestProperty(vm => vm.Quantity).Is.GreaterThan(20);
-                        FakeFluentValidationEngine.TestProperty(vm => vm.Quantity).Is.EqualTo(40);
+                        FakeFluentValidationEngine.AssertThatProperty(vm => vm.Quantity).Is.GreaterThan(20);
+                        FakeFluentValidationEngine.AssertThatProperty(vm => vm.Quantity).Is.EqualTo(40);
                     };
             FakeFluentValidationEngine.BuildRules(); 
 
             // Act
             FakeEditableViewModel.Quantity.Value = 15;
-            FakeEditableViewModel.SynchronizationTask.Wait();
+            FakeEditableViewModel.WaitForPropertyValidationsToTerminate();
 
             // Verify
             // if this is satisfied, that means that rules were broken
@@ -95,16 +95,16 @@ namespace GasyTek.Lakana.Mvvm.Tests
         [TestMethod]
         public void CanBreakSimpleRule()
         {
+            // Prepare
             ConfigureThread();
 
-            // Prepare
             var propertyName = FakeEditableViewModel.PurchasingPrice.PropertyMetadata.Name;
-            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.TestProperty(vm => vm.PurchasingPrice).Is.GreaterThan(20);
+            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty(vm => vm.PurchasingPrice).Is.GreaterThan(20);
             FakeFluentValidationEngine.BuildRules();
 
             // Act
             FakeEditableViewModel.PurchasingPrice.Value = 20;
-            FakeEditableViewModel.SynchronizationTask.Wait();
+            FakeEditableViewModel.WaitForPropertyValidationsToTerminate();
 
             // Verify
             VerifyThatRuleIsBroken(propertyName);
@@ -113,18 +113,18 @@ namespace GasyTek.Lakana.Mvvm.Tests
         [TestMethod]
         public void CanBreakSimpleRuleWithCustomMessage()
         {
+            // Prepare
             ConfigureThread();
 
-            // Prepare
             const string erroMessage = "PurchasingPrice must be greater that 20";
             var propertyName = FakeEditableViewModel.PurchasingPrice.PropertyMetadata.Name;
-            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.TestProperty(vm => vm.PurchasingPrice)
+            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty(vm => vm.PurchasingPrice)
                 .Is.GreaterThan(20).Otherwise(erroMessage);
             FakeFluentValidationEngine.BuildRules();
 
             // Act
             FakeEditableViewModel.PurchasingPrice.Value = 20;
-            FakeEditableViewModel.SynchronizationTask.Wait();
+            FakeEditableViewModel.WaitForPropertyValidationsToTerminate();
 
             // Verify
             Assert.IsNotNull(FakeFluentValidationEngine.GetErrors(propertyName));
@@ -135,17 +135,18 @@ namespace GasyTek.Lakana.Mvvm.Tests
         [TestMethod]
         public void CanBreakSimpleRuleThatComparesTwoProperties()
         {
-            ConfigureThread();
-
             // Prepare
+            ConfigureThread();
+            FakeEditableViewModel.ConfigureExpectedNumberOfPropertyValidation(2);
+
             var propertyName = FakeEditableViewModel.PurchasingPrice.PropertyMetadata.Name;
-            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.TestProperty(vm => vm.PurchasingPrice).Is.LessThan(vm => vm.SellingPrice);
+            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty(vm => vm.PurchasingPrice).Is.LessThan(vm => vm.SellingPrice);
             FakeFluentValidationEngine.BuildRules();
 
             // Act
-            FakeEditableViewModel.PurchasingPrice.Value = 20;
             FakeEditableViewModel.SellingPrice.Value = 19;
-            FakeEditableViewModel.SynchronizationTask.Wait();
+            FakeEditableViewModel.PurchasingPrice.Value = 20;
+            FakeEditableViewModel.WaitForPropertyValidationsToTerminate();
 
             // Verify
             VerifyThatRuleIsBroken(propertyName);
@@ -154,18 +155,19 @@ namespace GasyTek.Lakana.Mvvm.Tests
         [TestMethod]
         public void CanBreakRuleWithAndConjunction()
         {
-            ConfigureThread();
-
             // Prepare
+            ConfigureThread();
+            FakeEditableViewModel.ConfigureExpectedNumberOfPropertyValidation(2);
+
             var propertyName = FakeEditableViewModel.PurchasingPrice.PropertyMetadata.Name;
-            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.TestProperty(vm => vm.PurchasingPrice)
+            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty(vm => vm.PurchasingPrice)
                 .Is.LessThan(vm => vm.SellingPrice).And.Is.EqualTo(20);
             FakeFluentValidationEngine.BuildRules();
 
             // Act
-            FakeEditableViewModel.PurchasingPrice.Value = 19;
             FakeEditableViewModel.SellingPrice.Value = 21;
-            FakeEditableViewModel.SynchronizationTask.Wait();
+            FakeEditableViewModel.PurchasingPrice.Value = 19;
+            FakeEditableViewModel.WaitForPropertyValidationsToTerminate();
             
             // Verify
             VerifyThatRuleIsBroken(propertyName);
@@ -174,17 +176,17 @@ namespace GasyTek.Lakana.Mvvm.Tests
         [TestMethod]
         public void CanBreakRuleWithOrConjunction()
         {
+            // Prepare
             ConfigureThread();
 
-            // Prepare
             var propertyName = FakeEditableViewModel.Quantity.PropertyMetadata.Name;
-            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.TestProperty(vm => vm.Quantity)
+            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty(vm => vm.Quantity)
                 .Is.EqualTo(20).Or.Is.EqualTo(30);
             FakeFluentValidationEngine.BuildRules();
 
             // Act
             FakeEditableViewModel.Quantity.Value = 25;
-            FakeEditableViewModel.SynchronizationTask.Wait();
+            FakeEditableViewModel.WaitForPropertyValidationsToTerminate();
 
             // Verify
             VerifyThatRuleIsBroken(propertyName);
@@ -193,16 +195,16 @@ namespace GasyTek.Lakana.Mvvm.Tests
         [TestMethod]
         public void CanBreakRuleThatUsesIsNotOperator()
         {
+            // Prepare
             ConfigureThread();
 
-            // Prepare
             var propertyName = FakeEditableViewModel.Quantity.PropertyMetadata.Name;
-            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.TestProperty(vm => vm.Quantity).IsNot.EqualTo(20);
+            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty(vm => vm.Quantity).IsNot.EqualTo(20);
             FakeFluentValidationEngine.BuildRules();
 
             // Act
             FakeEditableViewModel.Quantity.Value = 20;
-            FakeEditableViewModel.SynchronizationTask.Wait();
+            FakeEditableViewModel.WaitForPropertyValidationsToTerminate();
 
             // Verify
             VerifyThatRuleIsBroken(propertyName);
@@ -211,16 +213,16 @@ namespace GasyTek.Lakana.Mvvm.Tests
         [TestMethod]
         public void CanBreakRuleThatUsesBetweenOperator()
         {
+            // Prepare
             ConfigureThread();
 
-            // Prepare
             var propertyName = FakeEditableViewModel.Quantity.PropertyMetadata.Name;
-            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.TestProperty(vm => vm.Quantity).Is.Between(15, 25);
+            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty(vm => vm.Quantity).Is.Between(15, 25);
             FakeFluentValidationEngine.BuildRules();
 
             // Act
             FakeEditableViewModel.Quantity.Value = 30;
-            FakeEditableViewModel.SynchronizationTask.Wait();
+            FakeEditableViewModel.WaitForPropertyValidationsToTerminate();
 
             // Verify
             VerifyThatRuleIsBroken(propertyName);
@@ -229,19 +231,20 @@ namespace GasyTek.Lakana.Mvvm.Tests
         [TestMethod]
         public void CanBreakRuleThatUsesBetweenPropertiesOperator()
         {
-            ConfigureThread();
-
             // Prepare
+            ConfigureThread();
+            FakeEditableViewModel.ConfigureExpectedNumberOfPropertyValidation(3);
+
             var propertyName = FakeEditableViewModel.Quantity.PropertyMetadata.Name;
-            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.TestProperty(vm => vm.Quantity)
-                .Is.BetweenPoperties(vm => vm.PurchasingPrice, vm => vm.SellingPrice);
+            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine
+                .AssertThatProperty(vm => vm.Quantity).Is.BetweenPoperties(vm => vm.PurchasingPrice, vm => vm.SellingPrice);
             FakeFluentValidationEngine.BuildRules();
 
             // Act
-            FakeEditableViewModel.Quantity.Value = 30;
             FakeEditableViewModel.PurchasingPrice.Value = 10;
             FakeEditableViewModel.SellingPrice.Value = 20;
-            FakeEditableViewModel.SynchronizationTask.Wait();
+            FakeEditableViewModel.Quantity.Value = 30;
+            FakeEditableViewModel.WaitForPropertyValidationsToTerminate();
 
             // Verify
             VerifyThatRuleIsBroken(propertyName);
@@ -250,19 +253,49 @@ namespace GasyTek.Lakana.Mvvm.Tests
         [TestMethod]
         public void CanBreakRuleThatUsesIsNotBetweenOperator()
         {
+            // Prepare
             ConfigureThread();
 
-            // Prepare
             var propertyName = FakeEditableViewModel.Quantity.PropertyMetadata.Name;
-            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.TestProperty(vm => vm.Quantity).IsNot.Between(15, 25);
+            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty(vm => vm.Quantity).IsNot.Between(15, 25);
             FakeFluentValidationEngine.BuildRules();
 
             // Act
             FakeEditableViewModel.Quantity.Value = 20;
-            FakeEditableViewModel.SynchronizationTask.Wait();
+            FakeEditableViewModel.WaitForPropertyValidationsToTerminate();
 
             // Verify
             VerifyThatRuleIsBroken(propertyName);
+        }
+
+        [TestMethod]
+        public void WhenTwoPropertiesAreInvolvedOnlyTheLastValidatedOneShouldHaveErrorMessage()
+        {
+            // Prepare
+            ConfigureThread();
+            FakeEditableViewModel.ConfigureExpectedNumberOfPropertyValidation(4);
+
+            var fluentValidationEngine = (FakeFluentValidationEngine)TestContext.Properties[FluentValidationEngineProperty];
+            var purchasingPricePropertyName = FakeEditableViewModel.PurchasingPrice.PropertyMetadata.Name;
+            var sellingPricePropertyName = FakeEditableViewModel.SellingPrice.PropertyMetadata.Name;
+            FakeEditableViewModel.SellingPrice.Value = 30;
+            FakeEditableViewModel.PurchasingPrice.Value = 20;
+            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine
+                .AssertThatProperty(vm => vm.PurchasingPrice).Is.LessThan(vm => vm.SellingPrice).Otherwise("ERROR");
+            FakeFluentValidationEngine.BuildRules();
+            
+            // Act
+            FakeEditableViewModel.SellingPrice.Value = 10;
+            FakeEditableViewModel.PurchasingPrice.Value = 15;
+            FakeEditableViewModel.WaitForPropertyValidationsToTerminate();
+
+            // Verify
+            var purchasingPriceErrors = fluentValidationEngine.GetErrors(purchasingPricePropertyName);
+            var sellingPriceErrors = fluentValidationEngine.GetErrors(sellingPricePropertyName);
+
+            Assert.IsFalse(sellingPriceErrors.Any());
+            Assert.IsNotNull(purchasingPriceErrors);
+            Assert.IsTrue(purchasingPriceErrors.Count() == 1);
         }
 
     }

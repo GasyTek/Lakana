@@ -1,3 +1,4 @@
+using System;
 using GasyTek.Lakana.Mvvm.Validation.Fluent;
 
 namespace Samples.GasyTek.Lakana.Mvvm.Validation.Fluent
@@ -21,6 +22,9 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.Fluent
             Property(vm => vm.Country).Is.EqualTo(Database.GetCountry(4)).Otherwise("Country other than Madagascar is not allowed.");
 
             // Example of more complex Fluent rules
+            Property(vm => vm.DateOfBirth)
+                .Is.GreaterThan(new DateTime(1990, 01, 01))
+                .Otherwise("Date of Birth must be after 1990");
             Property(vm => vm.DateOfBirth)
                 .IsNot.EqualTo(vm => vm.DateOfHire)
                 .And.Is.LessThan(vm => vm.DateOfHire)

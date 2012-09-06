@@ -157,12 +157,8 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.Custom
 
         private void AppendErrorMessage(string propertyName, string message)
         {
-            var propertyErrors = new List<string> { message };
-            Errors.AddOrUpdate(propertyName, propertyErrors, (key, oldValue) =>
-                                                                 {
-                                                                     oldValue.Add(message);
-                                                                     return oldValue;
-                                                                 });
+            var errorCollection = Errors.GetOrAdd(propertyName, new ErrorCollection());
+            errorCollection.AddError(message);
         }
 
         private void ClearErrorMessage(IEnumerable<string> propertyNames)
@@ -170,8 +166,8 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.Custom
             if (propertyNames == null) throw new ArgumentNullException("propertyNames");
             foreach (var propertyName in propertyNames)
             {
-                List<string> propertyErrors;
-                Errors.TryRemove(propertyName, out propertyErrors);
+                ErrorCollection errorCollection;
+                Errors.TryRemove(propertyName, out errorCollection);
             }
         }
 

@@ -21,7 +21,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         /// <summary>
         /// All the properties that are concerned.
         /// </summary>
-        public List<IViewModelProperty> Properties { get; private set; }
+        public HashSet<IViewModelProperty> Properties { get; private set; }
 
         /// <summary>
         /// Gets or sets the message that is associated with the fluent rule.
@@ -30,7 +30,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
         public FluentImplementerContext()
         {
-            Properties = new List<IViewModelProperty>();
+            Properties = new HashSet<IViewModelProperty>();
             Message = "No message defined.";
         }
     }

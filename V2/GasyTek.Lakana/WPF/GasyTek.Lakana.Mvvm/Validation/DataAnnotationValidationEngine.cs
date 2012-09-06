@@ -35,14 +35,16 @@ namespace GasyTek.Lakana.Mvvm.Validation
                 if (validationResults.Any())
                 {
                     // adds all detected errors for this property
-                    var propertyErrors = validationResults.Select(v => v.ErrorMessage).ToList();
-                    Errors.AddOrUpdate(property.Name, propertyErrors, (key, currentValue) => propertyErrors);
+                    var errorCollection = Errors.GetOrAdd(property.Name, new ErrorCollection());
+                    errorCollection.Clear();
+                    errorCollection.AddErrors(validationResults.Select(v => v.ErrorMessage));
+                    Errors.GetOrAdd(property.Name, new ErrorCollection(validationResults.Select(v => v.ErrorMessage)));
                 }
                 else
                 {
                     // reset errors for this property
-                    List<string> propertyErrors;
-                    Errors.TryRemove(property.Name, out propertyErrors);
+                    ErrorCollection errorCollection;
+                    Errors.TryRemove(property.Name, out errorCollection);
                 }
                 return true;
             }

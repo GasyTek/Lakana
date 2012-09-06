@@ -382,6 +382,8 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
         private void EnsureContextCurrentPropertyValueIsOfType(Type expectedType, string currentOperatorName)
         {
+            if (expectedType == null) throw new ArgumentNullException("expectedType");
+
             var valueType = _context.CurrentProperty.GetValueType();
             if (expectedType.IsAssignableFrom(valueType) == false)
                 throw new InvalidOperationException(String.Format("The type of the value of the property [{0}] do not support the operator [{1}].", 

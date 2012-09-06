@@ -20,7 +20,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         private readonly TViewModel _viewModelInstance;
 
         // contains rule definitions for each property
-        private readonly Dictionary<string, List<FluentImplementer<TViewModel>>> _definedRules;
+        private readonly Dictionary<string, List<FluentImplementer<TViewModel>>> _propertyRuleCollection;
 
         // contains the couple (AST, Error message) for each property.
         private readonly Dictionary<string, List<CompiledRule>> _compiledRules;
@@ -31,7 +31,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         internal FluentValidationEngine(TViewModel viewModelInstance, bool buildRuleImmediatly)
         {
             _parser = new Parser();
-            _definedRules = new Dictionary<string, List<FluentImplementer<TViewModel>>>();
+            _propertyRuleCollection = new Dictionary<string, List<FluentImplementer<TViewModel>>>();
             _compiledRules = new Dictionary<string, List<CompiledRule>>();
             _viewModelInstance = viewModelInstance;
 
@@ -54,6 +54,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
         /// <summary>
         /// Define the rules for all properties.
+        /// Use <see cref="Property" /> to begin defining rules.
         /// </summary>
         protected abstract void DefineRules();
 
@@ -62,8 +63,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         /// </summary>
         /// <param name="propertyExpression">The expression that specify the property to define rule for.</param>
         /// <remarks>This method will typically called from <see cref="DefineRules"/> method.</remarks>
-        protected IFluentVerb<TViewModel> Property(
-            Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
+        protected IFluentVerb<TViewModel> Property(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
         {
             var property = propertyExpression.Compile()(_viewModelInstance);
             if (property == null)
@@ -74,21 +74,21 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             var fluentApi = new FluentImplementer<TViewModel>(_viewModelInstance);
 
             // registers the rule for this property 
-            if (!_definedRules.ContainsKey(propertyName))
-                _definedRules.Add(propertyName, new List<FluentImplementer<TViewModel>>());
+            if (!_propertyRuleCollection.ContainsKey(propertyName))
+                _propertyRuleCollection.Add(propertyName, new List<FluentImplementer<TViewModel>>());
 
-            _definedRules[propertyName].Add(fluentApi);
+            _propertyRuleCollection[propertyName].Add(fluentApi);
 
             return fluentApi.Property(propertyExpression);
         }
 
         private void EnsureRulesAreValid()
         {
-            var allDefinedRules = from definedRule in _definedRules
-                                  from expr in definedRule.Value
-                                  select expr;
+            var allRules = from propertyRule in _propertyRuleCollection
+                           from rule in propertyRule.Value
+                           select rule;
 
-            allDefinedRules.ToList().ForEach(rule =>
+            allRules.ToList().ForEach(rule =>
                                                  {
                                                      if (rule.IsExpressionValid() == false)
                                                          throw new RuleDefinitionException(
@@ -104,16 +104,18 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
         private void CompileRules()
         {
-            // for each property that have a defined rule 
-            foreach (var definedRule in _definedRules)
+            // for each property that have a defined rules 
+            foreach (var propertyRule in _propertyRuleCollection)
             {
                 // for each rule define on the property
-                foreach (var expression in definedRule.Value)
+                var ruleCollection = propertyRule.Value;
+                foreach (var rule in ruleCollection)
                 {
-                    // compile the rule to an abstract syntax tree
-                    var ast = _parser.Parse(expression.InternalTokens);
-                    var concernedProperties = expression.Context.Properties;
-                    var errorMessage = expression.Context.Message;
+                    // compile the rule to get an abstract syntax tree
+                    var ruleId = Guid.NewGuid().ToString();
+                    var ast = _parser.Parse(rule.InternalTokens);
+                    var concernedProperties = rule.Context.Properties;
+                    var errorMessage = rule.Context.Message;
 
                     // attach the compiled rule to all concerned properties
                     foreach (var property in concernedProperties)
@@ -123,7 +125,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
                         if (_compiledRules.ContainsKey(propertyName) == false)
                             _compiledRules.Add(propertyName, new List<CompiledRule>());
 
-                        _compiledRules[propertyName].Add(new CompiledRule (ast, errorMessage));
+                        _compiledRules[propertyName].Add(new CompiledRule(ruleId, concernedProperties, ast, errorMessage));
                     }
                 }
             }
@@ -143,68 +145,110 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             // if there is no rules attached to the property then just ignore it.
             if (_compiledRules.ContainsKey(propertyName) == false) return;
 
-            // retrieve all evaluation tasks
-            var allEvaluationTasks = (from cr in _compiledRules[propertyName] select cr.Evaluate()).ToList();
+            // retrieve all evaluable rules
+            var allPropertyRules = (from cr in _compiledRules[propertyName] select cr.Evaluate()).ToList();
 
-            // starts all evaluation tasks
-            allEvaluationTasks.ForEach(t => t.Start());
-
-            Task.Factory.ContinueWhenAll(allEvaluationTasks.ToArray() 
+            // process evaluation of the rules
+            allPropertyRules.ForEach(t => t.RunSynchronously());
+            
+            Task.Factory.ContinueWhenAll(allPropertyRules.ToArray() 
                 , terminatedTasks =>
                       {
-                          var propertyErrors = from Task<EvaluationResult> ttask in terminatedTasks
-                                               where ttask.Result.AstResult == false
-                                               select ttask.Result.ErrorMessage;
+                          var evaluationResults = from ttask in terminatedTasks select ttask.Result;
 
-                          if (propertyErrors.Any())
-                          {
-                              // adds all detected errors for this property
-                              var localPropertyErrors = propertyErrors.ToList();
-                              Errors.AddOrUpdate(propertyName, localPropertyErrors, (key, currentValue) => localPropertyErrors);
-                          }
-                          else
-                          {
-                              // reset errors for this property
-                              List<string> localPropertyErrors;
-                              Errors.TryRemove(propertyName, out localPropertyErrors);
-                          }
+                          // update error messages
+                          UpdateCurrentPropertyErrors(propertyName, evaluationResults);
+                          UpdateConcernedPropertyErrors(propertyName, evaluationResults);
 
-                          OnRaiseErrorsChangedEvent(propertyName);
+                          // notify ui to refresh errors
+                          NotifyUIErrors(propertyName, evaluationResults);
                       }
                 , new CancellationToken(false)
-                , TaskContinuationOptions.None
+                , TaskContinuationOptions.ExecuteSynchronously
                 , TaskScheduler.FromCurrentSynchronizationContext());
         }
 
+        private void UpdateCurrentPropertyErrors(string propertyName, IEnumerable<EvaluationResult> evaluationResults)
+        {
+            var errorCollection = Errors.GetOrAdd(propertyName, new ErrorCollection());
+            errorCollection.Clear();
+
+            foreach (var evaluationResult in evaluationResults.Where(er => er.AstResult == false).ToList())
+            {
+                errorCollection.AddError(evaluationResult.RuleId, evaluationResult.ErrorMessage);
+            }
+        }
+
+        private void UpdateConcernedPropertyErrors(string propertyName, IEnumerable<EvaluationResult> evaluationResults)
+        {
+            foreach (var evaluationResult in evaluationResults)
+            {
+                // removes validation error for shared rule from concerned property
+                // validation error should appear on the current property 
+                var concernedPropertyNames = evaluationResult.ConcernedProperties
+                                                    .Where(p => p.PropertyMetadata.Name != propertyName)
+                                                    .Select(p => p.PropertyMetadata.Name).ToList();
+                foreach (var concernedPropertyName in concernedPropertyNames)
+                {
+                    // for each concerned property, get its error collection and remove the current rule id
+                    var errorCollection = Errors.GetOrAdd(concernedPropertyName, new ErrorCollection());
+                    errorCollection.RemoveError(evaluationResult.RuleId);
+                }
+            }
+        }
+
+        private void NotifyUIErrors(string propertyName, IEnumerable<EvaluationResult> evaluationResults)
+        {
+            var concernedProperties = (from eResult in evaluationResults
+                                       from cProperty in eResult.ConcernedProperties
+                                       where cProperty.PropertyMetadata.Name != propertyName
+                                       select cProperty.PropertyMetadata.Name).ToArray();
+
+            OnRaiseErrorsChangedEvent(propertyName, concernedProperties);
+        }
+
+        #region Private classes
+
         private class CompiledRule
         {
+            private readonly string _ruleId;
+            private readonly HashSet<IViewModelProperty> _concernedProperties;
             private readonly ExpressionNode _ast;
             private readonly string _errorMessage;
 
-            public CompiledRule(ExpressionNode ast, string errorMessage)
+            public CompiledRule(string ruleId, HashSet<IViewModelProperty> concernedProperties, ExpressionNode ast, string errorMessage)
             {
+                _ruleId = ruleId;
+                _concernedProperties = concernedProperties;
                 _ast = ast;
                 _errorMessage = errorMessage;
             }
 
             public Task<EvaluationResult> Evaluate()
             {
-                // wrap the ast task so that instead of returning only one boolean, it returns also the error message
+                // wrap the AST task so that instead of returning only one boolean, it returns also the error message
                 return new Task<EvaluationResult>(() =>
                                                       {
                                                           var astTask = _ast.Evaluate();
-                                                          astTask.Start();
-                                                          astTask.Wait();
-                                                          return new EvaluationResult { AstResult = astTask.Result, ErrorMessage = _errorMessage};
+                                                          astTask.RunSynchronously();
+                                                          return new EvaluationResult { 
+                                                                      RuleId = _ruleId,
+                                                                      ConcernedProperties = _concernedProperties,
+                                                                      AstResult = astTask.Result, 
+                                                                      ErrorMessage = _errorMessage};
                                                       });
             }
         }
 
         private class EvaluationResult
         {
+            public string RuleId { get; set; }
             public bool AstResult { get; set; }
             public string ErrorMessage { get; set; }
+            public HashSet<IViewModelProperty> ConcernedProperties { get; set; }
         }
+
+        #endregion
     }
 
     #endregion
