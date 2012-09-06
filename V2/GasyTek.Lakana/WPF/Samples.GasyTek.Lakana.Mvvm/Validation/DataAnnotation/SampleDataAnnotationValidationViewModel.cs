@@ -46,7 +46,7 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.DataAnnotation
                 DescriptionProvider = () => "Description of 'Country' property."
             };
 
-            Rank = CreateEnumProperty(objectToEdit.Rank, typeof(Labels));
+            Rank = CreateEnumProperty(objectToEdit.Rank, RankEnumUIMetadataProvider.GetUIMetadata);
             Rank.UIMetadata = new UIMetadata
             {
                 LabelProvider = () => "Rank",

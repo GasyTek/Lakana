@@ -65,6 +65,8 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition MinHeight="30" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition MinHeight="30" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition MinHeight="50" />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
@@ -177,8 +179,24 @@
                        ToolTip="{Binding DateOfHire.Description}"
                        Source="../../Resources/info.png" />
 
+                <!-- DateOfDeath -->
+                <TextBlock Grid.Row="12"
+                           Text="{Binding Label}"
+                           DataContext="{Binding DateOfDeath}"
+                           Style="{StaticResource FieldTitleStyle}" />
+                <xctk:DateTimeUpDown Grid.Row="12"
+                                     Grid.Column="2"
+                                     Value="{ui:Binding DateOfDeath.Value}"
+                                     Format="ShortDate"
+                                     Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
+                <Image Grid.Row="12"
+                       Grid.Column="4"
+                       RenderOptions.BitmapScalingMode="HighQuality"
+                       ToolTip="{Binding DateOfHire.Description}"
+                       Source="../../Resources/info.png" />
+
                 <!-- Save / Cancel buttons -->
-                <Border Grid.Row="12"
+                <Border Grid.Row="14"
                         Grid.ColumnSpan="5">
                     <StackPanel>
                         <StackPanel HorizontalAlignment="Right"

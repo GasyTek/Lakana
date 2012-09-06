@@ -30,7 +30,8 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.Fluent
                                        Country = Database.GetCountry(4),
                                        Rank = Rank.Boss,
                                        DateOfBirth = new DateTime(1982, 6, 3),
-                                       DateOfHire = new DateTime(2000, 10, 24)
+                                       DateOfHire = new DateTime(2000, 10, 24),
+                                       DateOfDeath = new DateTime(2012, 12, 21)
                                    };
 
                 // 2 - create the view model

@@ -3,7 +3,6 @@ using GasyTek.Lakana.Common.UI;
 using GasyTek.Lakana.Mvvm.Validation;
 using GasyTek.Lakana.Mvvm.ViewModelProperties;
 using GasyTek.Lakana.Mvvm.ViewModels;
-using Samples.GasyTek.Lakana.Mvvm.Resources;
 
 namespace Samples.GasyTek.Lakana.Mvvm.Validation.Custom
 {
@@ -41,7 +40,7 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.Custom
                 DescriptionProvider = () => "Description of 'Country' property."
             };
 
-            Rank = CreateEnumProperty(objectToEdit.Rank, typeof(Labels));
+            Rank = CreateEnumProperty(objectToEdit.Rank, RankEnumUIMetadataProvider.GetUIMetadata);
             Rank.UIMetadata = new UIMetadata
             {
                 LabelProvider = () => "Rank",

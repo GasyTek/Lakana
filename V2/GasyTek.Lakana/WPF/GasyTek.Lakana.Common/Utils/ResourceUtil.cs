@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Text;
 using System.Resources;
 using System.Reflection;
@@ -7,7 +6,6 @@ using System.Globalization;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.IO;
-using GasyTek.Lakana.Common.Attributes;
 
 namespace GasyTek.Lakana.Common.Utils
 {
@@ -61,28 +59,6 @@ namespace GasyTek.Lakana.Common.Utils
         }
 
         /// <summary>
-        /// Get the resource ID defined for the enum member.
-        /// </summary>
-        /// <param name="enumType">Type of the enum.</param>
-        /// <param name="enumMemberName">The name of the member requested.</param>
-        /// <returns>The identifier that is associated with the enum member specified</returns>
-        /// <remarks>The resource id can be specified by using <see cref="LocalizationEnumAttribute"/></remarks>
-        public static string GetResourceId(Type enumType, string enumMemberName)
-        {
-            var resourceId = String.Empty;
-            var fieldInfo = enumType.GetField(enumMemberName);
-            if (fieldInfo != null)
-            {
-                var localizeAttributes = fieldInfo.GetCustomAttributes(typeof(LocalizationEnumAttribute), false) as LocalizationEnumAttribute[];
-                if (localizeAttributes != null && localizeAttributes.Count() == 1)
-                {
-                    resourceId = localizeAttributes[0].LocalizationID;
-                }
-            }
-            return resourceId;
-        }
-
-        /// <summary>
         /// Retrieve an image source from an absolute Uri.
         /// </summary>
         /// <param name="imageUri">An absolute uri</param>
@@ -111,8 +87,6 @@ namespace GasyTek.Lakana.Common.Utils
         /// <param name="imageRelativeUri">A relative uri according to assembly GasyTek.Tantana.Common</param>
         public static ImageSource GetImageSourceFromRelative(string imageRelativeUri)
         {
-            //pack://application:,,,/ReferencedAssembly;component/Subfolder/ResourceFile.xaml
-
             var absoluteUri = new StringBuilder();
             absoluteUri.Append ("pack://application:,,,");
             absoluteUri.Append("/GasyTek.Tantana.Infrastructure.Presentation;");
