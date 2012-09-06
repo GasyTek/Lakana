@@ -46,7 +46,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
             // Act
             FakeEditableViewModel.Code.Value = "new value";
-            FakeEditableViewModel.SynchronizationTask.Wait();
+            FakeEditableViewModel.WaitForPropertyValidationsToTerminate();
 
             // Verify
             Assert.IsTrue(FakeEditableViewModel.HasChanged);
@@ -60,7 +60,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
             // Act
             FakeEditableViewModel.Code.Value = null;
-            FakeEditableViewModel.SynchronizationTask.Wait();
+            FakeEditableViewModel.WaitForPropertyValidationsToTerminate();
 
             // Verify
             Assert.IsFalse(FakeEditableViewModel.IsValid);

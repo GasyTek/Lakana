@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
+using System.Threading;
 using GasyTek.Lakana.Mvvm.Validation;
 using GasyTek.Lakana.Mvvm.ViewModelProperties;
 using GasyTek.Lakana.Mvvm.ViewModels;
@@ -20,17 +20,32 @@ namespace GasyTek.Lakana.Mvvm.Tests.Fakes
         /// Used by the unit testing framework to wait for a result of 
         /// an asynchronous operation before testing the result.
         /// </summary>
-        public Task SynchronizationTask { get; private set; }
+        private CountdownEvent SyncObject { get; set; }
 
         public Func<IValidationEngine> ValidationEngineProvider { get; set; } 
 
         public FakeEditableViewModel()
         {
-            SynchronizationTask = new Task(DummyAction);
+            SyncObject = new CountdownEvent(1);
         }
 
-        private void DummyAction()
-        {}
+        /// <summary>
+        /// Configure the view model to accept exactly the given number of property assignement that triggers validation.
+        /// </summary>
+        /// <param name="nbPropertyValidation">The nb property assignement.</param>
+        public void ConfigureExpectedNumberOfPropertyValidation(int nbPropertyValidation)
+        {
+            SyncObject.Reset(nbPropertyValidation);
+        }
+
+        /// <summary>
+        /// Synchronizes asynchronous validation.
+        /// This will block until all validations did not terminate.
+        /// </summary>
+        public void WaitForPropertyValidationsToTerminate()
+        {
+            SyncObject.Wait();
+        }
 
         protected override void OnCreateViewModelProperties()
         {
@@ -45,13 +60,15 @@ namespace GasyTek.Lakana.Mvvm.Tests.Fakes
         {
             if (ValidationEngineProvider == null) return null;
             var validationEngine = ValidationEngineProvider();
-            validationEngine.ErrorsChangedEvent += (sender, args) =>
-                                                       {
-                                                           // surrounded by try/catch to avoid the error that appears
-                                                           // when trying to start a task that alread started.
-                                                           try { SynchronizationTask.Start(); }
-                                                           catch { }   
-                                                       };
+            if (validationEngine is FakeFluentValidationEngine)
+            {
+                ((FakeFluentValidationEngine)validationEngine).ValidationTerminated += (sender, args) => SyncObject.Signal();
+            }
+            else
+            {
+                validationEngine.ErrorsChangedEvent += (sender, args) => SyncObject.Signal();
+            }
+
             return validationEngine;
         }
 

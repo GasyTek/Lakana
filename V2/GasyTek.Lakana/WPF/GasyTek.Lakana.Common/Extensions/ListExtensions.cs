@@ -1,8 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Collections;
 
-namespace GasyTek.Tantana.Infrastructure.Extensions
+namespace GasyTek.Lakana.Common.Extensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class ListExtensions
     {
         /// <summary>
