@@ -269,7 +269,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
         }
 
         [TestMethod]
-        public void WhenTwoPropertiesAreInvolvedOnlyTheLastValidatedOneShouldHaveErrorMessage()
+        public void WhenTwoPropertiesInvolvedTheLastValidatedHasTheSharedErrorMessage()
         {
             // Prepare
             ConfigureThread();
@@ -296,6 +296,51 @@ namespace GasyTek.Lakana.Mvvm.Tests
             Assert.IsFalse(sellingPriceErrors.Any());
             Assert.IsNotNull(purchasingPriceErrors);
             Assert.IsTrue(purchasingPriceErrors.Count() == 1);
+        }
+
+        [TestMethod]
+        public void WhenTwoPropertiesInvolvedErrorsOtherThanSharedOnesRemains()
+        {
+            // Prepare
+            ConfigureThread();
+            FakeEditableViewModel.ConfigureExpectedNumberOfPropertyValidation(4);
+
+            var fluentValidationEngine =
+                (FakeFluentValidationEngine) TestContext.Properties[FluentValidationEngineProperty];
+            var purchasingPricePropertyName = FakeEditableViewModel.PurchasingPrice.PropertyMetadata.Name;
+            var sellingPricePropertyName = FakeEditableViewModel.SellingPrice.PropertyMetadata.Name;
+            FakeEditableViewModel.SellingPrice.Value = 30;
+            FakeEditableViewModel.PurchasingPrice.Value = 20;
+
+            FakeFluentValidationEngine.DefineRulesAction = () =>
+                                                               {
+                                                                   // Selling price shoud be greater than 30
+                                                                   FakeFluentValidationEngine.AssertThatProperty(
+                                                                       vm => vm.SellingPrice).Is.GreaterThan(30);
+
+                                                                   // Purchasing price shoud be less than Selling price
+                                                                   FakeFluentValidationEngine
+                                                                       .AssertThatProperty(vm => vm.PurchasingPrice).Is.
+                                                                       LessThan(vm => vm.SellingPrice);
+                                                               };
+        
+
+            FakeFluentValidationEngine.BuildRules();
+
+            // Act
+            FakeEditableViewModel.SellingPrice.Value = 10;
+            FakeEditableViewModel.PurchasingPrice.Value = 15;
+            FakeEditableViewModel.WaitForPropertyValidationsToTerminate();
+
+            // Verify
+            var purchasingPriceErrors = fluentValidationEngine.GetErrors(purchasingPricePropertyName);
+            var sellingPriceErrors = fluentValidationEngine.GetErrors(sellingPricePropertyName);
+
+            Assert.IsNotNull(sellingPriceErrors);
+            Assert.IsTrue(sellingPriceErrors.Count() == 1);
+            Assert.IsNotNull(purchasingPriceErrors);
+            Assert.IsTrue(purchasingPriceErrors.Count() == 1);
+
         }
 
     }

@@ -3,7 +3,6 @@ using GasyTek.Lakana.Common.UI;
 using GasyTek.Lakana.Mvvm.Validation;
 using GasyTek.Lakana.Mvvm.ViewModelProperties;
 using GasyTek.Lakana.Mvvm.ViewModels;
-using Samples.GasyTek.Lakana.Mvvm.Resources;
 
 namespace Samples.GasyTek.Lakana.Mvvm.Validation.Fluent
 {
@@ -15,6 +14,7 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.Fluent
         public IEnumViewModelProperty<Rank> Rank { get; private set; }
         public IValueViewModelProperty<DateTime> DateOfBirth { get; private set; }
         public IValueViewModelProperty<DateTime> DateOfHire { get; private set; }
+        public IValueViewModelProperty<DateTime> DateOfDeath { get; private set; }
 
         protected override void OnCreateViewModelProperties()
         {
@@ -41,7 +41,7 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.Fluent
                 DescriptionProvider = () => "Description of 'Country' property."
             };
 
-            Rank = CreateEnumProperty(objectToEdit.Rank, typeof(Labels));
+            Rank = CreateEnumProperty(objectToEdit.Rank, RankEnumUIMetadataProvider.GetUIMetadata);
             Rank.UIMetadata = new UIMetadata
             {
                 LabelProvider = () => "Rank",
@@ -60,6 +60,13 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.Fluent
             {
                 LabelProvider = () => "Date of Hire",
                 DescriptionProvider = () => "Description of 'DateOfHire' property."
+            };
+
+            DateOfDeath = CreateValueProperty(objectToEdit.DateOfDeath);
+            DateOfDeath.UIMetadata = new UIMetadata
+            {
+                LabelProvider = () => "Date of Death",
+                DescriptionProvider = () => "Description of 'DateOfDeath' property."
             };
         }
 

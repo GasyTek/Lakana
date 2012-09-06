@@ -70,11 +70,11 @@ namespace Samples.GasyTek.Lakana.Mvvm.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Patron.
+        ///   Looks up a localized string similar to Patron (Boss).
         /// </summary>
-        internal static string Boss_ResId {
+        internal static string Boss {
             get {
-                return ResourceManager.GetString("Boss_ResId", resourceCulture);
+                return ResourceManager.GetString("Boss", resourceCulture);
             }
         }
         
@@ -97,11 +97,11 @@ namespace Samples.GasyTek.Lakana.Mvvm.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Apprenti.
+        ///   Looks up a localized string similar to Apprenti (Trainee).
         /// </summary>
-        internal static string Trainee_ResId {
+        internal static string Trainee {
             get {
-                return ResourceManager.GetString("Trainee_ResId", resourceCulture);
+                return ResourceManager.GetString("Trainee", resourceCulture);
             }
         }
     }

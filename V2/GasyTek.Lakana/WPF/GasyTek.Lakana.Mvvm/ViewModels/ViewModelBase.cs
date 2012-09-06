@@ -46,7 +46,6 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
 
         private IValidationEngine ValidationEngine
         {
-            get { return _observableValidationEngine.Object; }
             set { _observableValidationEngine.Object = value; }
         }
 
@@ -148,13 +147,24 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
         /// </summary>
         /// <typeparam name="TEnum">The type of the enum.</typeparam>
         /// <param name="originalValue">The original value.</param>
-        /// <param name="localizationResourceType">Type of the resource where the localization string can be found.</param>
+        /// <param name="enumUIMetadataProvider">A custom provider that returns the ui metadata that corresponds to given value.</param>
         /// <returns></returns>
-        protected IEnumViewModelProperty<TEnum> CreateEnumProperty<TEnum>(TEnum originalValue, Type localizationResourceType) where TEnum : struct
+        protected IEnumViewModelProperty<TEnum> CreateEnumProperty<TEnum>(TEnum originalValue, Func<TEnum, UIMetadata> enumUIMetadataProvider) where TEnum : struct
         {
-            var property = new EnumViewModelProperty<TEnum>(originalValue, localizationResourceType, _observableValidationEngine);
+            var property = new EnumViewModelProperty<TEnum>(originalValue, enumUIMetadataProvider, _observableValidationEngine);
             RegisterViewModelProperty(property);
             return property;
+        }
+
+        /// <summary>
+        /// Creates the enum property.
+        /// </summary>
+        /// <typeparam name="TEnum">The type of the enum.</typeparam>
+        /// <param name="originalValue">The original value.</param>
+        /// <returns></returns>
+        protected IEnumViewModelProperty<TEnum> CreateEnumProperty<TEnum>(TEnum originalValue) where TEnum : struct
+        {
+            return CreateEnumProperty<TEnum>(originalValue, null);
         }
 
         #endregion

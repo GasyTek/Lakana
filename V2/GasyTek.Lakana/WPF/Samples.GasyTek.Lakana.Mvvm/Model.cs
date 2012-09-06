@@ -1,5 +1,6 @@
 ﻿using System;
-using GasyTek.Lakana.Common.Attributes;
+using GasyTek.Lakana.Common.UI;
+using Samples.GasyTek.Lakana.Mvvm.Resources;
 
 namespace Samples.GasyTek.Lakana.Mvvm
 {
@@ -11,6 +12,7 @@ namespace Samples.GasyTek.Lakana.Mvvm
         public Country Country { get; set; }
         public DateTime DateOfBirth { get; set; }
         public DateTime DateOfHire { get; set; }
+        public DateTime DateOfDeath { get; set; }
     }
 
     public class Country
@@ -23,10 +25,25 @@ namespace Samples.GasyTek.Lakana.Mvvm
     // that corresponds to the enum member.
     public enum Rank
     {
-        [LocalizationEnum("Boss_ResId")]
         Boss,
-
-        [LocalizationEnum("Trainee_ResId")]
         Trainee
+    }
+
+    public static class RankEnumUIMetadataProvider
+    {
+        public static UIMetadata GetUIMetadata(Rank rank)
+        {
+            var result = new UIMetadata();
+            switch (rank)
+            {
+                case Rank.Boss:
+                    result.LabelProvider = () => Labels.Boss;
+                    break;
+                case Rank.Trainee:
+                    result.LabelProvider = () => Labels.Trainee;
+                    break;
+            }
+            return result;
+        }
     }
 }

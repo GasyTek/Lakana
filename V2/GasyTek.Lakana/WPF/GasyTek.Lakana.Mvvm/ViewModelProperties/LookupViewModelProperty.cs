@@ -59,16 +59,16 @@ namespace GasyTek.Lakana.Mvvm.ViewModelProperties
 
         #region Constructor
 
-        internal LookupViewModelProperty(TValue originalValue, Func<IEnumerable<TItem>> fillItemsSource, ObservableValidationEngine internalObservableValidationEngine)
+        internal LookupViewModelProperty(TValue originalValue, Func<IEnumerable<TItem>> itemsSourceProvider, ObservableValidationEngine internalObservableValidationEngine)
             : base(internalObservableValidationEngine)
         {
-            AssignFillItemsSource(fillItemsSource);
+            AssignItemsSourceProvider(itemsSourceProvider);
             AssignOriginalValue(originalValue);
         }
 
         #endregion
 
-        protected void AssignFillItemsSource(Func<IEnumerable<TItem>> fillItemsSource)
+        protected void AssignItemsSourceProvider(Func<IEnumerable<TItem>> fillItemsSource)
         {
             _fillItemsSource = fillItemsSource;
         }

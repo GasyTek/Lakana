@@ -29,6 +29,9 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.Fluent
                 .IsNot.EqualTo(vm => vm.DateOfHire)
                 .And.Is.LessThan(vm => vm.DateOfHire)
                 .Otherwise("Date of Birth must preced the Date of Hire");
+            Property(vm => vm.DateOfHire)
+                .Is.BetweenPoperties(vm=>vm.DateOfBirth, vm => vm.DateOfDeath)
+                .Otherwise("Date of Hire must be between Date of Birth and Date of Death.");
 
         }
     }

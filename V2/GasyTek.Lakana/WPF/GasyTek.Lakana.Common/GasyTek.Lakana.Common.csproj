@@ -59,7 +59,6 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attributes\LocalizationEnumAttributes.cs" />
     <Compile Include="Base\NotifyPropertyChangedBase.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />

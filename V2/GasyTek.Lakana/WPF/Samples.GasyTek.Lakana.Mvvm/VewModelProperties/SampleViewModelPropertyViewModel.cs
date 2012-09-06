@@ -34,9 +34,8 @@ namespace Samples.GasyTek.Lakana.Mvvm.VewModelProperties
             };
 
             // HOW TO : create an enum view model property
-            // You have to specify the resource that contains the translation for enum members.
             // NOTE : The lookup items are of type "IEnumItem<Rank>"
-            Rank = CreateEnumProperty(objectToEdit.Rank, typeof(Labels));
+            Rank = CreateEnumProperty(objectToEdit.Rank, RankEnumUIMetadataProvider.GetUIMetadata);
             Rank.UIMetadata = new UIMetadata
             {
                 LabelProvider = () => "Rank",
