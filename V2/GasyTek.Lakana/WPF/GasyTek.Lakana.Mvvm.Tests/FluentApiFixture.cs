@@ -62,7 +62,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
         {
             var expressionNode = Parser.Parse(((FluentImplementer<FakeEditableViewModel>)FluentApi).InternalTokens);
             var task = expressionNode.Evaluate();
-            task.Start();
+            task.RunSynchronously();
 
             // the rule is broken when the evaluation of the rule expression is equal to false.
             Assert.IsFalse(task.Result);
@@ -362,6 +362,32 @@ namespace GasyTek.Lakana.Mvvm.Tests
                 // verify that rule is broken
                 VerifyThatRuleIsBroken();
             }
+
+            [TestMethod]
+            public void BetweenIncludesLowerBoundary()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.Quantity).Is.Between(5, 8));
+
+                // break the rule
+                FakeEditableViewModel.Quantity.Value = 5;
+
+                // verify that rule is broken
+                VerifyThatRuleIsSatisfied();
+            }
+
+            [TestMethod]
+            public void BetweenIncludesUpperBoundary()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.Quantity).Is.Between(5, 8));
+
+                // break the rule
+                FakeEditableViewModel.Quantity.Value = 8;
+
+                // verify that rule is broken
+                VerifyThatRuleIsSatisfied();
+            }
         }
 
         #endregion
@@ -384,6 +410,36 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
                 // verify that rule is broken
                 VerifyThatRuleIsBroken();
+            }
+
+            [TestMethod]
+            public void BetweenPropertiesIncludeLowerBoundary()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.Quantity).Is.BetweenPoperties(vm => vm.PurchasingPrice, vm => vm.SellingPrice));
+
+                // break the rule
+                FakeEditableViewModel.Quantity.Value = 5;
+                FakeEditableViewModel.PurchasingPrice.Value = 5;
+                FakeEditableViewModel.SellingPrice.Value = 10;
+
+                // verify that rule is broken
+                VerifyThatRuleIsSatisfied();
+            }
+
+            [TestMethod]
+            public void BetweenPropertiesIncludeUpperBoundary()
+            {
+                // define the rule
+                Given(FluentApi.Property(vm => vm.Quantity).Is.BetweenPoperties(vm => vm.PurchasingPrice, vm => vm.SellingPrice));
+
+                // break the rule
+                FakeEditableViewModel.Quantity.Value = 10;
+                FakeEditableViewModel.PurchasingPrice.Value = 5;
+                FakeEditableViewModel.SellingPrice.Value = 10;
+
+                // verify that rule is broken
+                VerifyThatRuleIsSatisfied();
             }
         }
 

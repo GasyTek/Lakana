@@ -8,6 +8,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
     /// <summary>
     /// EqualTo operator.
     /// </summary>
+    // [DebuggerDisplay("EvaluatedValue = {EvaluatedValue}, Value = {Value}")]
     internal class EqualToExpression : EvaluableExpression
     {
         private readonly Func<object> _valueProvider;
@@ -53,9 +54,10 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
     }
 
     /// <summary>
-    /// GreaterThan operator.
+    /// Strictly GreaterThan operator.
     /// </summary>
     /// <remarks>Applies only on objects that implements IComparable.</remarks>
+    // [DebuggerDisplay("EvaluatedValue = {EvaluatedValue}, Value = {Value}")]
     internal class GreaterThanExpression : EvaluableExpression
     {
         private readonly Func<object> _valueProvider;
@@ -108,9 +110,10 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
     }
 
     /// <summary>
-    /// LessThan operator.
+    /// Strictly LessThan operator.
     /// </summary>
     /// /// <remarks>Applies only on objects that implements IComparable.</remarks>
+    // [DebuggerDisplay("EvaluatedValue = {EvaluatedValue}, Value = {Value}")]
     internal class LessThanExpression : EvaluableExpression
     {
         private readonly Func<object> _valueProvider;
