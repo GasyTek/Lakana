@@ -6,6 +6,9 @@ using GasyTek.Lakana.Common.Utils;
 
 namespace GasyTek.Lakana.Common.UI
 {
+    /// <summary>
+    /// <see cref="IUIMetadata"/>
+    /// </summary>
     public class UIMetadata : NotifyPropertyChangedBase, IUIMetadata
     {
         private Func<string> _labelProvider;

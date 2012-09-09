@@ -153,7 +153,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
                 leftTask.Start();
                 rightTask.Start();
-                
+
                 return leftTask.Result || rightTask.Result;
             });
         }

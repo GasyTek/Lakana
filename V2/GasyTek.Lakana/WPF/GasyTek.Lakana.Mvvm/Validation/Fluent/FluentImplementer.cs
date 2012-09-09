@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
 using GasyTek.Lakana.Mvvm.ViewModelProperties;
 using GasyTek.Lakana.Mvvm.ViewModels;
 
@@ -116,6 +117,44 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
+        public IFluentOtherwise<TViewModel> GreaterThan(Task<object> valueProvider)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IFluentOtherwise<TViewModel> GreaterThanOrEqualTo(object value)
+        {
+            EnsureContextCurrentPropertyIsNotNull();
+            EnsureContextCurrentPropertyValueIsOfType(typeof(IComparable), "GreaterThanOrEqualn");
+
+            AddToken(new OpenParenthesis());
+            AddToken(GreaterThanExpression.CreateUsingValue(_context.CurrentProperty, value));
+            AddToken(new OrExpression());
+            AddToken(EqualToExpression.CreateUsingValue(_context.CurrentProperty, value));
+            AddToken(new CloseParenthesis());
+            return this;
+        }
+
+        public IFluentOtherwise<TViewModel> GreaterThanOrEqualTo(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
+        {
+            EnsureContextCurrentPropertyIsNotNull();
+            EnsureContextCurrentPropertyValueIsOfType(typeof(IComparable), "GreaterThanOrEqualTo");
+
+            UpdateContext(propertyExpression);
+
+            AddToken(new OpenParenthesis());
+            AddToken(GreaterThanExpression.CreateUsingProperty(_context.CurrentProperty, propertyExpression.Compile()(_viewModel)));
+            AddToken(new OrExpression());
+            AddToken(EqualToExpression.CreateUsingProperty(_context.CurrentProperty, propertyExpression.Compile()(_viewModel)));
+            AddToken(new CloseParenthesis());
+            return this;
+        }
+
+        public IFluentOtherwise<TViewModel> GreaterThanOrEqualTo(Task<object> valueProvider)
+        {
+            throw new NotImplementedException();
+        }
+
         public IFluentOtherwise<TViewModel> LessThan(object value)
         {
             EnsureContextCurrentPropertyIsNotNull();
@@ -136,6 +175,44 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
+        public IFluentOtherwise<TViewModel> LessThan(Task<object> valueProvider)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IFluentOtherwise<TViewModel> LessThanOrEqualTo(object value)
+        {
+            EnsureContextCurrentPropertyIsNotNull();
+            EnsureContextCurrentPropertyValueIsOfType(typeof(IComparable), "LessThanOrEqualTo");
+
+            AddToken(new OpenParenthesis());
+            AddToken(LessThanExpression.CreateUsingValue(_context.CurrentProperty, value));
+            AddToken(new OrExpression());
+            AddToken(EqualToExpression.CreateUsingValue(_context.CurrentProperty, value));
+            AddToken(new CloseParenthesis());
+            return this;
+        }
+
+        public IFluentOtherwise<TViewModel> LessThanOrEqualTo(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
+        {
+            EnsureContextCurrentPropertyIsNotNull();
+            EnsureContextCurrentPropertyValueIsOfType(typeof(IComparable), "LessThanOrEqualTo");
+
+            UpdateContext(propertyExpression);
+
+            AddToken(new OpenParenthesis());
+            AddToken(LessThanExpression.CreateUsingProperty(_context.CurrentProperty, propertyExpression.Compile()(_viewModel)));
+            AddToken(new OrExpression());
+            AddToken(EqualToExpression.CreateUsingProperty(_context.CurrentProperty, propertyExpression.Compile()(_viewModel)));
+            AddToken(new CloseParenthesis());
+            return this;
+        }
+
+        public IFluentOtherwise<TViewModel> LessThanOrEqualTo(Task<object> valueProvider)
+        {
+            throw new NotImplementedException();
+        }
+
         public IFluentOtherwise<TViewModel> EqualTo(object value)
         {
             EnsureContextCurrentPropertyIsNotNull();
@@ -152,6 +229,11 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
             AddToken(EqualToExpression.CreateUsingProperty(_context.CurrentProperty, propertyExpression.Compile()(_viewModel)));
             return this;
+        }
+
+        public IFluentOtherwise<TViewModel> EqualTo(Task<object> valueProvider)
+        {
+            throw new NotImplementedException();
         }
 
         public IFluentOtherwise<TViewModel> Null()
@@ -285,15 +367,28 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
+        public IFluentOtherwise<TViewModel> DifferentOf(Task<object> valueProvider)
+        {
+            throw new NotImplementedException();
+        }
+
         public IFluentOtherwise<TViewModel> Between(object @from, object to)
         {
             EnsureContextCurrentPropertyIsNotNull();
 
             // uses parenthesis to satisfy syntax : IsNot.Between (...)
             AddToken(new OpenParenthesis());
+            AddToken(new OpenParenthesis());
             AddToken(GreaterThanExpression.CreateUsingValue(_context.CurrentProperty, @from));
+            AddToken(new OrExpression());
+            AddToken(EqualToExpression.CreateUsingValue(_context.CurrentProperty, @from));
+            AddToken(new CloseParenthesis());
             AddToken(new AndExpression());
+            AddToken(new OpenParenthesis());
             AddToken(LessThanExpression.CreateUsingValue(_context.CurrentProperty, to));
+            AddToken(new OrExpression());
+            AddToken(EqualToExpression.CreateUsingValue(_context.CurrentProperty, to));
+            AddToken(new CloseParenthesis());
             AddToken(new CloseParenthesis());
 
             return this;
@@ -308,9 +403,17 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
             // uses parenthesis to satisfy syntax : IsNot.Between (...)
             AddToken(new OpenParenthesis());
+            AddToken(new OpenParenthesis());
             AddToken(GreaterThanExpression.CreateUsingProperty(_context.CurrentProperty, @from.Compile()(_viewModel)));
+            AddToken(new OrExpression());
+            AddToken(EqualToExpression.CreateUsingProperty(_context.CurrentProperty, @from.Compile()(_viewModel)));
+            AddToken(new CloseParenthesis());
             AddToken(new AndExpression());
+            AddToken(new OpenParenthesis());
             AddToken(LessThanExpression.CreateUsingProperty(_context.CurrentProperty, to.Compile()(_viewModel)));
+            AddToken(new OrExpression());
+            AddToken(EqualToExpression.CreateUsingProperty(_context.CurrentProperty, to.Compile()(_viewModel)));
+            AddToken(new CloseParenthesis());
             AddToken(new CloseParenthesis());
 
             return this;

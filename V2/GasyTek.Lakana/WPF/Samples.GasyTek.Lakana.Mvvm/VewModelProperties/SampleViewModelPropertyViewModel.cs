@@ -3,7 +3,6 @@ using GasyTek.Lakana.Common.UI;
 using GasyTek.Lakana.Mvvm.Validation;
 using GasyTek.Lakana.Mvvm.ViewModelProperties;
 using GasyTek.Lakana.Mvvm.ViewModels;
-using Samples.GasyTek.Lakana.Mvvm.Resources;
 
 namespace Samples.GasyTek.Lakana.Mvvm.VewModelProperties
 {

@@ -3,6 +3,9 @@ using GasyTek.Lakana.Mvvm.Validation.Fluent;
 
 namespace Samples.GasyTek.Lakana.Mvvm.Validation.Fluent
 {
+    /// <summary>
+    /// The fluent validation engine for SampleFluentValidationViewModel.
+    /// </summary>
     public class MyFluentValidationEngine : FluentValidationEngine<SampleFluentValidationViewModel>
     {
         public MyFluentValidationEngine(SampleFluentValidationViewModel viewModelInstance) 
@@ -26,8 +29,7 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.Fluent
                 .Is.GreaterThan(new DateTime(1990, 01, 01))
                 .Otherwise("Date of Birth must be after 1990");
             Property(vm => vm.DateOfBirth)
-                .IsNot.EqualTo(vm => vm.DateOfHire)
-                .And.Is.LessThan(vm => vm.DateOfHire)
+                .Is.LessThanOrEqualTo(vm => vm.DateOfHire)
                 .Otherwise("Date of Birth must preced the Date of Hire");
             Property(vm => vm.DateOfHire)
                 .Is.BetweenPoperties(vm=>vm.DateOfBirth, vm => vm.DateOfDeath)

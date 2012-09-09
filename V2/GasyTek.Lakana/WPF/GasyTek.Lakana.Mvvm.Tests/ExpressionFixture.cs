@@ -23,7 +23,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
             var taskResult = ast.Evaluate();
 
             // Act
-            taskResult.Start();
+            taskResult.RunSynchronously();
 
             // Verify
             Assert.IsFalse(taskResult.Result);
@@ -38,7 +38,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
             // Act
             var taskResult = equalsToExpression.Evaluate();
-            taskResult.Start();
+            taskResult.RunSynchronously();
 
             // Verify
             Assert.IsTrue(taskResult.Result);
@@ -53,7 +53,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
             // Act
             var taskResult = greaterThanExpression.Evaluate();
-            taskResult.Start();
+            taskResult.RunSynchronously();
 
             // Verify
             Assert.IsTrue(taskResult.Result);
@@ -68,7 +68,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
             // Act
             var taskResult = lessThanExpression.Evaluate();
-            taskResult.Start();
+            taskResult.RunSynchronously();
 
             // Verify
             Assert.IsFalse(taskResult.Result);
@@ -83,7 +83,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
             // Act
             var taskResult = matchingExpression.Evaluate();
-            taskResult.Start();
+            taskResult.RunSynchronously();
 
             // Verify
             Assert.IsTrue(taskResult.Result);
@@ -98,7 +98,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
             // Act
             var taskResult = equalsToExpression.Evaluate();
-            taskResult.Start();
+            taskResult.RunSynchronously();
 
             // Verify
             Assert.IsFalse(taskResult.Result);
@@ -113,7 +113,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
             // Act
             var taskResult = equalsToExpression.Evaluate();
-            taskResult.Start();
+            taskResult.RunSynchronously();
 
             // Verify
             Assert.IsTrue(taskResult.Result);
