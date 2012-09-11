@@ -89,7 +89,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
 
         #endregion
 
-        protected override void OnCreateCommands()
+        protected override void OnCreateViewModelCommands()
         {
             _saveCommand = CreateCommand(OnSaveCommandExecute, OnSaveCommandCanExecute);
             _cancelCommand = CreateCommand(OnCancelCommandExecute);
