@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
@@ -16,13 +17,13 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
     /// <summary>
     /// Base class for all view-models
     /// </summary>
-    public abstract class ViewModelBase : NotifyPropertyChangedBase, IDisposable
+    public abstract class ViewModelBase : NotifyPropertyChangedBase, IViewModel
     {
         #region Fields
 
         private IUIMetadata _uiMetadata;
-        private readonly IList<IViewModelProperty> _registeredProperties;
-        private readonly IList<ISimpleCommand> _registeredCommands;
+        private readonly List<IViewModelProperty> _registeredProperties;
+        private readonly List<ISimpleCommand> _registeredCommands;
         private readonly ObservableValidationEngine _observableValidationEngine;
 
         #endregion
@@ -52,17 +53,17 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
         /// <summary>
         /// Gets the registered properties. Registered properties participates in automatically refreshing the <seealso cref="RegisteredCommands"/>
         /// </summary>
-        protected IList<IViewModelProperty> RegisteredProperties
+        public ReadOnlyCollection<IViewModelProperty> RegisteredProperties
         {
-            get { return _registeredProperties; }
+            get { return _registeredProperties.AsReadOnly(); }
         }
 
         /// <summary>
         /// Gets the registered commands. Registered commands will be automatically refreshed when changes appear in <seealso cref="RegisteredProperties"/>
         /// </summary>
-        protected IList<ISimpleCommand> RegisteredCommands
+        public ReadOnlyCollection<ISimpleCommand> RegisteredCommands
         {
-            get { return _registeredCommands; }
+            get { return _registeredCommands.AsReadOnly(); }
         }
 
         #endregion
@@ -110,7 +111,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
         protected void ClearViewmModelProperties()
         {
             DetachEventsFromProperty();
-            RegisteredProperties.Clear();
+            _registeredProperties.Clear();
         }
 
         /// <summary>
@@ -164,7 +165,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
         /// <returns></returns>
         protected IEnumViewModelProperty<TEnum> CreateEnumProperty<TEnum>(TEnum originalValue) where TEnum : struct
         {
-            return CreateEnumProperty<TEnum>(originalValue, null);
+            return CreateEnumProperty(originalValue, null);
         }
 
         #endregion
@@ -173,7 +174,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
 
         protected void ClearCommands()
         {
-            RegisteredCommands.Clear();
+            _registeredCommands.Clear();
         }
 
         /// <summary>
@@ -220,7 +221,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
 
             // build commands
             ClearCommands();
-            OnCreateCommands();
+            OnCreateViewModelCommands();
             OnRefreshCmmands();
 
             // initialize validation engine
@@ -274,7 +275,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
         /// <summary>
         /// Called when building commands for the view model..
         /// </summary>
-        protected abstract void OnCreateCommands();
+        protected abstract void OnCreateViewModelCommands();
 
         protected virtual IValidationEngine CreateValidationEngine()
         {

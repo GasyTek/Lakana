@@ -9,7 +9,7 @@ using GasyTek.Lakana.Mvvm.Validation;
 namespace GasyTek.Lakana.Mvvm.ViewModelProperties
 {
     /// <summary>
-    /// Default implementation for <seealso cref="IViewModelProperty"/>. It is the base class for view model rich properties.
+    /// Default implementation for <seealso cref="_"/>. It is the base class for view model rich properties.
     /// </summary>
     public abstract class ViewModelProperty : NotifyPropertyChangedBase, IViewModelProperty
     {
