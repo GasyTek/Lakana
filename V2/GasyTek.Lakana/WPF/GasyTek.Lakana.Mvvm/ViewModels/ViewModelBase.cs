@@ -150,7 +150,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
         /// <param name="originalValue">The original value.</param>
         /// <param name="enumUIMetadataProvider">A custom provider that returns the ui metadata that corresponds to given value.</param>
         /// <returns></returns>
-        protected IEnumViewModelProperty<TEnum> CreateEnumProperty<TEnum>(TEnum originalValue, Func<TEnum, UIMetadata> enumUIMetadataProvider) where TEnum : struct
+        protected IEnumViewModelProperty<TEnum> CreateEnumProperty<TEnum>(TEnum originalValue, Func<TEnum, IUIMetadata> enumUIMetadataProvider) where TEnum : struct
         {
             var property = new EnumViewModelProperty<TEnum>(originalValue, enumUIMetadataProvider, _observableValidationEngine);
             RegisterViewModelProperty(property);
@@ -275,7 +275,10 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
         /// <summary>
         /// Called when building commands for the view model..
         /// </summary>
-        protected abstract void OnCreateViewModelCommands();
+        protected virtual void OnCreateViewModelCommands()
+        {
+            
+        }
 
         protected virtual IValidationEngine CreateValidationEngine()
         {

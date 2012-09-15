@@ -9,7 +9,7 @@ using System.Windows.Markup;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("GasyTek.Lakana.Mvvm")]
-[assembly: AssemblyDescription("MVVM Framework for WPF")]
+[assembly: AssemblyDescription("WPF MVVM Framework.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("GasyTek")]
 [assembly: AssemblyProduct("GasyTek.Lakana.Mvvm")]
@@ -52,8 +52,8 @@ using System.Windows.Markup;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("2.0.0.0")]
+[assembly: AssemblyFileVersion("2.0.0.0")]
 
 [assembly: InternalsVisibleTo("GasyTek.Lakana.Mvvm.Tests")]
 

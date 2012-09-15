@@ -12,12 +12,21 @@ namespace GasyTek.Lakana.Mvvm.Commands
         private readonly Predicate<TParam> _canExecuteAction;
 
         #region Constructor
-
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SimpleCommand&lt;TParam&gt;"/> class.
+        /// </summary>
+        /// <param name="executeAction">The execute action.</param>
         public SimpleCommand(Action<TParam> executeAction)
         {
             _executeAction = executeAction;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SimpleCommand&lt;TParam&gt;"/> class.
+        /// </summary>
+        /// <param name="executeAction">The execute action.</param>
+        /// <param name="canExecuteAction">The can execute action.</param>
         public SimpleCommand(Action<TParam> executeAction, Predicate<TParam> canExecuteAction)
         {
             if(executeAction == null)
@@ -33,8 +42,14 @@ namespace GasyTek.Lakana.Mvvm.Commands
 
         #region ISimpleCommand implementation
 
+        /// <summary>
+        /// Occurs when changes occur that affect whether or not the command should execute.
+        /// </summary>
         public event EventHandler CanExecuteChanged;
 
+        /// <summary>
+        /// Raises the can execute changed.
+        /// </summary>
         public void RaiseCanExecuteChanged()
         {
             var handler = CanExecuteChanged;
@@ -60,11 +75,20 @@ namespace GasyTek.Lakana.Mvvm.Commands
     /// </summary>
     public class SimpleCommand : SimpleCommand<object>
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SimpleCommand"/> class.
+        /// </summary>
+        /// <param name="executeAction">The execute action.</param>
         public SimpleCommand(Action<object> executeAction)
             : base(executeAction)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SimpleCommand"/> class.
+        /// </summary>
+        /// <param name="executeAction">The execute action.</param>
+        /// <param name="canExecuteAction">The can execute action.</param>
         public SimpleCommand(Action<object> executeAction, Predicate<object> canExecuteAction)
             : base(executeAction, canExecuteAction)
         {
