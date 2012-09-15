@@ -14,13 +14,13 @@ namespace GasyTek.Lakana.Mvvm.ViewModelProperties
     {
         #region Fields
 
-        private readonly Func<TEnum, UIMetadata> _enumUIMetadataProvider;
+        private readonly Func<TEnum, IUIMetadata> _enumUIMetadataProvider;
 
         #endregion
 
         #region Constructor
 
-        internal EnumViewModelProperty(TEnum originalValue, Func<TEnum, UIMetadata> enumUIMetadataProvider, ObservableValidationEngine internalObservableValidationEngine)
+        internal EnumViewModelProperty(TEnum originalValue, Func<TEnum, IUIMetadata> enumUIMetadataProvider, ObservableValidationEngine internalObservableValidationEngine)
             : base(originalValue, null, internalObservableValidationEngine)
         {
             _enumUIMetadataProvider = enumUIMetadataProvider;

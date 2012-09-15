@@ -25,21 +25,39 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
 
         #region Properties
 
+        /// <summary>
+        /// Gets a value indicating whether this instance has changed.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance has changed; otherwise, <c>false</c>.
+        /// </value>
         public bool HasChanged
         {
             get { return RegisteredProperties.Any(o => o.HasChanged); }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance is valid.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is valid; otherwise, <c>false</c>.
+        /// </value>
         public bool IsValid
         {
             get { return RegisteredProperties.All(o => o.IsValid); }
         }
 
+        /// <summary>
+        /// Gets the save command.
+        /// </summary>
         public ICommand SaveCommand
         {
             get { return _saveCommand; }
         }
 
+        /// <summary>
+        /// Gets the cancel command.
+        /// </summary>
         public ICommand CancelCommand
         {
             get { return _cancelCommand; }
@@ -88,7 +106,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModels
         }
 
         #endregion
-
+        
         protected override void OnCreateViewModelCommands()
         {
             _saveCommand = CreateCommand(OnSaveCommandExecute, OnSaveCommandCanExecute);

@@ -4,6 +4,9 @@ using GasyTek.Lakana.Common.Base;
 
 namespace GasyTek.Lakana.Common.Extensions
 {
+    /// <summary>
+    /// Extension methods for objects that implements INotifyPropertyChanged.
+    /// </summary>
     public static class NotifyPropertyChangedExtensions
     {
         /// <summary>
