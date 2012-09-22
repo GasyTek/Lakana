@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using GasyTek.Lakana.Mvvm.Validation.Fluent;
 
 namespace Samples.GasyTek.Lakana.Mvvm.Validation.Fluent
@@ -13,11 +14,12 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.Fluent
         {
         }
 
-        protected override void DefineRules()
+        protected override void OnDefineRules()
         {
             // Example of simple Fluent rules
 
-            Property(vm => vm.Code).Is.Required().Otherwise("Code is required");
+            Property(vm => vm.Code).Is.Required().Otherwise("Code is required.");
+            Property(vm => vm.Code).Is.Satisfying(ViewModelInstance.CodeIsUnique()).Otherwise("Code already exist.");
             Property(vm => vm.Code).Has.MaxLength(3).Otherwise("Code length must not eceed 3 characters.");
             // NOTE : Above rules can be defined in one sentence like below, if you want them to share the same error message
             //Property(vm => vm.Code).Is.Required().And.Has.MaxLength(3).Otherwise("Code is required and its length must not eceed 3 characters.");

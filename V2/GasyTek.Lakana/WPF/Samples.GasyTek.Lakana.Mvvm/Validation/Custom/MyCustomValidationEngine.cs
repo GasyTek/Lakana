@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using System.Threading.Tasks;
 using GasyTek.Lakana.Mvvm.Validation;
 
@@ -16,13 +15,13 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.Custom
             _viewModel = viewModel;
         }
 
-        protected override void OnValidate(PropertyInfo property, object propertyValue)
+        protected override void OnValidate(ValidationParameter validationParameter)
         {
             // Example of Synchronous validation
-            SynchronouslyValidateProperty(property, propertyValue);
+            SynchronouslyValidateProperty(validationParameter);
 
             // Example of asynchronous validation
-            //AsynchronouslyValidateProperty(property, propertyValue);
+            //AsynchronouslyValidateProperty(validationParameter);
         }
 
         #region Synchronous validation
@@ -30,9 +29,9 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.Custom
         /// <summary>
         /// Synchronously validates the property.
         /// </summary>
-        private void SynchronouslyValidateProperty(PropertyInfo property, object propertyValue)
+        private void SynchronouslyValidateProperty(ValidationParameter validationParameter)
         {
-            var validateCoreResult = ValidateCore(property, propertyValue);
+            var validateCoreResult = ValidateCore(validationParameter);
 
             // optional properties
             ClearErrorMessage(validateCoreResult.ToClearProperties);
@@ -52,11 +51,11 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.Custom
         /// <summary>
         /// Asynchronously validates the property.
         /// </summary>
-        private void AsynchronouslyValidateProperty(PropertyInfo property, object propertyValue)
+        private void AsynchronouslyValidateProperty(ValidationParameter validationParameter)
         {
             var tsk = Task<ValidateCoreResult>.Factory.StartNew(() =>
                                                 {
-                                                    var validateCoreResult = ValidateCore(property, propertyValue);
+                                                    var validateCoreResult = ValidateCore(validationParameter);
 
                                                     // optional properties
                                                     ClearErrorMessage(validateCoreResult.ToClearProperties);
@@ -79,11 +78,14 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.Custom
 
         #region Common
 
-        private ValidateCoreResult ValidateCore(PropertyInfo property, object propertyValue)
+        private ValidateCoreResult ValidateCore(ValidationParameter validationParameter)
         {
-            var validateCoreResult = new ValidateCoreResult { Property = property.Name, IsValid = true };
+            var propertyMetadata = validationParameter.PropertyMetadata;
+            var propertyValue = validationParameter.PropertyValue;
 
-            if (property.Name == "Code")
+            var validateCoreResult = new ValidateCoreResult { Property = propertyMetadata.Name, IsValid = true };
+
+            if (propertyMetadata.Name == "Code")
             {
                 if (string.IsNullOrEmpty((string)propertyValue))
                 {
@@ -99,7 +101,7 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.Custom
                 }
             }
 
-            if (property.Name == "Age")
+            if (propertyMetadata.Name == "Age")
             {
                 if (propertyValue != null)
                 {
@@ -112,7 +114,7 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.Custom
                 }
             }
 
-            if (property.Name == "Country")
+            if (propertyMetadata.Name == "Country")
             {
                 var country = (Country)propertyValue;
                 if (country != null && country.Id != 4)
@@ -122,7 +124,7 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.Custom
                 }
             }
 
-            if (property.Name == "DateOfBirth")
+            if (propertyMetadata.Name == "DateOfBirth")
             {
                 if (propertyValue != null)
                 {
@@ -137,7 +139,7 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.Custom
                 }
             }
 
-            if (property.Name == "DateOfHire")
+            if (propertyMetadata.Name == "DateOfHire")
             {
                 if (propertyValue != null)
                 {

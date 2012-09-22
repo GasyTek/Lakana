@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading;
 using GasyTek.Lakana.Mvvm.Tests.Fakes;
 using GasyTek.Lakana.Mvvm.Validation.Fluent;
@@ -273,9 +274,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
         {
             // Prepare
             ConfigureThread();
-            FakeEditableViewModel.ConfigureExpectedNumberOfPropertyValidation(4);
-
-            var fluentValidationEngine = (FakeFluentValidationEngine)TestContext.Properties[FluentValidationEngineProperty];
+            
             var purchasingPricePropertyName = FakeEditableViewModel.PurchasingPrice.PropertyMetadata.Name;
             var sellingPricePropertyName = FakeEditableViewModel.SellingPrice.PropertyMetadata.Name;
             FakeEditableViewModel.SellingPrice.Value = 30;
@@ -285,13 +284,14 @@ namespace GasyTek.Lakana.Mvvm.Tests
             FakeFluentValidationEngine.BuildRules();
             
             // Act
+            FakeEditableViewModel.ConfigureExpectedNumberOfPropertyValidation(2);
             FakeEditableViewModel.SellingPrice.Value = 10;
             FakeEditableViewModel.PurchasingPrice.Value = 15;
             FakeEditableViewModel.WaitForPropertyValidationsToTerminate();
 
             // Verify
-            var purchasingPriceErrors = fluentValidationEngine.GetErrors(purchasingPricePropertyName);
-            var sellingPriceErrors = fluentValidationEngine.GetErrors(sellingPricePropertyName);
+            var purchasingPriceErrors = FakeFluentValidationEngine.GetErrors(purchasingPricePropertyName);
+            var sellingPriceErrors = FakeFluentValidationEngine.GetErrors(sellingPricePropertyName);
 
             Assert.IsFalse(sellingPriceErrors.Any());
             Assert.IsNotNull(purchasingPriceErrors);
@@ -303,10 +303,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
         {
             // Prepare
             ConfigureThread();
-            FakeEditableViewModel.ConfigureExpectedNumberOfPropertyValidation(4);
 
-            var fluentValidationEngine =
-                (FakeFluentValidationEngine) TestContext.Properties[FluentValidationEngineProperty];
             var purchasingPricePropertyName = FakeEditableViewModel.PurchasingPrice.PropertyMetadata.Name;
             var sellingPricePropertyName = FakeEditableViewModel.SellingPrice.PropertyMetadata.Name;
             FakeEditableViewModel.SellingPrice.Value = 30;
@@ -323,24 +320,45 @@ namespace GasyTek.Lakana.Mvvm.Tests
                                                                        .AssertThatProperty(vm => vm.PurchasingPrice).Is.
                                                                        LessThan(vm => vm.SellingPrice);
                                                                };
-        
 
             FakeFluentValidationEngine.BuildRules();
 
             // Act
+            FakeEditableViewModel.ConfigureExpectedNumberOfPropertyValidation(2);
             FakeEditableViewModel.SellingPrice.Value = 10;
             FakeEditableViewModel.PurchasingPrice.Value = 15;
             FakeEditableViewModel.WaitForPropertyValidationsToTerminate();
 
             // Verify
-            var purchasingPriceErrors = fluentValidationEngine.GetErrors(purchasingPricePropertyName);
-            var sellingPriceErrors = fluentValidationEngine.GetErrors(sellingPricePropertyName);
+            var purchasingPriceErrors = FakeFluentValidationEngine.GetErrors(purchasingPricePropertyName);
+            var sellingPriceErrors = FakeFluentValidationEngine.GetErrors(sellingPricePropertyName);
 
             Assert.IsNotNull(sellingPriceErrors);
             Assert.IsTrue(sellingPriceErrors.Count() == 1);
             Assert.IsNotNull(purchasingPriceErrors);
             Assert.IsTrue(purchasingPriceErrors.Count() == 1);
 
+        }
+
+        //[TestMethod]
+        //[ExpectedException(typeof(AggregateException))]
+        // TODO : manage exceptions propagation to UI then reactivate this unit test
+        public void ExceptionsDuringValidationProcessAreFlattenedAndPropagated()
+        {
+            // Prepare
+            ConfigureThread();
+
+            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty(
+                vm => vm.PurchasingPrice).Is.Satisfying((value, token) =>
+                                                         {
+                                                             throw new InvalidOperationException ("test");
+                                                         });
+            FakeFluentValidationEngine.BuildRules();
+
+            // Act
+            FakeEditableViewModel.PurchasingPrice.Value = 20;
+
+            // Verify
         }
 
     }

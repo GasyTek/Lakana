@@ -112,6 +112,7 @@
     <Compile Include="Validation\Fluent\SampleFluentValidationViewModel.cs" />
     <Compile Include="Validation\Custom\MyCustomValidationEngine.cs" />
     <Compile Include="Model.cs" />
+    <Compile Include="Validation\Fluent\WebService.cs" />
     <Compile Include="VewModelProperties\SampleViewModelPropertyView.xaml.cs">
       <DependentUpon>SampleViewModelPropertyView.xaml</DependentUpon>
     </Compile>

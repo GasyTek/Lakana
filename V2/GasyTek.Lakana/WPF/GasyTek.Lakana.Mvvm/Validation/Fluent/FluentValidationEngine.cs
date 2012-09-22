@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using GasyTek.Lakana.Mvvm.ViewModelProperties;
@@ -16,6 +16,8 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
     /// <typeparam name="TViewModel">The type of the view model.</typeparam>
     public abstract class FluentValidationEngine<TViewModel> : ValidationEngineBase where TViewModel : ViewModelBase
     {
+        private readonly object _lock = new object();
+
         private readonly Parser _parser;
         private readonly TViewModel _viewModelInstance;
 
@@ -24,6 +26,11 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
         // contains the couple (AST, Error message) for each property.
         private readonly Dictionary<string, List<CompiledRule>> _compiledRules;
+
+        protected TViewModel ViewModelInstance
+        {
+            get { return _viewModelInstance; }
+        }
 
         /// <summary>
         /// Do not use this constructor, it is intended to be used by the infrastructure only.
@@ -45,7 +52,8 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
         internal void BuildRules()
         {
-            DefineRules();
+            OnBeforeDefineRules();
+            OnDefineRules();
             EnsureRulesAreValid();
             CompileRules();
         }
@@ -56,13 +64,13 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         /// Define the rules for all properties.
         /// Use <see cref="Property" /> to begin defining rules.
         /// </summary>
-        protected abstract void DefineRules();
+        protected abstract void OnDefineRules();
 
         /// <summary>
         /// Allows to define rule for one property.
         /// </summary>
         /// <param name="propertyExpression">The expression that specify the property to define rule for.</param>
-        /// <remarks>This method will typically called from <see cref="DefineRules"/> method.</remarks>
+        /// <remarks>This method will typically called from <see cref="OnDefineRules"/> method.</remarks>
         protected IFluentVerb<TViewModel> Property(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
         {
             var property = propertyExpression.Compile()(_viewModelInstance);
@@ -135,37 +143,52 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
         #region Rule evaluation
 
-        protected override void OnValidate(PropertyInfo property, object propertyValue)
+        protected override void OnValidate(ValidationParameter validationParameter)
         {
-            // Note that propertyValue is never used here. The fluent validation engine will 
+            // Note that propertyValue is not used here. The fluent validation engine will 
             // bind directly to view model properties in order to get their values.
 
-            var propertyName = property.Name;
+            var propertyName = validationParameter.PropertyMetadata.Name;
+            var propertyInstance = validationParameter.PropertyInstance;
+
+            // notifies that the property is currently validating its value
+            propertyInstance.IsValidating = true;
 
             // if there is no rules attached to the property then just ignore it.
             if (_compiledRules.ContainsKey(propertyName) == false) return;
 
+            // Cancellation ability
+            var cancellationToken = validationParameter.CancellationToken;
+
             // retrieve all evaluable rules
-            var allPropertyRules = (from cr in _compiledRules[propertyName] select cr.Evaluate()).ToList();
+            var validationTasks = (from cr in _compiledRules[propertyName] select cr.Evaluate(cancellationToken)).ToList();
+
+            Trace.WriteLine("OnStartValidating " + propertyName);
 
             // process evaluation of the rules
-            allPropertyRules.ForEach(t => t.RunSynchronously());
-            
-            Task.Factory.ContinueWhenAll(allPropertyRules.ToArray() 
+            StartValidationTasks(validationTasks);
+
+            Task.Factory.ContinueWhenAll(validationTasks.ToArray()
                 , terminatedTasks =>
                       {
-                          var evaluationResults = from ttask in terminatedTasks select ttask.Result;
+                          try
+                          {
+                              // waits for terminated tasks in order to detect eventual exceptions.
+                              Task.WaitAll(terminatedTasks.Cast<Task>().ToArray());
 
-                          // update error messages
-                          UpdateCurrentPropertyErrors(propertyName, evaluationResults);
-                          UpdateConcernedPropertyErrors(propertyName, evaluationResults);
+                              OnValidationTerminated(propertyName, terminatedTasks.ToList());
+                              propertyInstance.IsValidating = false;
+                          }
+                          catch (AggregateException ae)
+                          {
+                              propertyInstance.IsValidating = false;
 
-                          // notify ui to refresh errors
-                          NotifyUIErrors(propertyName, evaluationResults);
-                      }
-                , new CancellationToken(false)
-                , TaskContinuationOptions.ExecuteSynchronously
-                , TaskScheduler.FromCurrentSynchronizationContext());
+                              // TODO : propagate exception notification to the UI !!
+                              throw ae.Flatten();
+                          }
+                      }, cancellationToken
+                       , TaskContinuationOptions.None
+                       , TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void UpdateCurrentPropertyErrors(string propertyName, IEnumerable<EvaluationResult> evaluationResults)
@@ -207,6 +230,43 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             OnRaiseErrorsChangedEvent(propertyName, concernedProperties);
         }
 
+        #endregion
+
+        #region Overridable methods
+
+        /// <summary>
+        /// Override this method to start tasks synchronously instead.
+        /// </summary>
+        /// <param name="validationTasks">The validation tasks.</param>
+        protected internal virtual void StartValidationTasks(List<Task<EvaluationResult>> validationTasks)
+        {
+            validationTasks.ForEach(task => task.Start());
+        }
+
+        protected virtual void OnValidationTerminated(string propertyName, List<Task<EvaluationResult>> terminatedTasks)
+        {
+            lock (_lock)
+            {
+                Trace.WriteLine("OnValidationTerminated " + propertyName);
+
+                var evaluationResults = (from ttask in terminatedTasks select ttask.Result).ToList();
+
+                // update error messages
+                UpdateCurrentPropertyErrors(propertyName, evaluationResults);
+                UpdateConcernedPropertyErrors(propertyName, evaluationResults);
+
+                // notify ui to refresh errors
+                NotifyUIErrors(propertyName, evaluationResults);
+            }
+        }
+
+        protected virtual void OnBeforeDefineRules()
+        {
+
+        }
+
+        #endregion
+
         #region Private classes
 
         private class CompiledRule
@@ -224,23 +284,26 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
                 _errorMessage = errorMessage;
             }
 
-            public Task<EvaluationResult> Evaluate()
+            public Task<EvaluationResult> Evaluate(CancellationToken cancellationToken)
             {
                 // wrap the AST task so that instead of returning only one boolean, it returns also the error message
                 return new Task<EvaluationResult>(() =>
                                                       {
-                                                          var astTask = _ast.Evaluate();
-                                                          astTask.RunSynchronously();
-                                                          return new EvaluationResult { 
-                                                                      RuleId = _ruleId,
-                                                                      ConcernedProperties = _concernedProperties,
-                                                                      AstResult = astTask.Result, 
-                                                                      ErrorMessage = _errorMessage};
-                                                      });
+                                                          var astTask = _ast.Evaluate(cancellationToken);
+                                                          astTask.Start();
+
+                                                          return new EvaluationResult
+                                                          {
+                                                              RuleId = _ruleId,
+                                                              ConcernedProperties = _concernedProperties,
+                                                              AstResult = astTask.Result,
+                                                              ErrorMessage = _errorMessage
+                                                          };
+                                                      }, cancellationToken);
             }
         }
 
-        private class EvaluationResult
+        protected internal class EvaluationResult
         {
             public string RuleId { get; set; }
             public bool AstResult { get; set; }
@@ -251,9 +314,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         #endregion
     }
 
-    #endregion
-
-/// <summary>
+    /// <summary>
     /// Thrown when the definition of a rule contains syntactic error or is not complete.
     /// </summary>
     public class RuleDefinitionException : ApplicationException

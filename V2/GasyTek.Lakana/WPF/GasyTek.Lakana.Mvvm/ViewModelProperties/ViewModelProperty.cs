@@ -1,23 +1,29 @@
 ﻿using System;
 using System.Reflection;
+using System.Threading;
+using System.Windows.Input;
 using GasyTek.Lakana.Common.Base;
 using GasyTek.Lakana.Common.Extensions;
 using GasyTek.Lakana.Common.UI;
 using GasyTek.Lakana.Common.Utils;
+using GasyTek.Lakana.Mvvm.Commands;
 using GasyTek.Lakana.Mvvm.Validation;
 
 namespace GasyTek.Lakana.Mvvm.ViewModelProperties
 {
     /// <summary>
-    /// Default implementation for <seealso cref="_"/>. It is the base class for view model rich properties.
+    /// Default implementation for <seealso cref="IViewModelProperty"/>. It is the base class for view model rich properties.
     /// </summary>
     public abstract class ViewModelProperty : NotifyPropertyChangedBase, IViewModelProperty
     {
         #region Fields
 
         private IUIMetadata _uiMetadata;
-        private readonly ObservableValidationEngine _internalObservableValidationEngine;
-        
+        private ObservableValidationEngine _internalObservableValidationEngine;
+        private bool _isValidating;
+        private readonly SimpleCommand _cancelValidationCommand;
+        private CancellationTokenSource _cancellationTokenSource;
+
         #endregion
 
         #region Properties
@@ -58,8 +64,8 @@ namespace GasyTek.Lakana.Mvvm.ViewModelProperties
         {
             get
             {
-                var veng = (IHasValidationEngine) this;
-                var ipmeta = (IHasPropertyMetadata) this;
+                var veng = (IHasValidationEngine)this;
+                var ipmeta = (IHasPropertyMetadata)this;
                 if (veng.InternalObservableValidationEngine.Object != null && (ipmeta.InternalPropertyMetadata != null))
                     return veng.InternalObservableValidationEngine.Object.IsValid(ipmeta.InternalPropertyMetadata.Name);
                 return true;
@@ -72,19 +78,21 @@ namespace GasyTek.Lakana.Mvvm.ViewModelProperties
 
         protected ViewModelProperty(ObservableValidationEngine internalObservableValidationEngine)
         {
-            _internalObservableValidationEngine = internalObservableValidationEngine;
-            InitializeObservableValidationEngine();
+            _cancelValidationCommand = new SimpleCommand(OnCancelValidationCommandExecute, OnCancelValidationCommandCanExecute);
+            InitializeObservableValidationEngine(internalObservableValidationEngine);
         }
 
-        private void InitializeObservableValidationEngine()
+        private void InitializeObservableValidationEngine(ObservableValidationEngine internalObservableValidationEngine)
         {
-            if (_internalObservableValidationEngine.Object != null)
+            _internalObservableValidationEngine = internalObservableValidationEngine;
+
+            if (internalObservableValidationEngine.Object != null)
             {
-                _internalObservableValidationEngine.Object.
+                internalObservableValidationEngine.Object.
                         ErrorsChangedEvent +=
                         OnValidationEngineErrorsChanged;
             }
-            _internalObservableValidationEngine.ObjectChanged += (sender, args) =>
+            internalObservableValidationEngine.ObjectChanged += (sender, args) =>
             {
                 if (args.OldValue != null)
                 {
@@ -103,6 +111,26 @@ namespace GasyTek.Lakana.Mvvm.ViewModelProperties
 
         #endregion
 
+        #region Command handler
+
+        private bool OnCancelValidationCommandCanExecute(object param)
+        {
+            return IsValidating == false;
+        }
+
+        private void OnCancelValidationCommandExecute(object param)
+        {
+            CancelCurrentValidation();
+        }
+
+        private void CancelCurrentValidation()
+        {
+            if (_cancellationTokenSource != null && _cancellationTokenSource.IsCancellationRequested == false)
+                _cancellationTokenSource.Cancel();
+        }
+
+        #endregion
+
         #region IHasPropertyMetadata members
 
         PropertyInfo IHasPropertyMetadata.InternalPropertyMetadata { get; set; }
@@ -114,6 +142,17 @@ namespace GasyTek.Lakana.Mvvm.ViewModelProperties
         ObservableValidationEngine IHasValidationEngine.InternalObservableValidationEngine
         {
             get { return _internalObservableValidationEngine; }
+        }
+
+        public bool IsValidating
+        {
+            get { return _isValidating; }
+            set { this.SetPropertyValueAndNotify(ref _isValidating, value, vmp => vmp.IsValidating); }
+        }
+
+        public ICommand CancelValidationCommand
+        {
+            get { return _cancelValidationCommand; }
         }
 
         #endregion
@@ -143,8 +182,8 @@ namespace GasyTek.Lakana.Mvvm.ViewModelProperties
         {
             get
             {
-                var veng = (IHasValidationEngine) this;
-                var inpmeta = (IHasPropertyMetadata) this;
+                var veng = (IHasValidationEngine)this;
+                var inpmeta = (IHasPropertyMetadata)this;
                 if (veng.InternalObservableValidationEngine.Object != null && inpmeta.InternalPropertyMetadata != null)
                 {
                     var errors = veng.InternalObservableValidationEngine.Object.GetErrors(inpmeta.InternalPropertyMetadata.Name);
@@ -165,21 +204,29 @@ namespace GasyTek.Lakana.Mvvm.ViewModelProperties
                 OnNotifyValueProperty();
             }
         }
-        
+
         protected void OnValidatePropertyValue(object oldValue, object newValue, Type valueType)
         {
-            // strings are special case where null = empty
+            // strings are special case where null = empty, so no need to validate
             if (valueType == typeof(String))
                 if (String.IsNullOrEmpty((string)oldValue) && String.IsNullOrEmpty((string)newValue))
                     return;
 
-            if(Equals(oldValue, newValue)) return;
+            if (Equals(oldValue, newValue)) return;
 
             // process an async validation
             var veng = (IHasValidationEngine)this;
             var inpmeta = (IHasPropertyMetadata)this;
             if (veng.InternalObservableValidationEngine.Object != null && inpmeta.InternalPropertyMetadata != null)
-                veng.InternalObservableValidationEngine.Object.Validate(inpmeta.InternalPropertyMetadata, newValue);
+            {            
+                // TODO : refactor !
+                CancelCurrentValidation();
+                _cancellationTokenSource = new CancellationTokenSource();
+
+                var validationParameter = new ValidationParameter(inpmeta.InternalPropertyMetadata, this, newValue, _cancellationTokenSource.Token);
+                veng.InternalObservableValidationEngine.Object.Validate(validationParameter);
+
+            }
         }
 
         #region Overridable methods

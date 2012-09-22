@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
 using GasyTek.Lakana.Mvvm.Validation.Fluent;
 using GasyTek.Lakana.Mvvm.ViewModelProperties;
 
@@ -16,23 +19,24 @@ namespace GasyTek.Lakana.Mvvm.Tests.Fakes
         {
         }
 
-        protected override void DefineRules()
+        protected override void OnDefineRules()
         {
             if (DefineRulesAction != null)
                 DefineRulesAction();
         }
 
-        protected override void OnValidate(System.Reflection.PropertyInfo property, object propertyValue)
+        protected internal override void StartValidationTasks(List<Task<EvaluationResult>> validationTasks)
         {
-            base.OnValidate(property, propertyValue);
-            OnValidationTerminated(new EventArgs());
+            validationTasks.ForEach(t => t.RunSynchronously());
         }
 
-
-        public void OnValidationTerminated(EventArgs e)
+        protected override void OnValidationTerminated(string propertyName, List<Task<EvaluationResult>> terminatedTasks)
         {
+            base.OnValidationTerminated(propertyName, terminatedTasks);
+
+            // notify the termination of the tasks
             var handler = ValidationTerminated;
-            if (handler != null) handler(this, e);
+            if (handler != null) handler(this, new EventArgs());
         }
 
         public IFluentVerb<FakeEditableViewModel> AssertThatProperty(Expression<Func<FakeEditableViewModel, IViewModelProperty>> propertyExpression)

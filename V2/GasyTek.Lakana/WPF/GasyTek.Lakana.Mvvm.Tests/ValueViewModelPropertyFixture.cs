@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using GasyTek.Lakana.Mvvm.ViewModelProperties;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

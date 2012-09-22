@@ -1,0 +1,57 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	xmlns:SampleData="clr-namespace:Expression.Blend.SampleData.SampleDataSource"
+	mc:Ignorable="d"
+	x:Class="Samples.GasyTek.Lakana.Screens.ContactListView"	
+	d:DesignWidth="640" 
+	d:DesignHeight="480"
+	Background="{DynamicResource WorkspaceBackgroundBrush}"
+	Style="{StaticResource ScreenStyle}">
+	<UserControl.Resources>
+		
+		<SampleData:SampleDataSource x:Key="SampleDataSource" d:IsDataSource="True"/>
+
+		<DataTemplate x:Key="ItemTemplate">
+			<StackPanel>
+				<TextBlock FontFamily="Segoe UI Light" 
+						   FontSize="21.333"                          
+                           Margin="15,2,5,0">
+					<Run Text="{Binding FirstName}" /> <Run Text="{Binding LastName}" />
+				</TextBlock>
+				<TextBlock FontFamily="Segoe UI Light" 
+                           FontSize="16" 
+                           Margin="15,2,5,0">
+					<Run Text="{Binding DateOfBirth, StringFormat=d}" /> - <Run Text="{Binding DateOfDeath, StringFormat=d}" />
+				</TextBlock>
+				<TextBlock Text="{Binding PlaceOfBirth}"                           
+                           FontSize="16" 
+                           FontFamily="Segoe UI Light" 
+                           Margin="15,2,5,0"/>
+			</StackPanel>
+		</DataTemplate>
+		
+	</UserControl.Resources>
+
+	<DockPanel x:Name="LayoutRoot">
+		<TextBlock DockPanel.Dock="Top" Text="Contact List" Style="{DynamicResource ScreenTitleStyle}" />
+		<Border DockPanel.Dock="Top">
+			<Button  Content="Edit Contact" 
+					HorizontalAlignment="Right" 
+					Margin="0,0,0,10" 
+					Style="{DynamicResource ActionButtonStyle}"
+                    Command="{Binding EditContactCommand}" />
+		</Border>
+        <!--DataContext="{Binding Source={StaticResource SampleDataSource}}"-->
+        <!--ItemsSource="{Binding Collection}"-->
+		<!-- ItemsSource="{Binding Contacts}" -->
+        <ListBox ItemsSource="{Binding Contacts}"				
+				SelectedItem="{Binding SelectedContact, Mode=TwoWay}"
+				Style="{DynamicResource SimpleListBox}" 
+				ItemContainerStyle="{DynamicResource SimpleListBoxItem}" 
+				ItemTemplate="{DynamicResource ItemTemplate}" 
+                 />
+	</DockPanel>
+</UserControl>

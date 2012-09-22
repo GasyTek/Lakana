@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using GasyTek.Lakana.Mvvm.Tests.Fakes;
 using GasyTek.Lakana.Mvvm.Validation.Fluent;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -359,7 +360,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
                 // Act
                 var expressionBase = Parser.Parse(Tokens);
-                var taskResult = expressionBase.Evaluate();
+                var taskResult = expressionBase.Evaluate(new CancellationToken());
                 taskResult.Start();
 
                 // Verify
@@ -375,7 +376,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
                 // Act
                 var expressionBase = Parser.Parse(Tokens);
-                var taskResult = expressionBase.Evaluate();
+                var taskResult = expressionBase.Evaluate(new CancellationToken());
                 taskResult.Start();
 
                 // Verify
@@ -392,7 +393,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
                 // Act
                 var expressionBase = Parser.Parse(Tokens);
-                var taskResult = expressionBase.Evaluate();
+                var taskResult = expressionBase.Evaluate(new CancellationToken());
                 taskResult.Start();
 
                 // Verify
@@ -412,7 +413,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
                 // Act
                 var expressionBase = Parser.Parse(Tokens);
-                var taskResult = expressionBase.Evaluate();
+                var taskResult = expressionBase.Evaluate(new CancellationToken());
                 taskResult.Start();
 
                 // Verify
@@ -428,7 +429,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
                 // Act
                 var expressionBase = Parser.Parse(Tokens);
-                var taskResult = expressionBase.Evaluate();
+                var taskResult = expressionBase.Evaluate(new CancellationToken());
                 taskResult.Start();
 
                 // Verify
@@ -448,7 +449,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
                 // Act
                 var expressionBase = Parser.Parse(Tokens);
-                var taskResult = expressionBase.Evaluate();
+                var taskResult = expressionBase.Evaluate(new CancellationToken());
                 taskResult.Start();
 
                 // Verify
@@ -464,7 +465,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
                 // Act
                 var expressionBase = Parser.Parse(Tokens);
-                var taskResult = expressionBase.Evaluate();
+                var taskResult = expressionBase.Evaluate(new CancellationToken());
                 taskResult.Start();
 
                 // Verify

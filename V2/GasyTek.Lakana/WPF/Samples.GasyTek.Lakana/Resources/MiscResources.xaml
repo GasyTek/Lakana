@@ -1,0 +1,72 @@
+﻿<ResourceDictionary
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:Microsoft_Windows_Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d">
+	
+	<SolidColorBrush x:Key="WindowBackgorundBrush" Color="#FF353535"/>	
+	<SolidColorBrush x:Key="WorkspaceBackgroundBrush" Color="White"/>
+	
+	<SolidColorBrush x:Key="MetroRedBrush" Color="#FFE12026" />
+	<SolidColorBrush x:Key="MetroBlueBrush" Color="#FF558FCB" />
+	<SolidColorBrush x:Key="MetroOrangeBrush" Color="#FFF1961F" />
+	<SolidColorBrush x:Key="MetroGreenBrush" Color="#FF6FBD45" />
+	
+	<Style x:Key="ScreenStyle" TargetType="{x:Type UserControl}">
+		<Setter Property="Padding" Value="20" />
+	</Style>
+	
+	<Style x:Key="ScreenTitleStyle" TargetType="{x:Type TextBlock}">
+		<Setter Property="TextWrapping" Value="NoWrap"/>
+		<Setter Property="TextTrimming" Value="None"/>
+		<Setter Property="FontSize" Value="36" />
+		<Setter Property="FontFamily" Value="Segoe UI Light" />
+		<Setter Property="Foreground" Value="{DynamicResource WindowBackgorundBrush}"/>
+	</Style>
+	
+	<Style x:Key="ButtonFocusVisual">
+		<Setter Property="Control.Template">
+			<Setter.Value>
+				<ControlTemplate>
+					<Rectangle Margin="2" SnapsToDevicePixels="true" Stroke="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" StrokeThickness="1" StrokeDashArray="1 2"/>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+	
+	<Style x:Key="ActionButtonStyle" TargetType="{x:Type Button}">
+		<Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}"/>
+		<Setter Property="Background" Value="Transparent"/>
+		<Setter Property="BorderBrush" Value="#FF333333"/>
+		<Setter Property="BorderThickness" Value="1"/>
+		<Setter Property="Foreground" Value="#FF333333"/>
+		<Setter Property="HorizontalContentAlignment" Value="Center"/>
+		<Setter Property="VerticalContentAlignment" Value="Center"/>
+		<Setter Property="Padding" Value="15,3"/>
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="{x:Type Button}">
+					<Border Padding="{TemplateBinding Padding}" 
+						Background="{TemplateBinding Property=Background}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						BorderBrush="{TemplateBinding BorderBrush}">
+						
+						<ContentPresenter ContentSource="Content"
+							HorizontalAlignment="Center"
+							VerticalAlignment="Bottom" />
+					</Border>
+					
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsKeyboardFocused" Value="true"/>
+						<Trigger Property="ToggleButton.IsChecked" Value="true"/>
+						<Trigger Property="IsEnabled" Value="false">
+							<Setter Property="Foreground" Value="#ADADAD"/>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+		<Setter Property="Cursor" Value="Hand"/>
+		<Setter Property="FontFamily" Value="Segoe UI Light"/>
+		<Setter Property="FontSize" Value="13.333"/>
+	</Style>
+	
+</ResourceDictionary>

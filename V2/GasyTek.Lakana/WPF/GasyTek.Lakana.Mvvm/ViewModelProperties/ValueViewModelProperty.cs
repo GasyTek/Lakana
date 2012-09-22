@@ -8,7 +8,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModelProperties
     /// A single valued property.
     /// </summary>
     /// <typeparam name="TValue">The type of the value.</typeparam>
-    [DebuggerDisplay("Name = {PropertyMetadata.Name}, CurrentValue = {Value}")]
+    [DebuggerDisplay("Name = {PropertyMetadata.Name}, CurrentValue = {RightValue}")]
     public class ValueViewModelProperty<TValue> : ViewModelProperty, IValueViewModelProperty<TValue>
     {
         #region Fields
@@ -46,7 +46,7 @@ namespace GasyTek.Lakana.Mvvm.ViewModelProperties
         #endregion
 
         #region Constructor
-
+        
         internal ValueViewModelProperty(TValue originalValue, ObservableValidationEngine internalObservableValidationEngine)
             : base(internalObservableValidationEngine)
         {

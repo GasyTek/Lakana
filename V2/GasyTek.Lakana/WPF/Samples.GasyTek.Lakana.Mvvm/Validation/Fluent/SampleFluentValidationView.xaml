@@ -11,6 +11,8 @@
              Loaded="UserControlLoaded">
     <UserControl.Resources>
 
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
         <Style x:Key="FieldTitleStyle"
                TargetType="TextBlock">
             <Setter Property="HorizontalAlignment"
@@ -76,7 +78,7 @@
                     <ColumnDefinition Width="5" />
                     <ColumnDefinition Width="180" />
                     <ColumnDefinition Width="5" />
-                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
                 <!--
@@ -89,12 +91,23 @@
                            DataContext="{Binding Code}"
                            Style="{StaticResource FieldTitleStyle}" />
                 <TextBox Grid.Column="2"
-                         Text="{ui:Binding Code.Value}"
+                         Text="{ui:Binding Code.Value, UpdateSourceTrigger=PropertyChanged}"
                          Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
-                <Image Grid.Column="4"
-                       RenderOptions.BitmapScalingMode="HighQuality"
-                       ToolTip="{Binding Code.Description}"
-                       Source="../../Resources/info.png" />
+                <StackPanel Grid.Column="4"
+                            Orientation="Horizontal">
+                    <Image Width="20"
+                           HorizontalAlignment="Left"
+                           RenderOptions.BitmapScalingMode="HighQuality"
+                           ToolTip="{Binding Code.Description}"
+                           Source="../../Resources/info.png" />
+                    <Border Width="150">
+                        <TextBlock Text="Validating"
+                                   Foreground="Green"
+                                   Margin="5,0,0,0"
+                                   VerticalAlignment="Center"
+                                   Visibility="{Binding Code.IsValidating, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                    </Border>
+                </StackPanel>
 
                 <!-- Age -->
                 <TextBlock Grid.Row="2"
@@ -108,6 +121,8 @@
                                     Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
                 <Image Grid.Row="2"
                        Grid.Column="4"
+                       Width="20"
+                       HorizontalAlignment="Left"
                        RenderOptions.BitmapScalingMode="HighQuality"
                        ToolTip="{Binding Age.Description}"
                        Source="../../Resources/info.png" />
@@ -125,6 +140,8 @@
                           Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
                 <Image Grid.Row="4"
                        Grid.Column="4"
+                       Width="20"
+                       HorizontalAlignment="Left"
                        RenderOptions.BitmapScalingMode="HighQuality"
                        ToolTip="{Binding Country.Description}"
                        Source="../../Resources/info.png" />
@@ -143,6 +160,8 @@
                           Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
                 <Image Grid.Row="6"
                        Grid.Column="4"
+                       Width="20"
+                       HorizontalAlignment="Left"
                        RenderOptions.BitmapScalingMode="HighQuality"
                        ToolTip="{Binding Rank.Description}"
                        Source="../../Resources/info.png" />
@@ -159,6 +178,8 @@
                                      Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
                 <Image Grid.Row="8"
                        Grid.Column="4"
+                       Width="20"
+                       HorizontalAlignment="Left"
                        RenderOptions.BitmapScalingMode="HighQuality"
                        ToolTip="{Binding DateOfBirth.Description}"
                        Source="../../Resources/info.png" />
@@ -175,6 +196,8 @@
                                      Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
                 <Image Grid.Row="10"
                        Grid.Column="4"
+                       Width="20"
+                       HorizontalAlignment="Left"
                        RenderOptions.BitmapScalingMode="HighQuality"
                        ToolTip="{Binding DateOfHire.Description}"
                        Source="../../Resources/info.png" />
@@ -191,6 +214,8 @@
                                      Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
                 <Image Grid.Row="12"
                        Grid.Column="4"
+                       Width="20"
+                       HorizontalAlignment="Left"
                        RenderOptions.BitmapScalingMode="HighQuality"
                        ToolTip="{Binding DateOfHire.Description}"
                        Source="../../Resources/info.png" />
