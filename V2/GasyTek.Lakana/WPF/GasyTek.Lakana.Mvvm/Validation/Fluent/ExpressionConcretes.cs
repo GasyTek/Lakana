@@ -1,55 +1,32 @@
 ﻿using System;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
-using GasyTek.Lakana.Mvvm.ViewModelProperties;
 
 namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 {
     /// <summary>
     /// EqualTo operator.
     /// </summary>
-    // [DebuggerDisplay("EvaluatedValue = {EvaluatedValue}, Value = {Value}")]
+    // [DebuggerDisplay("LeftValue = {LeftValue}, RightValue = {RightValue}")]
     internal class EqualToExpression : EvaluableExpression
     {
-        private readonly Func<object> _valueProvider;
+        private readonly Func<object> _rightValueProvider;
 
-        public object Value
+        public object RightValue
         {
-            get { return _valueProvider != null ? _valueProvider() : null; }
+            get { return _rightValueProvider != null ? _rightValueProvider() : default(object); }
         }
 
-        private EqualToExpression(Func<object> evaluatedValueProvider, Func<object> valueProvider)
-            : base(evaluatedValueProvider)
+        internal EqualToExpression(Func<object> leftValueProvider, Func<object> rightValueProvider)
+            : base(leftValueProvider)
         {
-            _valueProvider = valueProvider;
+            _rightValueProvider = rightValueProvider;
         }
 
-        #region Factory methods
-
-        public static EqualToExpression CreateGeneric(Func<object> evaluatedValueProvider, Func<object> valueProvider)
+        public override Task<bool> Evaluate(CancellationToken cancellationToken)
         {
-            return new EqualToExpression(evaluatedValueProvider, valueProvider);
-        }
-
-        public static EqualToExpression CreateUsingValue(IViewModelProperty evaluatedProperty, object value)
-        {
-            var evaluatedValueProvider = new Func<object>(evaluatedProperty.GetValue);
-            var valueProvider = new Func<object>(() => value);
-            return CreateGeneric(evaluatedValueProvider, valueProvider);
-        }
-
-        public static EqualToExpression CreateUsingProperty(IViewModelProperty evaluatedProperty, IViewModelProperty valueProperty)
-        {
-            var evaluatedValueProvider = new Func<object>(evaluatedProperty.GetValue);
-            var valueProvider = new Func<object>(valueProperty.GetValue);
-            return CreateGeneric(evaluatedValueProvider, valueProvider);
-        }
-
-        #endregion
-
-        public override Task<bool> Evaluate()
-        {
-            return new Task<bool>(() => Equals(EvaluatedValue, Value));
+            return new Task<bool>(() => Equals(LeftValue, RightValue), cancellationToken, TaskCreationOptions.AttachedToParent);
         }
     }
 
@@ -57,55 +34,32 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
     /// Strictly GreaterThan operator.
     /// </summary>
     /// <remarks>Applies only on objects that implements IComparable.</remarks>
-    // [DebuggerDisplay("EvaluatedValue = {EvaluatedValue}, Value = {Value}")]
+    // [DebuggerDisplay("LeftValue = {LeftValue}, RightValue = {RightValue}")]
     internal class GreaterThanExpression : EvaluableExpression
     {
-        private readonly Func<object> _valueProvider;
+        private readonly Func<object> _rightValueProvider;
 
-        public object Value
+        public object RightValue
         {
-            get { return _valueProvider != null ? _valueProvider() : null; }
+            get { return _rightValueProvider != null ? _rightValueProvider() : null; }
         }
 
-        private GreaterThanExpression(Func<object> evaluatedValueProvider, Func<object> valueProvider)
-            : base(evaluatedValueProvider)
+        internal GreaterThanExpression(Func<object> leftValueProvider, Func<object> rightValueProvider)
+            : base(leftValueProvider)
         {
-            _valueProvider = valueProvider;
+            _rightValueProvider = rightValueProvider;
         }
 
-        #region Factory methods
-
-        public static GreaterThanExpression CreateGeneric(Func<object> evaluatedValueProvider, Func<object> valueProvider)
-        {
-            return new GreaterThanExpression(evaluatedValueProvider, valueProvider);
-        }
-
-        public static GreaterThanExpression CreateUsingValue(IViewModelProperty evaluatedProperty, object value)
-        {
-            var evaluatedValueProvider = new Func<object>(evaluatedProperty.GetValue);
-            var valueProvider = new Func<object>(() => value);
-            return CreateGeneric(evaluatedValueProvider, valueProvider);
-        }
-
-        public static GreaterThanExpression CreateUsingProperty(IViewModelProperty evaluatedProperty, IViewModelProperty valueProperty)
-        {
-            var evaluatedValueProvider = new Func<object>(evaluatedProperty.GetValue);
-            var valueProvider = new Func<object>(valueProperty.GetValue);
-            return CreateGeneric(evaluatedValueProvider, valueProvider);
-        }
-
-        #endregion
-
-        public override Task<bool> Evaluate()
+        public override Task<bool> Evaluate(CancellationToken cancellationToken)
         {
             return new Task<bool>(() =>
                                       {
-                                          var cmp1 = EvaluatedValue as IComparable;
-                                          var cmp2 = Value as IComparable;
+                                          var cmp1 = LeftValue as IComparable;
+                                          var cmp2 = RightValue as IComparable;
                                           if (cmp1 == null || cmp2 == null)
                                               throw new InvalidOperationException("GreaterThan operator : one of the operand is not comparable. Make them implement IComparable.");
                                           return cmp1.CompareTo(cmp2) > 0;
-                                      });
+                                      }, cancellationToken, TaskCreationOptions.AttachedToParent);
         }
     }
 
@@ -113,55 +67,32 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
     /// Strictly LessThan operator.
     /// </summary>
     /// /// <remarks>Applies only on objects that implements IComparable.</remarks>
-    // [DebuggerDisplay("EvaluatedValue = {EvaluatedValue}, Value = {Value}")]
+    // [DebuggerDisplay("LeftValue = {LeftValue}, RightValue = {RightValue}")]
     internal class LessThanExpression : EvaluableExpression
     {
-        private readonly Func<object> _valueProvider;
+        private readonly Func<object> _rightValueProvider;
 
-        public object Value
+        public object RightValue
         {
-            get { return _valueProvider != null ? _valueProvider() : null; }
+            get { return _rightValueProvider != null ? _rightValueProvider() : null; }
         }
 
-        private LessThanExpression(Func<object> evaluatedValueProvider, Func<object> valueProvider)
-            : base(evaluatedValueProvider)
+        internal LessThanExpression(Func<object> leftValueProvider, Func<object> rightValueProvider)
+            : base(leftValueProvider)
         {
-            _valueProvider = valueProvider;
+            _rightValueProvider = rightValueProvider;
         }
 
-        #region Factory methods
-
-        public static LessThanExpression CreateGeneric(Func<object> evaluatedValueProvider, Func<object> valueProvider)
-        {
-            return new LessThanExpression(evaluatedValueProvider, valueProvider);
-        }
-
-        public static LessThanExpression CreateUsingValue(IViewModelProperty evaluatedProperty, object value)
-        {
-            var evaluatedValueProvider = new Func<object>(evaluatedProperty.GetValue);
-            var valueProvider = new Func<object>(() => value);
-            return CreateGeneric(evaluatedValueProvider, valueProvider);
-        }
-
-        public static LessThanExpression CreateUsingProperty(IViewModelProperty evaluatedProperty, IViewModelProperty valueProperty)
-        {
-            var evaluatedValueProvider = new Func<object>(evaluatedProperty.GetValue);
-            var valueProvider = new Func<object>(valueProperty.GetValue);
-            return CreateGeneric(evaluatedValueProvider, valueProvider);
-        }
-
-        #endregion
-
-        public override Task<bool> Evaluate()
+        public override Task<bool> Evaluate(CancellationToken cancellationToken)
         {
             return new Task<bool>(() =>
-            {
-                var cmp1 = EvaluatedValue as IComparable;
-                var cmp2 = Value as IComparable;
-                if (cmp1 == null || cmp2 == null)
-                    throw new InvalidOperationException("LessThan operator : one of the operand is not comparable. Make them implement IComparable.");
-                return cmp1.CompareTo(cmp2) < 0;
-            });
+                                    {
+                                        var cmp1 = LeftValue as IComparable;
+                                        var cmp2 = RightValue as IComparable;
+                                        if (cmp1 == null || cmp2 == null)
+                                            throw new InvalidOperationException("LessThan operator : one of the operand is not comparable. Make them implement IComparable.");
+                                        return cmp1.CompareTo(cmp2) < 0;
+                                    }, cancellationToken, TaskCreationOptions.AttachedToParent);
         }
     }
 
@@ -173,36 +104,48 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
     {
         public string Pattern { get; private set; }
 
-        private MatchingExpression(Func<object> evaluatedValueProvider, string pattern)
-            : base(evaluatedValueProvider)
+        internal MatchingExpression(Func<object> leftValueProvider, string pattern)
+            : base(leftValueProvider)
         {
             Pattern = pattern;
         }
 
-        #region Factory methods
-
-        public static MatchingExpression CreateGeneric(Func<object> evaluatedValueProvider, string pattern)
-        {
-            return new MatchingExpression(evaluatedValueProvider, pattern);
-        }
-
-        public static MatchingExpression CreateUsingProperty(IViewModelProperty evaluatedProperty, string pattern)
-        {
-            var evaluatedValueProvider = new Func<object>(evaluatedProperty.GetValue);
-            return CreateGeneric(evaluatedValueProvider, pattern);
-        }
-
-        #endregion
-
-        public override Task<bool> Evaluate()
+        public override Task<bool> Evaluate(CancellationToken cancellationToken)
         {
             return new Task<bool>(() =>
-            {
-                if (EvaluatedValue is string == false)
-                    throw new InvalidOperationException("Matching operator : matching to a regular expression can be applied only on string values. ");
+                                    {
+                                        if (LeftValue is string == false)
+                                            throw new InvalidOperationException("Matching operator : matching to a regular expression can be applied only on string values. ");
 
-                return Regex.IsMatch(EvaluatedValue.ToString(), Pattern);
-            });
+                                        return Regex.IsMatch(LeftValue.ToString(), Pattern);
+                                    }, cancellationToken, TaskCreationOptions.AttachedToParent);
+        }
+    }
+
+    /// <summary>
+    /// Custom rule operator.
+    /// </summary>
+    internal class CustomValidationExpression : EvaluableExpression
+    {
+        private readonly CustomValidator _customValidator;
+
+        public CustomValidator CustomValidator
+        {
+            get { return _customValidator; }
+        }
+
+        public CustomValidationExpression(Func<object> leftValueProvider, CustomValidator customValidator) 
+            : base(leftValueProvider)
+        {
+            _customValidator = customValidator;
+        }
+
+        public override Task<bool> Evaluate(CancellationToken cancellationToken)
+        {
+            if (_customValidator == null)
+                throw new ArgumentNullException("customValidator");
+
+            return new Task<bool>(() => _customValidator (LeftValue, cancellationToken), cancellationToken, TaskCreationOptions.AttachedToParent);
         }
     }
 }

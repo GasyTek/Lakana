@@ -2,7 +2,6 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace GasyTek.Lakana.Mvvm.Validation
 {
@@ -21,7 +20,7 @@ namespace GasyTek.Lakana.Mvvm.Validation
             Errors = new ConcurrentDictionary<string, ErrorCollection>();
         }
 
-        protected abstract void OnValidate(PropertyInfo property, object propertyValue);
+        protected abstract void OnValidate(ValidationParameter validationParameter);
 
         protected virtual void OnRaiseErrorsChangedEvent(string propertyName, params string [] optionalPropertyNames)
         {
@@ -55,9 +54,9 @@ namespace GasyTek.Lakana.Mvvm.Validation
             return GetErrors(propertyName).Any() == false;
         }
 
-        public void Validate(PropertyInfo property, object value)
+        public void Validate(ValidationParameter validationParameter)
         {
-            OnValidate(property, value);
+            OnValidate(validationParameter);
         }
 
         #endregion
@@ -69,7 +68,7 @@ namespace GasyTek.Lakana.Mvvm.Validation
         /// </summary>
         protected sealed class ErrorCollection
         {
-            private readonly Dictionary<object, string> _errors;
+            private readonly ConcurrentDictionary<object, string> _errors;
 
             public string this[object key]
             {
@@ -83,7 +82,7 @@ namespace GasyTek.Lakana.Mvvm.Validation
 
             public ErrorCollection()
             {
-                _errors = new Dictionary<object, string>();
+                _errors = new ConcurrentDictionary<object, string>();
             }
 
             public ErrorCollection(IEnumerable<string> errorMessages)
@@ -99,8 +98,7 @@ namespace GasyTek.Lakana.Mvvm.Validation
 
             public void AddError(object key, string errorMessage)
             {
-                if(_errors.ContainsKey(key) == false)
-                    _errors.Add(key, errorMessage);
+                _errors.AddOrUpdate(key, errorMessage, (k, v) => errorMessage);
             }
 
             public void AddError(string errorMessage)
@@ -115,8 +113,8 @@ namespace GasyTek.Lakana.Mvvm.Validation
 
             public void RemoveError(object key)
             {
-                if (_errors.ContainsKey(key))
-                    _errors.Remove(key);
+                string removedValue;
+                _errors.TryRemove(key, out removedValue);
             }
 
             public IEnumerable<string> GetErrors()

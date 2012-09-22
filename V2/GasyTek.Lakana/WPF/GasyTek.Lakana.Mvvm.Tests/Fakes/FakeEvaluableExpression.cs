@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using GasyTek.Lakana.Mvvm.Validation.Fluent;
 
@@ -28,7 +29,7 @@ namespace GasyTek.Lakana.Mvvm.Tests.Fakes
         {
         }
 
-        public override Task<bool> Evaluate()
+        public override Task<bool> Evaluate(CancellationToken cancellationToken)
         {
             var evaluableTask = new Task<bool>(() => _evaluableValue);
             if (_sleepDuration != TimeSpan.Zero) evaluableTask.Wait(_sleepDuration);

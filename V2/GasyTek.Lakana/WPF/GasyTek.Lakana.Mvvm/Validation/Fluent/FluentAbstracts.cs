@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using GasyTek.Lakana.Mvvm.ViewModelProperties;
 using GasyTek.Lakana.Mvvm.ViewModels;
 
@@ -49,9 +48,9 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
     }
 
     /// <summary>
-    /// The first fluent api part that must be used. It defines the property to configure.
+    /// The first fluent api part that must be used. It defines the property to configure and begins the fluent rule definition.
     /// </summary>
-    /// <typeparam name="TViewModel">The type of the view model.</typeparam>
+    /// <typeparam name="TViewModel">The type of the targeted view model.</typeparam>
     public interface IFluentProperty<TViewModel> : IFluentInterface where TViewModel : ViewModelBase
     {
         /// <summary>
@@ -65,7 +64,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
     /// <summary>
     /// The equivalent of verb part in the world of fluent api.
     /// </summary>
-    /// <typeparam name="TViewModel">The type of the view model.</typeparam>
+    /// <typeparam name="TViewModel">The type of the targeted view model.</typeparam>
     public interface IFluentVerb<TViewModel> : IFluentInterface where TViewModel : ViewModelBase
     {
         /// <summary>
@@ -89,28 +88,35 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
     /// <summary>
     /// Evaluable expressions that is used with fluent api.
     /// </summary>
-    /// <typeparam name="TViewModel">The type of the view model.</typeparam>
+    /// <typeparam name="TViewModel">The type of the targeted view model.</typeparam>
     public interface IFluentEvaluable<TViewModel> : IFluentInterface where TViewModel : ViewModelBase
     {
         /// <summary>
-        /// GreaterThan.
+        /// The property must satisfy the custom rule.
+        /// </summary>
+        /// <param name="customValidator">The custom rule.</param>
+        /// <returns></returns>
+        IFluentOtherwise<TViewModel> Satisfying(CustomValidator customValidator);
+
+        /// <summary>
+        /// Assert that proeprty value is greater than provided value.
         /// </summary>
         /// <param name="value">The value.</param>
         /// <returns></returns>
         IFluentOtherwise<TViewModel> GreaterThan(object value);
 
         /// <summary>
-        /// GreaterThan
+        /// Assert that proeprty value is greater than provided property.
         /// </summary>
         /// <param name="propertyExpression">The property expression.</param>
         IFluentOtherwise<TViewModel> GreaterThan(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression);
 
         /// <summary>
-        /// GreaterThan.
+        /// Assert that proeprty value is greater than provided value.
         /// </summary>
-        /// <param name="valueProvider">The async value.</param>
+        /// <param name="lateValue"> </param>
         /// <returns></returns>
-        IFluentOtherwise<TViewModel> GreaterThan(Task<object> valueProvider);
+        IFluentOtherwise<TViewModel> GreaterThan(LateValue lateValue);
         
         /// <summary>
         /// GreaterThanOrEqualn.
@@ -128,9 +134,9 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         /// <summary>
         /// GreaterThanOrEqualTo.
         /// </summary>
-        /// <param name="valueProvider">The async value.</param>
+        /// <param name="lateValue"> </param>
         /// <returns></returns>
-        IFluentOtherwise<TViewModel> GreaterThanOrEqualTo(Task<object> valueProvider);
+        IFluentOtherwise<TViewModel> GreaterThanOrEqualTo(LateValue lateValue);
 
         /// <summary>
         /// LessThan
@@ -150,7 +156,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         /// LessThan
         /// </summary>
         /// <returns></returns>
-        IFluentOtherwise<TViewModel> LessThan(Task<object> valueProvider);
+        IFluentOtherwise<TViewModel> LessThan(LateValue lateValue);
 
         /// <summary>
         /// LessThanOrEqualTo
@@ -170,7 +176,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         /// LessThanOrEqualTo
         /// </summary>
         /// <returns></returns>
-        IFluentOtherwise<TViewModel> LessThanOrEqualTo(Task<object> valueProvider);
+        IFluentOtherwise<TViewModel> LessThanOrEqualTo(LateValue lateValue);
 
         /// <summary>
         /// EqualTo
@@ -190,7 +196,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         /// EqualTo
         /// </summary>
         /// <returns></returns>
-        IFluentOtherwise<TViewModel> EqualTo(Task<object> valueProvider);
+        IFluentOtherwise<TViewModel> EqualTo(LateValue lateValue);
 
         /// <summary>
         /// Null.
@@ -210,17 +216,81 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         /// <param name="pattern">The pattern.</param>
         /// <returns></returns>
         IFluentOtherwise<TViewModel> Matching(string pattern);
-        
+
+        /// <summary>
+        /// Validates email property.
+        /// </summary>
+        /// <returns></returns>
         IFluentOtherwise<TViewModel> ValidEmail();
+
+        /// <summary>
+        /// Matches if property value starts with provided pattern.
+        /// </summary>
+        /// <param name="start">The pattern.</param>
+        /// <returns></returns>
         IFluentOtherwise<TViewModel> StartingWith(string start);
+
+        /// <summary>
+        /// Matches if property value ends with provided pattern.
+        /// </summary>
+        /// <param name="end">The pattern.</param>
+        /// <returns></returns>
         IFluentOtherwise<TViewModel> EndingWith(string end);
+
+        /// <summary>
+        /// Validates max length of proeprty value.
+        /// </summary>
+        /// <param name="maxLength">Max length.</param>
+        /// <returns></returns>
         IFluentOtherwise<TViewModel> MaxLength(int maxLength);
+
+        /// <summary>
+        /// Validates min length of property value.
+        /// </summary>
+        /// <param name="minLength">Min length.</param>
+        /// <returns></returns>
         IFluentOtherwise<TViewModel> MinLength(int minLength);
+
+        /// <summary>
+        /// Assert that property value is required.
+        /// </summary>
+        /// <remarks>Strings must not be null nor empty.</remarks>
+        /// <returns></returns>
         IFluentOtherwise<TViewModel> Required();
+
+        /// <summary>
+        ///Assert that property value is different of provided value.
+        /// </summary>
         IFluentOtherwise<TViewModel> DifferentOf(object value);
+        
+        /// <summary>
+        /// Assert that property value is different of another property's value.
+        /// </summary>
+        /// <param name="propertyExpression">The other property.</param>
+        /// <returns></returns>
         IFluentOtherwise<TViewModel> DifferentOf(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression);
-        IFluentOtherwise<TViewModel> DifferentOf(Task<object> valueProvider);
+
+        /// <summary>
+        /// Assert that property value is different of a value provided by asynchrnoous operation.
+        /// </summary>
+        /// <param name="lateValue">The async value.</param>
+        /// <returns></returns>
+        IFluentOtherwise<TViewModel> DifferentOf(LateValue lateValue);
+
+        /// <summary>
+        /// Assert that property value is between provided values.
+        /// </summary>
+        /// <param name="from">Lower bound.</param>
+        /// <param name="to">Upper bound.</param>
+        /// <returns></returns>
         IFluentOtherwise<TViewModel> Between(object @from, object to);
+
+        /// <summary>
+        /// Assert that property value is between provided properties.
+        /// </summary>
+        /// <param name="from">Lower bound.</param>
+        /// <param name="to">Upper bound.</param>
+        /// <returns></returns>
         IFluentOtherwise<TViewModel> BetweenPoperties(Expression<Func<TViewModel, IViewModelProperty>> @from, Expression<Func<TViewModel, IViewModelProperty>> to);
     }
 

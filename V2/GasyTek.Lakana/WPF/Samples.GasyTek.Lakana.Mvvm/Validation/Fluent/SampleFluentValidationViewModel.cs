@@ -1,6 +1,7 @@
 using System;
 using GasyTek.Lakana.Common.UI;
 using GasyTek.Lakana.Mvvm.Validation;
+using GasyTek.Lakana.Mvvm.Validation.Fluent;
 using GasyTek.Lakana.Mvvm.ViewModelProperties;
 using GasyTek.Lakana.Mvvm.ViewModels;
 
@@ -73,6 +74,12 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.Fluent
         protected override IValidationEngine OnCreateValidationEngine()
         {
             return new MyFluentValidationEngine(this);
+        }
+
+        internal CustomValidator CodeIsUnique()
+        {
+            CustomValidator codeExistValidator = (code, token) => WebService.CodeExist(code as string) == false;
+            return codeExistValidator;
         }
 
         protected override void OnSave()

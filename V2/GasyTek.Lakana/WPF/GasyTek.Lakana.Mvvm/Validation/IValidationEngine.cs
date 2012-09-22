@@ -32,8 +32,7 @@ namespace GasyTek.Lakana.Mvvm.Validation
         /// <summary>
         /// Validates the provided value of the provided property.
         /// </summary>
-        /// <param name="property">The metadata of the property.</param>
-        /// <param name="value">The value to validate. Typically, this is the current value of the property.</param>
-        void Validate(PropertyInfo property, object value);
+        /// <param name="validationParameter"> </param>
+        void Validate(ValidationParameter validationParameter);
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
+using GasyTek.Lakana.Mvvm.ViewModelProperties;
 
 namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 {
@@ -8,32 +10,140 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
     /// </summary>
     internal abstract class ExpressionNode
     {
-        public abstract Task<bool> Evaluate();
-    }
+        public abstract Task<bool> Evaluate(CancellationToken cancellationToken);
 
-    #region Constants
+        #region Factory : Parenthesis Expressions
 
-    internal abstract class ConstantExpression : ExpressionNode
-    {
-    }
-
-    internal class TrueExpression : ConstantExpression
-    {
-        public override Task<bool> Evaluate()
+        public static OpenParenthesis OpenParenthesis()
         {
-            return new Task<bool>(() => true);
+            return new OpenParenthesis();
         }
-    }
 
-    internal class FalseExpression : ConstantExpression
-    {
-        public override Task<bool> Evaluate()
+        public static CloseParenthesis CloseParenthesis()
         {
-            return new Task<bool>(() => false);
+            return new CloseParenthesis();
         }
-    }
 
-    #endregion
+        #endregion
+
+        #region Factory : Operator Expressions
+
+        public static AndExpression And()
+        {
+            return new AndExpression();
+        }
+
+        public static OrExpression Or()
+        {
+            return new OrExpression();
+        }
+
+        public static NotExpression Not()
+        {
+            return  new NotExpression();
+        }
+
+        #endregion
+
+        #region Factory : Evaluable Expressions
+
+        public static  EqualToExpression EqualToGeneric(Func<object> leftValueProvider, Func<object> rightValueProvider)
+        {
+            return new EqualToExpression(leftValueProvider, rightValueProvider);
+        }
+
+        public static EqualToExpression EqualToValue(IViewModelProperty property, object value)
+        {
+            var leftValueProvider = new Func<object>(property.GetValue);
+            var rightValueProvider = new Func<object>(() => value);
+            return EqualToGeneric(leftValueProvider, rightValueProvider);
+        }
+
+        public static EqualToExpression EqualToProperty(IViewModelProperty property, IViewModelProperty valueProperty)
+        {
+            var leftValueProvider = new Func<object>(property.GetValue);
+            var rightValueProvider = new Func<object>(valueProperty.GetValue);
+            return EqualToGeneric(leftValueProvider, rightValueProvider);
+        }
+
+        public static EqualToExpression EqualToLateValue(IViewModelProperty property, LateValue lateValue)
+        {
+            var leftValueProvider = new Func<object>(property.GetValue);
+            var rightValueProvider = new Func<object>(() => lateValue());
+            return EqualToGeneric(leftValueProvider, rightValueProvider);
+        }
+
+        public static GreaterThanExpression GreaterThanGeneric(Func<object> leftValueProvider, Func<object> rightValueProvider)
+        {
+            return new GreaterThanExpression(leftValueProvider, rightValueProvider);
+        }
+
+        public static GreaterThanExpression GreaterThanValue(IViewModelProperty property, object value)
+        {
+            var leftValueProvider = new Func<object>(property.GetValue);
+            var rightValueProvider = new Func<object>(() => value);
+            return GreaterThanGeneric(leftValueProvider, rightValueProvider);
+        }
+
+        public static GreaterThanExpression GreaterThanProperty(IViewModelProperty property, IViewModelProperty valueProperty)
+        {
+            var leftValueProvider = new Func<object>(property.GetValue);
+            var rightValueProvider = new Func<object>(valueProperty.GetValue);
+            return GreaterThanGeneric(leftValueProvider, rightValueProvider);
+        }
+
+        public static GreaterThanExpression GreaterThanLateValue(IViewModelProperty property, LateValue lateValue)
+        {
+            var leftValueProvider = new Func<object>(property.GetValue);
+            var rightValueProvider = new Func<object>(() => lateValue());
+            return GreaterThanGeneric(leftValueProvider, rightValueProvider);
+        }
+
+        public static LessThanExpression LessThanGeneric(Func<object> leftValueProvider, Func<object> rightValueProvider)
+        {
+            return new LessThanExpression(leftValueProvider, rightValueProvider);
+        }
+
+        public static LessThanExpression LessThanValue(IViewModelProperty property, object value)
+        {
+            var leftValueProvider = new Func<object>(property.GetValue);
+            var rightValueProvider = new Func<object>(() => value);
+            return LessThanGeneric(leftValueProvider, rightValueProvider);
+        }
+
+        public static LessThanExpression LessThanProperty(IViewModelProperty property, IViewModelProperty valueProperty)
+        {
+            var leftValueProvider = new Func<object>(property.GetValue);
+            var rightValueProvider = new Func<object>(valueProperty.GetValue);
+            return LessThanGeneric(leftValueProvider, rightValueProvider);
+        }
+
+        public static LessThanExpression LessThanLateValue(IViewModelProperty property, LateValue lateValue)
+        {
+            var leftValueProvider = new Func<object>(property.GetValue);
+            var rightValueProvider = new Func<object>(() => lateValue());
+            return LessThanGeneric(leftValueProvider, rightValueProvider);
+        }
+
+        public static MatchingExpression MatchingGeneric(Func<object> leftValueProvider, string pattern)
+        {
+            return new MatchingExpression(leftValueProvider, pattern);
+        }
+
+        public static MatchingExpression MatchingProperty(IViewModelProperty property, string pattern)
+        {
+            var evaluatedValueProvider = new Func<object>(property.GetValue);
+            return MatchingGeneric(evaluatedValueProvider, pattern);
+        }
+
+        public static CustomValidationExpression CustomValidation(IViewModelProperty property, CustomValidator customValidator)
+        {
+            var leftValueProvider = new Func<object>(property.GetValue);
+            return new CustomValidationExpression(leftValueProvider, customValidator);
+        }
+
+        #endregion
+    }
 
     #region Parenthesis
 
@@ -49,7 +159,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
     /// </summary>
     internal class OpenParenthesis : ParenthesisExpression
     {
-        public override Task<bool> Evaluate()
+        public override Task<bool> Evaluate(CancellationToken cancellationToken)
         {
             throw new InvalidOperationException();
         }
@@ -60,7 +170,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
     /// </summary>
     internal class CloseParenthesis : ParenthesisExpression
     {
-        public override Task<bool> Evaluate()
+        public override Task<bool> Evaluate(CancellationToken cancellationToken)
         {
             throw new InvalidOperationException();
         }
@@ -110,20 +220,20 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             get { return OperatorType.Binary; }
         }
 
-        public override Task<bool> Evaluate()
+        public override Task<bool> Evaluate(CancellationToken cancellationToken)
         {
             EnsureBinaryOperandsInitialized();
 
             return new Task<bool>(() =>
-            {
-                var leftTask = Left.Evaluate();
-                var rightTask = Right.Evaluate();
+                                    {
+                                        var leftTask = Left.Evaluate(cancellationToken);
+                                        var rightTask = Right.Evaluate(cancellationToken);
 
-                leftTask.Start();
-                rightTask.Start();
+                                        leftTask.Start();
+                                        rightTask.Start();
                 
-                return leftTask.Result && rightTask.Result;
-            });
+                                        return leftTask.Result && rightTask.Result;
+                                    }, cancellationToken, TaskCreationOptions.AttachedToParent);
         }
     }
 
@@ -142,20 +252,20 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             get { return OperatorType.Binary; }
         }
 
-        public override Task<bool> Evaluate()
+        public override Task<bool> Evaluate(CancellationToken cancellationToken)
         {
             EnsureBinaryOperandsInitialized();
 
             return new Task<bool>(() =>
-            {
-                var leftTask = Left.Evaluate();
-                var rightTask = Right.Evaluate();
+                                    {
+                                        var leftTask = Left.Evaluate(cancellationToken);
+                                        var rightTask = Right.Evaluate(cancellationToken);
 
-                leftTask.Start();
-                rightTask.Start();
+                                        leftTask.Start();
+                                        rightTask.Start();
 
-                return leftTask.Result || rightTask.Result;
-            });
+                                        return leftTask.Result || rightTask.Result;
+                                    }, cancellationToken, TaskCreationOptions.AttachedToParent);
         }
     }
 
@@ -174,17 +284,17 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             get { return OperatorType.Unary; }
         }
 
-        public override Task<bool> Evaluate()
+        public override Task<bool> Evaluate(CancellationToken cancellationToken)
         {
             EnsureUnaryOperandInitialized();
 
             return new Task<bool>(() =>
-            {
-                var leftTask = Left.Evaluate();
-                leftTask.Start();
+                                    {
+                                        var leftTask = Left.Evaluate(cancellationToken);
+                                        leftTask.Start();
 
-                return !leftTask.Result;
-            });
+                                        return !leftTask.Result;
+                                    }, cancellationToken, TaskCreationOptions.AttachedToParent);
         }
     }
 
@@ -205,26 +315,24 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             get { return OperatorType.Ternary; }
         }
 
-        public override Task<bool> Evaluate()
+        public override Task<bool> Evaluate(CancellationToken cancellationToken)
         {
             EnsureTernaryOperandsInitialized();
 
             return new Task<bool>(() =>
-            {
-                var conditionTask = Condition.Evaluate();
-                if(conditionTask.Result)
-                {
-                    var leftTask = Left.Evaluate();
-                    leftTask.Start();
-                    return leftTask.Result;
-                }
-                else
-                {
-                    var rightTask = Right.Evaluate();
-                    rightTask.Start();
-                    return rightTask.Result;
-                }
-            });
+                                    {
+                                        var conditionTask = Condition.Evaluate(cancellationToken);
+                                        if(conditionTask.Result)
+                                        {
+                                            var leftTask = Left.Evaluate(cancellationToken);
+                                            leftTask.Start();
+                                            return leftTask.Result;
+                                        }
+
+                                        var rightTask = Right.Evaluate(cancellationToken);
+                                        rightTask.Start();
+                                        return rightTask.Result;
+                                    }, cancellationToken, TaskCreationOptions.AttachedToParent);
         }
 
         protected void EnsureTernaryOperandsInitialized()
@@ -241,26 +349,27 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
     /// </summary>
     internal abstract class EvaluableExpression : ExpressionNode
     {
-        private readonly Func<object> _evaluatedValueProvider;
+        private readonly Func<object> _leftValueProvider;
 
         /// <summary>
         /// Gets the value that will be evaluated.
         /// </summary>
-        public object EvaluatedValue
+        public object LeftValue
         {
-            get { return _evaluatedValueProvider != null ? _evaluatedValueProvider() : null; }
+            get { return _leftValueProvider != null ? _leftValueProvider() : null; }
         }
 
-        protected EvaluableExpression(Func<object> evaluatedValueProvider)
+        protected EvaluableExpression(Func<object> leftValueProvider)
         {
-            _evaluatedValueProvider = evaluatedValueProvider;
+            _leftValueProvider = leftValueProvider;
         }
 
-        public override Task<bool> Evaluate()
+        public override Task<bool> Evaluate(CancellationToken cancellationToken)
         {
-            return new Task<bool>(() => true);
+            return new Task<bool>(() => true, TaskCreationOptions.AttachedToParent);
         }
     }
+
 
     /// <summary>
     /// Defines associativity of operators.

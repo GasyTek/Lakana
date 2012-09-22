@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using GasyTek.Lakana.Mvvm.Tests.Fakes;
 using GasyTek.Lakana.Mvvm.Validation.Fluent;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -55,13 +56,12 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
         private void Given(IFluentOtherwise<FakeEditableViewModel> expression)
         {
-
         }
 
         private void VerifyThatRuleIsBroken()
         {
             var expressionNode = Parser.Parse(((FluentImplementer<FakeEditableViewModel>)FluentApi).InternalTokens);
-            var task = expressionNode.Evaluate();
+            var task = expressionNode.Evaluate(new CancellationToken());
             task.RunSynchronously();
 
             // the rule is broken when the evaluation of the rule expression is equal to false.
@@ -71,7 +71,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
         private void VerifyThatRuleIsSatisfied()
         {
             var expressionNode = Parser.Parse(((FluentImplementer<FakeEditableViewModel>)FluentApi).InternalTokens);
-            var task = expressionNode.Evaluate();
+            var task = expressionNode.Evaluate(new CancellationToken());
             task.Start();
 
             Assert.IsTrue(task.Result);
@@ -109,7 +109,22 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
                 // verify that rule is broken
                 VerifyThatRuleIsBroken();
-            } 
+            }
+
+            [TestMethod]
+            public void CanEvaluateGreaterThanRuleAgainstLateValue()
+            {
+                // define the rule
+                int[] dynamicValue = {3};
+                Given(FluentApi.Property(vm => vm.PurchasingPrice).Is.GreaterThan(() => dynamicValue[0]));
+
+                // break the rule
+                dynamicValue[0] = 10;
+                FakeEditableViewModel.PurchasingPrice.Value = 5;
+
+                // verify that rule is broken
+                VerifyThatRuleIsBroken();
+            }
         }
         
         #endregion
@@ -144,7 +159,22 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
                 // verify that rule is broken
                 VerifyThatRuleIsBroken();
-            }    
+            }
+
+            [TestMethod]
+            public void CanEvaluateLessThanRuleAgainstLateValue()
+            {
+                // define the rule
+                int[] dynamicValue = {15};
+                Given(FluentApi.Property(vm => vm.PurchasingPrice).Is.LessThan(() => dynamicValue[0]));
+
+                // break the rule
+                dynamicValue[0] = 5;
+                FakeEditableViewModel.PurchasingPrice.Value = 10;
+
+                // verify that rule is broken
+                VerifyThatRuleIsBroken();
+            }
         }
 
         #endregion
@@ -179,7 +209,22 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
                 // verify that rule is broken
                 VerifyThatRuleIsBroken();
-            }             
+            }
+
+            [TestMethod]
+            public void CanEvaluateEqualToRuleAgainstAsyncValue()
+            {
+                // define the rule
+                int[] dynamicValue = {10};
+                Given(FluentApi.Property(vm => vm.PurchasingPrice).Is.EqualTo(() => dynamicValue[0]));
+
+                // break the rule
+                dynamicValue[0] = 15;
+                FakeEditableViewModel.PurchasingPrice.Value = 10;
+
+                // verify that rule is broken
+                VerifyThatRuleIsBroken();
+            }
         }
 
         #endregion
@@ -337,6 +382,21 @@ namespace GasyTek.Lakana.Mvvm.Tests
                 // break the rule
                 FakeEditableViewModel.PurchasingPrice.Value = 10;
                 FakeEditableViewModel.SellingPrice.Value = 10;
+
+                // verify that rule is broken
+                VerifyThatRuleIsBroken();
+            }
+
+            [TestMethod]
+            public void CanEvaluateDifferentOfRuleAgainstAsyncValue()
+            {
+                // define the rule
+                int[] dynamicValue = {10};
+                Given(FluentApi.Property(vm => vm.PurchasingPrice).Is.DifferentOf(() => dynamicValue[0]));
+
+                // break the rule
+                dynamicValue[0] = 6;
+                FakeEditableViewModel.PurchasingPrice.Value = 6;
 
                 // verify that rule is broken
                 VerifyThatRuleIsBroken();
@@ -557,6 +617,28 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
                 // break the rule
                 FakeEditableViewModel.Code.Value = "";
+
+                // verify that rule is broken
+                VerifyThatRuleIsBroken();
+            }
+        }
+
+        #endregion
+
+        #region Satisfying
+
+        [TestClass]
+        public class Satisfying : FluentApiFixture
+        {
+            [TestMethod]
+            public void CanEvaluateSatisfyingRule()
+            {
+                // define the rule
+                CustomValidator emailStartsWithGoodString = (value, token) => ((string)value).StartsWith("ab");
+                Given(FluentApi.Property(vm => vm.SellerEmail).Is.Satisfying(emailStartsWithGoodString));
+
+                // break the rule
+                FakeEditableViewModel.SellerEmail.Value = "bc@bc.com";
 
                 // verify that rule is broken
                 VerifyThatRuleIsBroken();

@@ -1,3 +1,5 @@
+using System.Windows.Input;
+
 namespace GasyTek.Lakana.Mvvm.ViewModelProperties
 {
     /// <summary>
@@ -13,5 +15,18 @@ namespace GasyTek.Lakana.Mvvm.ViewModelProperties
         /// The validation engine.
         /// </value>
         ObservableValidationEngine InternalObservableValidationEngine { get; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether validation process is running or not.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is validating; otherwise, <c>false</c>.
+        /// </value>
+        bool IsValidating { get; set; }
+
+        /// <summary>
+        /// Gets the validation to cancel validation.
+        /// </summary>
+        ICommand CancelValidationCommand { get; }
     }
 }
