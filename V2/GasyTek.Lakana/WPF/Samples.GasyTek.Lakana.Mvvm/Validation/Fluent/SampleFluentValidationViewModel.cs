@@ -78,8 +78,8 @@ namespace Samples.GasyTek.Lakana.Mvvm.Validation.Fluent
 
         internal CustomValidator CodeIsUnique()
         {
-            CustomValidator codeExistValidator = (code, token) => WebService.CodeExist(code as string) == false;
-            return codeExistValidator;
+            CustomValidator codeExistCustomValidator = (code, token) => WebService.CodeExist(code as string) == false;
+            return codeExistCustomValidator;
         }
 
         protected override void OnSave()

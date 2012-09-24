@@ -13,11 +13,16 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
     /// </summary>
     /// <typeparam name="TViewModel">The type of the view model.</typeparam>
     internal sealed class FluentImplementer<TViewModel> 
-        : IFluentProperty<TViewModel>, IFluentVerb<TViewModel>, IFluentEvaluable<TViewModel>, IFluentOtherwise<TViewModel> where TViewModel : ViewModelBase
+        : IFluentProperty<TViewModel>
+        , IFluentVerb<TViewModel>
+        , IFluentEvaluable<TViewModel>
+        , IFluentContinuation<TViewModel> where TViewModel : ViewModelBase
     {
         private readonly List<ExpressionNode> _internalTokens;
         private readonly TViewModel _viewModel;
         private readonly FluentImplementerContext _context;
+
+        #region Properties
 
         /// <summary>
         /// Used by the infrastructure only.
@@ -31,6 +36,8 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         {
             get { return _context; }
         }
+
+        #endregion
 
         public FluentImplementer(TViewModel viewModel)
         {
@@ -56,11 +63,15 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return false;
         }
 
+        #region Fluent api property
+
         public IFluentVerb<TViewModel> Property(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
         {
             UpdateContext(propertyExpression, true, true);
             return this;
         }
+
+        #endregion
 
         #region Fluent api verbs
 
@@ -96,7 +107,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
         #region Fluent api evaluables
 
-        public IFluentOtherwise<TViewModel> Satisfying(CustomValidator customValidator)
+        public IFluentContinuation<TViewModel> Valid(CustomValidator customValidator)
         {
             EnsureContextCurrentPropertyIsNotNull();
 
@@ -104,7 +115,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> GreaterThan(object value)
+        public IFluentContinuation<TViewModel> GreaterThan(object value)
         {
             EnsureContextCurrentPropertyIsNotNull();
             EnsureContextCurrentPropertyValueIsOfType(typeof(IComparable), "GreaterThan");
@@ -113,7 +124,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> GreaterThan(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
+        public IFluentContinuation<TViewModel> GreaterThan(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
         {
             EnsureContextCurrentPropertyIsNotNull();
             EnsureContextCurrentPropertyValueIsOfType(typeof(IComparable), "GreaterThan");
@@ -124,7 +135,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> GreaterThan(LateValue lateValue)
+        public IFluentContinuation<TViewModel> GreaterThan(LateValue lateValue)
         {
             EnsureContextCurrentPropertyIsNotNull();
 
@@ -132,7 +143,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> GreaterThanOrEqualTo(object value)
+        public IFluentContinuation<TViewModel> GreaterThanOrEqualTo(object value)
         {
             EnsureContextCurrentPropertyIsNotNull();
             EnsureContextCurrentPropertyValueIsOfType(typeof(IComparable), "GreaterThanOrEqualn");
@@ -145,7 +156,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> GreaterThanOrEqualTo(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
+        public IFluentContinuation<TViewModel> GreaterThanOrEqualTo(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
         {
             EnsureContextCurrentPropertyIsNotNull();
             EnsureContextCurrentPropertyValueIsOfType(typeof(IComparable), "GreaterThanOrEqualTo");
@@ -160,7 +171,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> GreaterThanOrEqualTo(LateValue lateValue)
+        public IFluentContinuation<TViewModel> GreaterThanOrEqualTo(LateValue lateValue)
         {
             EnsureContextCurrentPropertyIsNotNull();
 
@@ -172,7 +183,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> LessThan(object value)
+        public IFluentContinuation<TViewModel> LessThan(object value)
         {
             EnsureContextCurrentPropertyIsNotNull();
             EnsureContextCurrentPropertyValueIsOfType(typeof(IComparable), "LessThan");
@@ -181,7 +192,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> LessThan(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
+        public IFluentContinuation<TViewModel> LessThan(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
         {
             EnsureContextCurrentPropertyIsNotNull();
             EnsureContextCurrentPropertyValueIsOfType(typeof(IComparable), "LessThan");
@@ -192,7 +203,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> LessThan(LateValue lateValue)
+        public IFluentContinuation<TViewModel> LessThan(LateValue lateValue)
         {
             EnsureContextCurrentPropertyIsNotNull();
 
@@ -200,7 +211,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> LessThanOrEqualTo(object value)
+        public IFluentContinuation<TViewModel> LessThanOrEqualTo(object value)
         {
             EnsureContextCurrentPropertyIsNotNull();
             EnsureContextCurrentPropertyValueIsOfType(typeof(IComparable), "LessThanOrEqualTo");
@@ -213,7 +224,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> LessThanOrEqualTo(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
+        public IFluentContinuation<TViewModel> LessThanOrEqualTo(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
         {
             EnsureContextCurrentPropertyIsNotNull();
             EnsureContextCurrentPropertyValueIsOfType(typeof(IComparable), "LessThanOrEqualTo");
@@ -228,7 +239,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> LessThanOrEqualTo(LateValue lateValue)
+        public IFluentContinuation<TViewModel> LessThanOrEqualTo(LateValue lateValue)
         {
             EnsureContextCurrentPropertyIsNotNull();
 
@@ -240,7 +251,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> EqualTo(object value)
+        public IFluentContinuation<TViewModel> EqualTo(object value)
         {
             EnsureContextCurrentPropertyIsNotNull();
 
@@ -248,7 +259,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> EqualTo(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
+        public IFluentContinuation<TViewModel> EqualTo(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
         {
             EnsureContextCurrentPropertyIsNotNull();
 
@@ -258,7 +269,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> EqualTo(LateValue lateValue)
+        public IFluentContinuation<TViewModel> EqualTo(LateValue lateValue)
         {
             EnsureContextCurrentPropertyIsNotNull();
 
@@ -266,7 +277,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> Null()
+        public IFluentContinuation<TViewModel> Null()
         {
             EnsureContextCurrentPropertyIsNotNull();
 
@@ -274,7 +285,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> NullOrEmpty()
+        public IFluentContinuation<TViewModel> NullOrEmpty()
         {
             EnsureContextCurrentPropertyIsNotNull();
 
@@ -289,7 +300,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         /// </summary>
         /// <param name="pattern">The pattern.</param>
         /// <returns></returns>
-        public IFluentOtherwise<TViewModel> Matching(string pattern)
+        public IFluentContinuation<TViewModel> Matching(string pattern)
         {
             EnsureContextCurrentPropertyIsNotNull();
             EnsureContextCurrentPropertyValueIsOfType(typeof(string), "Matching");
@@ -298,22 +309,22 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> ValidEmail()
+        public IFluentContinuation<TViewModel> ValidEmail()
         {
             return Matching(ValidationConstants.EmailPattern);
         }
 
-        public IFluentOtherwise<TViewModel> StartingWith(string start)
+        public IFluentContinuation<TViewModel> StartingWith(string start)
         {
             return Matching(string.Format("^({0})", start));
         }
 
-        public IFluentOtherwise<TViewModel> EndingWith(string end)
+        public IFluentContinuation<TViewModel> EndingWith(string end)
         {
             return Matching(string.Format("({0})$", end));
         }
 
-        public IFluentOtherwise<TViewModel> MaxLength(int maxLength)
+        public IFluentContinuation<TViewModel> MaxLength(int maxLength)
         {
             EnsureContextCurrentPropertyIsNotNull();
             EnsureContextCurrentPropertyValueIsOfType(typeof(string), "MaxLength");
@@ -337,7 +348,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> MinLength(int minLength)
+        public IFluentContinuation<TViewModel> MinLength(int minLength)
         {
             EnsureContextCurrentPropertyIsNotNull();
             EnsureContextCurrentPropertyValueIsOfType(typeof(string), "MinLength");
@@ -361,7 +372,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> Required()
+        public IFluentContinuation<TViewModel> Required()
         {
             EnsureContextCurrentPropertyIsNotNull();
             
@@ -375,7 +386,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> DifferentOf(object value)
+        public IFluentContinuation<TViewModel> DifferentOf(object value)
         {
             EnsureContextCurrentPropertyIsNotNull();
 
@@ -385,7 +396,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> DifferentOf(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
+        public IFluentContinuation<TViewModel> DifferentOf(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
         {
             EnsureContextCurrentPropertyIsNotNull();
 
@@ -397,7 +408,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> DifferentOf(LateValue lateValue)
+        public IFluentContinuation<TViewModel> DifferentOf(LateValue lateValue)
         {
             EnsureContextCurrentPropertyIsNotNull();
 
@@ -406,7 +417,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> Between(object @from, object to)
+        public IFluentContinuation<TViewModel> Between(object @from, object to)
         {
             EnsureContextCurrentPropertyIsNotNull();
 
@@ -428,7 +439,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return this;
         }
 
-        public IFluentOtherwise<TViewModel> BetweenPoperties(Expression<Func<TViewModel, IViewModelProperty>> @from, Expression<Func<TViewModel, IViewModelProperty>> to)
+        public IFluentContinuation<TViewModel> BetweenPoperties(Expression<Func<TViewModel, IViewModelProperty>> @from, Expression<Func<TViewModel, IViewModelProperty>> to)
         {
             EnsureContextCurrentPropertyIsNotNull();
 
@@ -455,7 +466,12 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
         #endregion
 
-        #region Fluent api otherwise
+        #region Fluent api continuation
+
+        public void Otherwise(string message)
+        {
+            _context.Message = message;
+        }
 
         public IFluentVerb<TViewModel> And
         {
@@ -473,23 +489,6 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
                 AddToken(ExpressionNode.Or());
                 return this;
             }
-        }
-        
-        public IFluentVerb<TViewModel> When(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
-        {
-            // TODO : finish the implementation
-            throw new NotImplementedException();
-            //UpdateContext(propertyExpression, true);
-
-            //// p1.Is.EqualTo(3).When(p2).Is.GreaterThan(5) means
-            //// p1 == 3 && p2 > 5 .... ??
-            //AddToken(new AndExpression());
-            //return this;
-        }
-
-        public void Otherwise(string message)
-        {
-            _context.Message = message;
         }
 
         #endregion

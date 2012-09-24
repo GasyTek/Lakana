@@ -33,6 +33,90 @@
 	</Style>
 	
 	<Style x:Key="ActionButtonStyle" TargetType="{x:Type Button}">
+		<Style.Resources>
+			<Storyboard x:Key="ToBlueAnimation">
+				<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="{x:Null}">
+					<EasingColorKeyFrame KeyTime="0" Value="#FF333333"/>
+					<EasingColorKeyFrame KeyTime="0:0:0.1" Value="#FF1BB5EF"/>
+				</ColorAnimationUsingKeyFrames>
+				<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" Storyboard.TargetName="{x:Null}">
+					<EasingColorKeyFrame KeyTime="0" Value="#FF333333"/>
+					<EasingColorKeyFrame KeyTime="0:0:0.1" Value="#FF1BB5EF"/>
+				</ColorAnimationUsingKeyFrames>
+				<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)" Storyboard.TargetName="{x:Null}">
+					<EasingColorKeyFrame KeyTime="0" Value="Transparent"/>
+					<EasingColorKeyFrame KeyTime="0:0:0.1" Value="#FF1BB5EF"/>
+				</ColorAnimationUsingKeyFrames>
+				<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(Brush.Opacity)" Storyboard.TargetName="{x:Null}">
+					<EasingDoubleKeyFrame KeyTime="0" Value="1"/>
+					<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0.8"/>
+				</DoubleAnimationUsingKeyFrames>
+				<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="{x:Null}">
+					<EasingColorKeyFrame KeyTime="0" Value="#FF1BB5EF"/>
+					<EasingColorKeyFrame KeyTime="0:0:0.1" Value="White"/>
+				</ColorAnimationUsingKeyFrames>
+				<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="{x:Null}">
+					<EasingColorKeyFrame KeyTime="0" Value="#FF333333"/>
+					<EasingColorKeyFrame KeyTime="0:0:0.1" Value="#FF1BB5EF"/>
+				</ColorAnimationUsingKeyFrames>
+				<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="{x:Null}">
+					<EasingColorKeyFrame KeyTime="0" Value="#FF1BB5EF"/>
+					<EasingColorKeyFrame KeyTime="0:0:0.1" Value="White"/>
+				</ColorAnimationUsingKeyFrames>
+				<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(Brush.Opacity)" Storyboard.TargetName="{x:Null}">
+					<EasingDoubleKeyFrame KeyTime="0" Value="0.8"/>
+					<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0.5"/>
+				</DoubleAnimationUsingKeyFrames>
+				<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(Brush.Opacity)" Storyboard.TargetName="{x:Null}">
+					<EasingDoubleKeyFrame KeyTime="0" Value="0.5"/>
+					<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0.7"/>
+				</DoubleAnimationUsingKeyFrames>
+			</Storyboard>
+			<Storyboard x:Key="ToDarkGrayAnimation">
+				<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="{x:Null}">
+					<EasingColorKeyFrame KeyTime="0" Value="#FF333333"/>
+					<EasingColorKeyFrame KeyTime="0:0:0.1" Value="#FF1BB5EF"/>
+				</ColorAnimationUsingKeyFrames>
+				<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="{x:Null}">
+					<EasingColorKeyFrame KeyTime="0" Value="#FF1BB5EF"/>
+					<EasingColorKeyFrame KeyTime="0:0:0.1" Value="#FF333333"/>
+				</ColorAnimationUsingKeyFrames>
+				<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Border.BorderBrush).(SolidColorBrush.Color)" Storyboard.TargetName="{x:Null}">
+					<EasingColorKeyFrame KeyTime="0" Value="#FF1BB5EF"/>
+					<EasingColorKeyFrame KeyTime="0:0:0.1" Value="#FF333333"/>
+				</ColorAnimationUsingKeyFrames>
+				<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(SolidColorBrush.Color)" Storyboard.TargetName="{x:Null}">
+					<EasingColorKeyFrame KeyTime="0" Value="#FF1BB5EF"/>
+					<EasingColorKeyFrame KeyTime="0:0:0.1" Value="Transparent"/>
+				</ColorAnimationUsingKeyFrames>
+				<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(Brush.Opacity)" Storyboard.TargetName="{x:Null}">
+					<EasingDoubleKeyFrame KeyTime="0" Value="0.5"/>
+					<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="1"/>
+				</DoubleAnimationUsingKeyFrames>
+				<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="{x:Null}">
+					<EasingColorKeyFrame KeyTime="0" Value="White"/>
+					<EasingColorKeyFrame KeyTime="0:0:0.1" Value="#FF1BB5EF"/>
+				</ColorAnimationUsingKeyFrames>
+				<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="{x:Null}">
+					<EasingColorKeyFrame KeyTime="0" Value="#FF1BB5EF"/>
+					<EasingColorKeyFrame KeyTime="0:0:0.1" Value="#FF333333"/>
+				</ColorAnimationUsingKeyFrames>
+				<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(Panel.Background).(Brush.Opacity)" Storyboard.TargetName="{x:Null}">
+					<EasingDoubleKeyFrame KeyTime="0" Value="0.7"/>
+					<EasingDoubleKeyFrame KeyTime="0:0:0.1" Value="0.5"/>
+				</DoubleAnimationUsingKeyFrames>
+			</Storyboard>
+		</Style.Resources>
+		<Style.Triggers>
+			<Trigger Property="IsMouseOver" Value="True">
+				<Trigger.ExitActions>
+					<BeginStoryboard x:Name="ToDarkGrayAnimation_BeginStoryboard" Storyboard="{StaticResource ToDarkGrayAnimation}"/>
+				</Trigger.ExitActions>
+				<Trigger.EnterActions>
+					<BeginStoryboard x:Name="ToBlueAnimation_BeginStoryboard" Storyboard="{StaticResource ToBlueAnimation}"/>
+				</Trigger.EnterActions>
+			</Trigger>
+		</Style.Triggers>
 		<Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}"/>
 		<Setter Property="Background" Value="Transparent"/>
 		<Setter Property="BorderBrush" Value="#FF333333"/>
@@ -47,11 +131,10 @@
 					<Border Padding="{TemplateBinding Padding}" 
 						Background="{TemplateBinding Property=Background}"
 						BorderThickness="{TemplateBinding BorderThickness}"
-						BorderBrush="{TemplateBinding BorderBrush}">
-						
+						BorderBrush="{TemplateBinding BorderBrush}">						
 						<ContentPresenter ContentSource="Content"
 							HorizontalAlignment="Center"
-							VerticalAlignment="Bottom" />
+							VerticalAlignment="Center" />
 					</Border>
 					
 					<ControlTemplate.Triggers>
