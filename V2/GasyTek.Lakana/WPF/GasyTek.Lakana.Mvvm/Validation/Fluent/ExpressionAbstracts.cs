@@ -26,6 +26,20 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
         #endregion
 
+        #region Factory : Constants Expressions
+
+        public static TrueExpression True()
+        {
+            return new TrueExpression();
+        }
+
+        public static FalseExpression False()
+        {
+            return new FalseExpression();
+        }
+
+        #endregion
+
         #region Factory : Operator Expressions
 
         public static AndExpression And()
@@ -41,6 +55,11 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         public static NotExpression Not()
         {
             return  new NotExpression();
+        }
+
+        public static IfThen IfThen()
+        {
+            return new IfThen();
         }
 
         #endregion
@@ -178,6 +197,39 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
     #endregion
 
+    #region Constants
+
+    /// <summary>
+    /// Reprensents constants into the expression.
+    /// </summary>
+    internal abstract class ConstantExpression : ExpressionNode
+    {
+    }
+
+    /// <summary>
+    /// Reprensents True boolean constant.
+    /// </summary>
+    internal class TrueExpression : ConstantExpression
+    {
+        public override Task<bool> Evaluate(CancellationToken cancellationToken)
+        {
+            return new Task<bool>(() => true, cancellationToken, TaskCreationOptions.AttachedToParent);
+        }
+    }
+
+    /// <summary>
+    /// Reprensents False boolean constant.
+    /// </summary>
+    internal class FalseExpression : ConstantExpression
+    {
+        public override Task<bool> Evaluate(CancellationToken cancellationToken)
+        {
+            return new Task<bool>(() => false, cancellationToken, TaskCreationOptions.AttachedToParent);
+        }
+    }
+
+    #endregion
+
     #region Operators
 
     /// <summary>
@@ -299,12 +351,10 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
     }
 
     /// <summary>
-    /// "If Then Else" operator.
+    /// "If Then" operator.
     /// </summary>
-    internal class ConditionalOperator : OperatorExpression
+    internal class IfThen : OperatorExpression
     {
-        public ExpressionNode Condition { get; set; }
-
         public override Associativity Associativity
         {
             get { return Associativity.Right;}
@@ -312,33 +362,25 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
         public override OperatorType OperatorType
         {
-            get { return OperatorType.Ternary; }
+            get { return OperatorType.Binary; }
         }
 
         public override Task<bool> Evaluate(CancellationToken cancellationToken)
         {
-            EnsureTernaryOperandsInitialized();
+            EnsureBinaryOperandsInitialized();
 
             return new Task<bool>(() =>
                                     {
-                                        var conditionTask = Condition.Evaluate(cancellationToken);
+                                        var conditionTask = Left.Evaluate(cancellationToken);
                                         if(conditionTask.Result)
                                         {
-                                            var leftTask = Left.Evaluate(cancellationToken);
-                                            leftTask.Start();
-                                            return leftTask.Result;
+                                            var rightTask = Right.Evaluate(cancellationToken);
+                                            rightTask.Start();
+                                            return rightTask.Result;
                                         }
 
-                                        var rightTask = Right.Evaluate(cancellationToken);
-                                        rightTask.Start();
-                                        return rightTask.Result;
+                                        return true;
                                     }, cancellationToken, TaskCreationOptions.AttachedToParent);
-        }
-
-        protected void EnsureTernaryOperandsInitialized()
-        {
-            if (Condition == null || Left == null || Right == null)
-                throw new InvalidOperationException("Condition, Left and Right operands have to be initialized");
         }
     }
 
@@ -370,7 +412,6 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         }
     }
 
-
     /// <summary>
     /// Defines associativity of operators.
     /// </summary>
@@ -386,8 +427,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
     internal enum OperatorType
     {
         Unary,
-        Binary,
-        Ternary
+        Binary
     }
 
     /// <summary>
@@ -400,7 +440,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             if (@operator is NotExpression) return 4;
             if (@operator is AndExpression) return 3;
             if (@operator is OrExpression) return 2;
-            if (@operator is ConditionalOperator) return 1;
+            if (@operator is IfThen) return 1;
 
             throw new InvalidOperationException("Unknown operator " + @operator.GetType().Name);
         }

@@ -26,14 +26,61 @@
 					
     			</DockPanel>
     		</DataTemplate>
-			
-    		<ControlTemplate x:Key="MenuButtonTemplate" TargetType="{x:Type Button}">    			
-    			<Border Background="Transparent" Cursor="Hand">
-    				<ContentPresenter ContentSource="Content"
-    					HorizontalAlignment="Center" 
-    					VerticalAlignment="Center" />
-    			</Border>
-    		</ControlTemplate>
+
+			<Style x:Key="MenuButtonStyle" TargetType="{x:Type Button}">
+				<Style.Resources>
+					<Storyboard x:Key="ToBlueAnimation">
+						<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="{x:Null}">
+							<EasingColorKeyFrame KeyTime="0" Value="White">
+								<EasingColorKeyFrame.EasingFunction>
+									<CircleEase EasingMode="EaseIn"/>
+								</EasingColorKeyFrame.EasingFunction>
+							</EasingColorKeyFrame>
+							<EasingColorKeyFrame KeyTime="0:0:0.1" Value="#FF1BB5EF"/>
+						</ColorAnimationUsingKeyFrames>
+					</Storyboard>
+					<Storyboard x:Key="ToWhiteAnimation">
+						<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="{x:Null}">
+							<EasingColorKeyFrame KeyTime="0" Value="White">
+								<EasingColorKeyFrame.EasingFunction>
+									<CircleEase EasingMode="EaseIn"/>
+								</EasingColorKeyFrame.EasingFunction>
+							</EasingColorKeyFrame>
+							<EasingColorKeyFrame KeyTime="0:0:0.1" Value="White"/>
+						</ColorAnimationUsingKeyFrames>
+						<ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)" Storyboard.TargetName="{x:Null}">
+							<EasingColorKeyFrame KeyTime="0" Value="#FF1BB5EF"/>
+							<EasingColorKeyFrame KeyTime="0:0:0.2" Value="White"/>
+						</ColorAnimationUsingKeyFrames>
+					</Storyboard>
+				</Style.Resources>			
+				<Setter Property="Foreground" Value="White" />
+				<Setter Property="Template">
+					<Setter.Value>
+			    		<ControlTemplate TargetType="{x:Type Button}">
+			    			<ControlTemplate.Resources>
+			    				<Storyboard x:Key="Storyboard1"/>
+			    			</ControlTemplate.Resources>    			
+			    			<Border Background="Transparent" 
+			    				Cursor="Hand">
+			    				<ContentPresenter ContentSource="Content"
+			    					HorizontalAlignment="Center" 
+			    					VerticalAlignment="Center" OpacityMask="{x:Null}" />
+			    			</Border>
+			    		</ControlTemplate>					</Setter.Value>
+				</Setter>
+				<Setter Property="Cursor" Value="Hand"/>
+				<Style.Triggers>
+					<Trigger Property="IsMouseOver" Value="True">
+						<Trigger.ExitActions>
+							<BeginStoryboard x:Name="ToWhiteAnimation_BeginStoryboard" Storyboard="{StaticResource ToWhiteAnimation}"/>
+						</Trigger.ExitActions>
+						<Trigger.EnterActions>
+							<BeginStoryboard x:Name="ToBlueAnimation_BeginStoryboard" Storyboard="{StaticResource ToBlueAnimation}"/>
+						</Trigger.EnterActions>
+					</Trigger>
+				</Style.Triggers>		
+			</Style>
          
     	</ResourceDictionary>
          

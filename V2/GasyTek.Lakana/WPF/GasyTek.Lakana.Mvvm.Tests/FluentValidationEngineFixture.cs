@@ -349,7 +349,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
             ConfigureThread();
 
             FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty(
-                vm => vm.PurchasingPrice).Is.Satisfying((value, token) =>
+                vm => vm.PurchasingPrice).Is.Valid((value, token) =>
                                                          {
                                                              throw new InvalidOperationException ("test");
                                                          });

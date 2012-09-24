@@ -143,7 +143,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         public override Task<bool> Evaluate(CancellationToken cancellationToken)
         {
             if (_customValidator == null)
-                throw new ArgumentNullException("customValidator");
+                throw new InvalidOperationException("You must initialize customValidator.");
 
             return new Task<bool>(() => _customValidator (LeftValue, cancellationToken), cancellationToken, TaskCreationOptions.AttachedToParent);
         }

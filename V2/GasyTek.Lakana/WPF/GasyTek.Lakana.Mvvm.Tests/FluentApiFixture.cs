@@ -54,7 +54,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
             get { return (Parser)TestContext.Properties[ParserProperty]; }
         }
 
-        private void Given(IFluentOtherwise<FakeEditableViewModel> expression)
+        private void Given(IFluentOtherwise expression)
         {
         }
 
@@ -625,7 +625,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
         #endregion
 
-        #region Satisfying
+        #region Valid
 
         [TestClass]
         public class Satisfying : FluentApiFixture
@@ -635,7 +635,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
             {
                 // define the rule
                 CustomValidator emailStartsWithGoodString = (value, token) => ((string)value).StartsWith("ab");
-                Given(FluentApi.Property(vm => vm.SellerEmail).Is.Satisfying(emailStartsWithGoodString));
+                Given(FluentApi.Property(vm => vm.SellerEmail).Is.Valid(emailStartsWithGoodString));
 
                 // break the rule
                 FakeEditableViewModel.SellerEmail.Value = "bc@bc.com";
@@ -646,5 +646,43 @@ namespace GasyTek.Lakana.Mvvm.Tests
         }
 
         #endregion
+
+        //#region When
+
+        //[TestClass]
+        //public class When : FluentApiFixture
+        //{
+        //    [TestMethod]
+        //    public void CanBreakWhenRule()
+        //    {
+        //        // define the rule
+        //        var condition = FluentApi.Property(vm => vm.Code).Is.EqualTo("ABC");
+        //        Given(FluentApi.Property(vm => vm.SellingPrice).Is.GreaterThan(10).When(condition));
+
+        //        // break the rule
+        //        FakeEditableViewModel.Code.Value = "ABC";
+        //        FakeEditableViewModel.SellingPrice.Value = 9;
+
+        //        // verify that rule is broken
+        //        VerifyThatRuleIsBroken();
+        //    }
+
+        //    [TestMethod]
+        //    public void CanSatisfyWhenRule()
+        //    {
+        //        // define the rule
+        //        var condition = FluentApi.Property(vm => vm.Code).Is.EqualTo("ABC");
+        //        Given(FluentApi.Property(vm => vm.SellingPrice).Is.GreaterThan(10).When(condition));
+
+        //        // break the rule
+        //        FakeEditableViewModel.Code.Value = "ABC";
+        //        FakeEditableViewModel.SellingPrice.Value = 12;
+
+        //        // verify that rule is broken
+        //        VerifyThatRuleIsSatisfied();
+        //    }
+        //}
+
+        //#endregion
     }
 }

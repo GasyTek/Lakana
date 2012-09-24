@@ -34,11 +34,6 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
         #region Helper methods
 
-        private FakeEditableViewModel FakeEditableViewModel
-        {
-            get { return (FakeEditableViewModel)TestContext.Properties[FakeEditableViewModelProperty]; }
-        }
-
         private IFluentProperty<FakeEditableViewModel> FluentApi
         {
             get { return (FluentImplementer<FakeEditableViewModel>)TestContext.Properties[FluentApiProperty]; }
