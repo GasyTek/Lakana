@@ -26,7 +26,7 @@
                            Margin="15,2,5,0">
 					<Run Text="{Binding DateOfBirth, StringFormat=d}" /> - <Run Text="{Binding DateOfDeath, StringFormat=d}" />
 				</TextBlock>
-				<TextBlock Text="{Binding PlaceOfBirth}"                           
+				<TextBlock Text="{Binding Email}"                           
                            FontSize="16" 
                            FontFamily="Segoe UI Light" 
                            Margin="15,2,5,0"/>
@@ -52,6 +52,6 @@
 				Style="{DynamicResource SimpleListBox}" 
 				ItemContainerStyle="{DynamicResource SimpleListBoxItem}" 
 				ItemTemplate="{DynamicResource ItemTemplate}" 
-                 />
+                />
 	</DockPanel>
 </UserControl>

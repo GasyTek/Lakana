@@ -60,7 +60,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
         public void CanDetectIncompleteRules()
         {
             // Prepare
-            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty(vm => vm.Quantity);    // incomplete rule
+            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty<int>(vm => vm.Quantity);    // incomplete rule
 
             // Act
             FakeFluentValidationEngine.BuildRules();
@@ -78,8 +78,8 @@ namespace GasyTek.Lakana.Mvvm.Tests
             FakeFluentValidationEngine.DefineRulesAction = 
                 () =>
                     {
-                        FakeFluentValidationEngine.AssertThatProperty(vm => vm.Quantity).Is.GreaterThan(20);
-                        FakeFluentValidationEngine.AssertThatProperty(vm => vm.Quantity).Is.EqualTo(40);
+                        FakeFluentValidationEngine.AssertThatProperty<int>(vm => vm.Quantity).Is.GreaterThan(20);
+                        FakeFluentValidationEngine.AssertThatProperty<int>(vm => vm.Quantity).Is.EqualTo(40);
                     };
             FakeFluentValidationEngine.BuildRules(); 
 
@@ -100,7 +100,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
             ConfigureThread();
 
             var propertyName = FakeEditableViewModel.PurchasingPrice.PropertyMetadata.Name;
-            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty(vm => vm.PurchasingPrice).Is.GreaterThan(20);
+            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty<int>(vm => vm.PurchasingPrice).Is.GreaterThan(20);
             FakeFluentValidationEngine.BuildRules();
 
             // Act
@@ -119,7 +119,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
             const string erroMessage = "PurchasingPrice must be greater that 20";
             var propertyName = FakeEditableViewModel.PurchasingPrice.PropertyMetadata.Name;
-            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty(vm => vm.PurchasingPrice)
+            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty<int>(vm => vm.PurchasingPrice)
                 .Is.GreaterThan(20).Otherwise(erroMessage);
             FakeFluentValidationEngine.BuildRules();
 
@@ -141,7 +141,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
             FakeEditableViewModel.ConfigureExpectedNumberOfPropertyValidation(2);
 
             var propertyName = FakeEditableViewModel.PurchasingPrice.PropertyMetadata.Name;
-            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty(vm => vm.PurchasingPrice).Is.LessThan(vm => vm.SellingPrice);
+            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty<int>(vm => vm.PurchasingPrice).Is.LessThan(vm => vm.SellingPrice);
             FakeFluentValidationEngine.BuildRules();
 
             // Act
@@ -161,7 +161,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
             FakeEditableViewModel.ConfigureExpectedNumberOfPropertyValidation(2);
 
             var propertyName = FakeEditableViewModel.PurchasingPrice.PropertyMetadata.Name;
-            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty(vm => vm.PurchasingPrice)
+            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty<int>(vm => vm.PurchasingPrice)
                 .Is.LessThan(vm => vm.SellingPrice).And.Is.EqualTo(20);
             FakeFluentValidationEngine.BuildRules();
 
@@ -181,7 +181,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
             ConfigureThread();
 
             var propertyName = FakeEditableViewModel.Quantity.PropertyMetadata.Name;
-            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty(vm => vm.Quantity)
+            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty<int>(vm => vm.Quantity)
                 .Is.EqualTo(20).Or.Is.EqualTo(30);
             FakeFluentValidationEngine.BuildRules();
 
@@ -200,7 +200,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
             ConfigureThread();
 
             var propertyName = FakeEditableViewModel.Quantity.PropertyMetadata.Name;
-            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty(vm => vm.Quantity).IsNot.EqualTo(20);
+            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty<int>(vm => vm.Quantity).IsNot.EqualTo(20);
             FakeFluentValidationEngine.BuildRules();
 
             // Act
@@ -218,7 +218,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
             ConfigureThread();
 
             var propertyName = FakeEditableViewModel.Quantity.PropertyMetadata.Name;
-            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty(vm => vm.Quantity).Is.Between(15, 25);
+            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty<int>(vm => vm.Quantity).Is.BetweenValues(15, 25);
             FakeFluentValidationEngine.BuildRules();
 
             // Act
@@ -238,7 +238,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
             var propertyName = FakeEditableViewModel.Quantity.PropertyMetadata.Name;
             FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine
-                .AssertThatProperty(vm => vm.Quantity).Is.BetweenPoperties(vm => vm.PurchasingPrice, vm => vm.SellingPrice);
+                .AssertThatProperty<int>(vm => vm.Quantity).Is.BetweenPoperties(vm => vm.PurchasingPrice, vm => vm.SellingPrice);
             FakeFluentValidationEngine.BuildRules();
 
             // Act
@@ -258,7 +258,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
             ConfigureThread();
 
             var propertyName = FakeEditableViewModel.Quantity.PropertyMetadata.Name;
-            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty(vm => vm.Quantity).IsNot.Between(15, 25);
+            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty<int>(vm => vm.Quantity).IsNot.BetweenValues(15, 25);
             FakeFluentValidationEngine.BuildRules();
 
             // Act
@@ -280,7 +280,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
             FakeEditableViewModel.SellingPrice.Value = 30;
             FakeEditableViewModel.PurchasingPrice.Value = 20;
             FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine
-                .AssertThatProperty(vm => vm.PurchasingPrice).Is.LessThan(vm => vm.SellingPrice).Otherwise("ERROR");
+                .AssertThatProperty<int>(vm => vm.PurchasingPrice).Is.LessThan(vm => vm.SellingPrice).Otherwise("ERROR");
             FakeFluentValidationEngine.BuildRules();
             
             // Act
@@ -312,12 +312,12 @@ namespace GasyTek.Lakana.Mvvm.Tests
             FakeFluentValidationEngine.DefineRulesAction = () =>
                                                                {
                                                                    // Selling price shoud be greater than 30
-                                                                   FakeFluentValidationEngine.AssertThatProperty(
+                                                                   FakeFluentValidationEngine.AssertThatProperty<int>(
                                                                        vm => vm.SellingPrice).Is.GreaterThan(30);
 
                                                                    // Purchasing price shoud be less than Selling price
                                                                    FakeFluentValidationEngine
-                                                                       .AssertThatProperty(vm => vm.PurchasingPrice).Is.
+                                                                       .AssertThatProperty<int>(vm => vm.PurchasingPrice).Is.
                                                                        LessThan(vm => vm.SellingPrice);
                                                                };
 
@@ -348,7 +348,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
             // Prepare
             ConfigureThread();
 
-            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty(
+            FakeFluentValidationEngine.DefineRulesAction = () => FakeFluentValidationEngine.AssertThatProperty<int>(
                 vm => vm.PurchasingPrice).Is.Valid((value, token) =>
                                                          {
                                                              throw new InvalidOperationException ("test");

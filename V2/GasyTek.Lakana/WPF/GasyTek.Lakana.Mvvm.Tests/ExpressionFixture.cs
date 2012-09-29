@@ -30,119 +30,299 @@ namespace GasyTek.Lakana.Mvvm.Tests
             Assert.IsFalse(taskResult.Result);
         }
 
-        [TestMethod]
-        public void CanEvaluateEqualToExpression()
+        [TestClass]
+        public class EqualTo : ExpressionFixture
         {
-            // Prepare
-            var viewModelProperty = new FakeViewModelProperty(10);
-            var equalsToExpression = ExpressionNode.EqualToValue(viewModelProperty, 10);
+            [TestMethod]
+            public void EqualToExprCanEvaluate()
+            {
+                // Prepare
+                var viewModelProperty = new FakeViewModelProperty(10);
+                var equalsToExpression = ExpressionNode.EqualToValue(viewModelProperty, 10);
 
-            // Act
-            var taskResult = equalsToExpression.Evaluate(new CancellationToken());
-            taskResult.RunSynchronously();
+                // Act
+                var taskResult = equalsToExpression.Evaluate(new CancellationToken());
+                taskResult.RunSynchronously();
 
-            // Verify
-            Assert.IsTrue(taskResult.Result);
+                // Verify
+                Assert.IsTrue(taskResult.Result);
+            }
+
+            [TestMethod]
+            public void EqualToLateValueExprCanEvaluate()
+            {
+                // Prepare
+                int[] dynamicValue = { 5 };
+                var viewModelProperty = new FakeViewModelProperty(10);
+                var equalsToExpression = ExpressionNode.EqualToLateValue(viewModelProperty, () => dynamicValue[0]);
+
+                // Act
+                dynamicValue[0] = 10;
+                var taskResult = equalsToExpression.Evaluate(new CancellationToken());
+                taskResult.RunSynchronously();
+
+                // Verify
+                Assert.IsTrue(taskResult.Result);
+            }
+
+            [TestMethod]
+            public void EqualToLateValueExprCanEvaluateMoreThanOnce()
+            {
+                // Prepare
+                int[] dynamicValue = { 5 };
+                var viewModelProperty = new FakeViewModelProperty(10);
+                var equalsToExpression = ExpressionNode.EqualToLateValue(viewModelProperty, () => dynamicValue[0]);
+
+                // Act
+                dynamicValue[0] = 10;
+                var t = equalsToExpression.Evaluate(new CancellationToken());
+                t.RunSynchronously();
+                var taskResult = equalsToExpression.Evaluate(new CancellationToken());
+                taskResult.RunSynchronously();
+
+                // Verify
+                Assert.IsTrue(taskResult.Result);
+            }
+
+            [TestMethod]
+            public void EqualToNullExprCanEvaluate()
+            {
+                // Prepare
+                var viewModelProperty = new FakeViewModelProperty(new object());
+                var equalsToExpression = ExpressionNode.EqualToValue(viewModelProperty, null);
+
+                // Act
+                var taskResult = equalsToExpression.Evaluate(new CancellationToken());
+                taskResult.RunSynchronously();
+
+                // Verify
+                Assert.IsFalse(taskResult.Result);
+            }
+
+            [TestMethod]
+            public void EqualToNullOrEmptyExprCanEvaluate()
+            {
+                // Prepare
+                var viewModelProperty = new FakeViewModelProperty(string.Empty);
+                var equalsToExpression = ExpressionNode.EqualToValue(viewModelProperty, "");
+
+                // Act
+                var taskResult = equalsToExpression.Evaluate(new CancellationToken());
+                taskResult.RunSynchronously();
+
+                // Verify
+                Assert.IsTrue(taskResult.Result);
+            }
         }
 
-        [TestMethod]
-        public void CanEvaluateEqualToLateValueExpression()
+        [TestClass]
+        public class GreaterThan : ExpressionFixture
         {
-            // Prepare
-            int[] dynamicValue = {5};
-            var viewModelProperty = new FakeViewModelProperty(10);
-            var equalsToExpression = ExpressionNode.EqualToLateValue(viewModelProperty, () => dynamicValue[0]);
+            [TestMethod]
+            public void GreaterThanExprCanEvaluate()
+            {
+                // Prepare
+                var viewModelProperty = new FakeViewModelProperty(10);
+                var greaterThanExpression = ExpressionNode.GreaterThanValue(viewModelProperty, 5);
 
-            // Act
-            dynamicValue[0] = 10;
-            var taskResult = equalsToExpression.Evaluate(new CancellationToken());
-            taskResult.RunSynchronously();
+                // Act
+                var taskResult = greaterThanExpression.Evaluate(new CancellationToken());
+                taskResult.RunSynchronously();
 
-            // Verify
-            Assert.IsTrue(taskResult.Result);
+                // Verify
+                Assert.IsTrue(taskResult.Result);
+            }
+
+            [TestMethod]
+            public void GreaterThanLateValueExprCanEvaluate()
+            {
+                // Prepare
+                int[] dynamicValue = { 20 };
+                var viewModelProperty = new FakeViewModelProperty(10);
+                var equalsToExpression = ExpressionNode.GreaterThanLateValue(viewModelProperty, () => dynamicValue[0]);
+
+                // Act
+                dynamicValue[0] = 5;
+                var taskResult = equalsToExpression.Evaluate(new CancellationToken());
+                taskResult.RunSynchronously();
+
+                // Verify
+                Assert.IsTrue(taskResult.Result);
+            }
+
+            [TestMethod]
+            [ExpectedException(typeof(InvalidOperationException))]
+            public void GreaterThanExprShouldNotAllowNullOperands()
+            {
+                // Prepare
+                var viewModelProperty = new FakeViewModelProperty(null);
+                var greaterThanExpression = ExpressionNode.GreaterThanValue(viewModelProperty, null);
+
+                // Act
+                var taskResult = greaterThanExpression.Evaluate(new CancellationToken());
+                taskResult.Start();
+                try
+                {
+                    // to throw eventual exceptions
+                    taskResult.Wait();
+                }
+                catch (AggregateException ae)
+                {
+                    ae.Flatten().Handle(ex =>
+                    {
+                        if (ex is InvalidOperationException)
+                            throw ex;
+                        return false;
+                    });
+                }
+            }
+
+            [TestMethod]
+            [ExpectedException(typeof(InvalidOperationException))]
+            public void GreaterThanExprPropertyValueShouldBeComparable()
+            {
+                // Prepare
+                var viewModelProperty = new FakeViewModelProperty(new object());
+                var greaterThanExpression = ExpressionNode.GreaterThanValue(viewModelProperty, 2);
+
+                // Act
+                var taskResult = greaterThanExpression.Evaluate(new CancellationToken());
+                taskResult.Start();
+                try
+                {
+                    // to throw eventual exceptions
+                    taskResult.Wait();
+                }
+                catch (AggregateException ae)
+                {
+                    ae.Flatten().Handle(ex =>
+                    {
+                        if (ex is InvalidOperationException)
+                            throw ex;
+                        return false;
+                    });
+                }
+            }
+
+            [TestMethod]
+            [ExpectedException(typeof(ArgumentException))]
+            public void GreaterThanExprShouldNotAllowComparingDifferentTypes()
+            {
+                // Prepare
+                var viewModelProperty = new FakeViewModelProperty(10);
+                var greaterThanExpression = ExpressionNode.GreaterThanValue(viewModelProperty, "NotAllowedValue");
+
+                // Act
+                var taskResult = greaterThanExpression.Evaluate(new CancellationToken());
+                taskResult.Start();
+                try
+                {
+                    // to throw eventual exceptions
+                    taskResult.Wait();  
+                }
+                catch (AggregateException ae)
+                {
+                    ae.Flatten().Handle(ex =>
+                                            {
+                                                if (ex is ArgumentException)
+                                                    throw ex;
+                                                return false;
+                                            });
+                }
+
+                // Verify
+
+            }
         }
-
-        [TestMethod]
-        public void CanEvaluateEqualToLateValueExpressionMoreThanOnce()
+        
+        [TestClass]
+        public class LessThan : ExpressionFixture
         {
-            // Prepare
-            int[] dynamicValue = {5};
-            var viewModelProperty = new FakeViewModelProperty(10);
-            var equalsToExpression = ExpressionNode.EqualToLateValue(viewModelProperty, () => dynamicValue[0]);
+            [TestMethod]
+            public void LessThanExprCanEvaluate()
+            {
+                // Prepare
+                var viewModelProperty = new FakeViewModelProperty(10);
+                var lessThanExpression = ExpressionNode.LessThanValue(viewModelProperty, 5);
 
-            // Act
-            dynamicValue[0] = 10;
-            var t = equalsToExpression.Evaluate(new CancellationToken());
-            t.RunSynchronously();
-            var taskResult = equalsToExpression.Evaluate(new CancellationToken());
-            taskResult.RunSynchronously();
+                // Act
+                var taskResult = lessThanExpression.Evaluate(new CancellationToken());
+                taskResult.RunSynchronously();
 
-            // Verify
-            Assert.IsTrue(taskResult.Result);
-        }
+                // Verify
+                Assert.IsFalse(taskResult.Result);
+            }
 
-        [TestMethod]
-        public void CanEvaluateGreaterThanExpression()
-        {
-            // Prepare
-            var viewModelProperty = new FakeViewModelProperty(10);
-            var greaterThanExpression = ExpressionNode.GreaterThanValue(viewModelProperty, 5);
+            [TestMethod]
+            public void LessThanLateValueExprCanEvaluate()
+            {
+                // Prepare
+                int[] dynamicValue = { 5 };
+                var viewModelProperty = new FakeViewModelProperty(10);
+                var equalsToExpression = ExpressionNode.LessThanLateValue(viewModelProperty, () => dynamicValue[0]);
 
-            // Act
-            var taskResult = greaterThanExpression.Evaluate(new CancellationToken());
-            taskResult.RunSynchronously();
+                // Act
+                dynamicValue[0] = 20;
+                var taskResult = equalsToExpression.Evaluate(new CancellationToken());
+                taskResult.RunSynchronously();
 
-            // Verify
-            Assert.IsTrue(taskResult.Result);
-        }
+                // Verify
+                Assert.IsTrue(taskResult.Result);
+            }
 
-        [TestMethod]
-        public void CanEvaluateGreaterThanLateValueExpression()
-        {
-            // Prepare
-            int[] dynamicValue = { 20 };
-            var viewModelProperty = new FakeViewModelProperty(10);
-            var equalsToExpression = ExpressionNode.GreaterThanLateValue(viewModelProperty, () => dynamicValue[0]);
+            [TestMethod]
+            [ExpectedException(typeof(InvalidOperationException))]
+            public void LessThanExprShouldNotAllowNullOperands()
+            {
+                // Prepare
+                var viewModelProperty = new FakeViewModelProperty(null);
+                var lessThanExpression = ExpressionNode.LessThanValue(viewModelProperty, null);
 
-            // Act
-            dynamicValue[0] = 5;
-            var taskResult = equalsToExpression.Evaluate(new CancellationToken());
-            taskResult.RunSynchronously();
+                // Act
+                var taskResult = lessThanExpression.Evaluate(new CancellationToken());
+                taskResult.Start();
+                try
+                {
+                    // to throw eventual exceptions
+                    taskResult.Wait();
+                }
+                catch (AggregateException ae)
+                {
+                    ae.Flatten().Handle(ex =>
+                    {
+                        if (ex is InvalidOperationException)
+                            throw ex;
+                        return false;
+                    });
+                }
+            }
 
-            // Verify
-            Assert.IsTrue(taskResult.Result);
-        }
+            [TestMethod]
+            [ExpectedException(typeof(InvalidOperationException))]
+            public void LessThanExprPropertyValueShouldBeComparable()
+            {
+                // Prepare
+                var viewModelProperty = new FakeViewModelProperty(new object());
+                var lessThanExpression = ExpressionNode.LessThanValue(viewModelProperty, 2);
 
-        [TestMethod]
-        public void CanEvaluateLessThanExpression()
-        {
-            // Prepare
-            var viewModelProperty = new FakeViewModelProperty(10);
-            var lessThanExpression = ExpressionNode.LessThanValue(viewModelProperty, 5);
-
-            // Act
-            var taskResult = lessThanExpression.Evaluate(new CancellationToken());
-            taskResult.RunSynchronously();
-
-            // Verify
-            Assert.IsFalse(taskResult.Result);
-        }
-
-        [TestMethod]
-        public void CanEvaluateLessThanLateValueExpression()
-        {
-            // Prepare
-            int[] dynamicValue = { 5 };
-            var viewModelProperty = new FakeViewModelProperty(10);
-            var equalsToExpression = ExpressionNode.LessThanLateValue(viewModelProperty, () => dynamicValue[0]);
-
-            // Act
-            dynamicValue[0] = 20;
-            var taskResult = equalsToExpression.Evaluate(new CancellationToken());
-            taskResult.RunSynchronously();
-
-            // Verify
-            Assert.IsTrue(taskResult.Result);
+                // Act
+                var taskResult = lessThanExpression.Evaluate(new CancellationToken());
+                taskResult.Start();
+                try
+                {
+                    // to throw eventual exceptions
+                    taskResult.Wait();
+                }
+                catch (AggregateException ae)
+                {
+                    ae.Flatten().Handle(ex =>
+                    {
+                        if (ex is InvalidOperationException)
+                            throw ex;
+                        return false;
+                    });
+                }
+            }
         }
 
         [TestMethod]
@@ -154,36 +334,6 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
             // Act
             var taskResult = matchingExpression.Evaluate(new CancellationToken());
-            taskResult.RunSynchronously();
-
-            // Verify
-            Assert.IsTrue(taskResult.Result);
-        }
-
-        [TestMethod]
-        public void CanEvaluateNullExpression()
-        {
-            // Prepare
-            var viewModelProperty = new FakeViewModelProperty(new object());
-            var equalsToExpression = ExpressionNode.EqualToValue(viewModelProperty, null);
-
-            // Act
-            var taskResult = equalsToExpression.Evaluate(new CancellationToken());
-            taskResult.RunSynchronously();
-
-            // Verify
-            Assert.IsFalse(taskResult.Result);
-        }
-
-        [TestMethod]
-        public void CanEvaluateNullOrEmptyExpression()
-        {
-            // Prepare
-            var viewModelProperty = new FakeViewModelProperty(string.Empty);
-            var equalsToExpression = ExpressionNode.EqualToValue(viewModelProperty, "");
-
-            // Act
-            var taskResult = equalsToExpression.Evaluate(new CancellationToken());
             taskResult.RunSynchronously();
 
             // Verify

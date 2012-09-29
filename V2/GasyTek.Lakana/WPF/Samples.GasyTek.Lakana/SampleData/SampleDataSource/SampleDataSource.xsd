@@ -21,6 +21,6 @@
     <xs:attribute blend:Format="Lorem ipsum" blend:FormatParameters="4,8" name="LastName" type="xs:string" />
     <xs:attribute name="DateOfBirth" type="xs:string" />
     <xs:attribute name="DateOfDeath" type="xs:string" />
-    <xs:attribute name="PlaceOfBirth" type="xs:string" />
+    <xs:attribute name="Email" type="xs:string" />
   </xs:complexType>
 </xs:schema>

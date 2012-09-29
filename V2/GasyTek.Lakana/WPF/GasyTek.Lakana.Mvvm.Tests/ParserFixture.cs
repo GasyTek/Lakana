@@ -22,7 +22,7 @@ namespace GasyTek.Lakana.Mvvm.Tests
         public void OnSetup()
         {
             var fakeEditableViewModel = new FakeEditableViewModel { Model = new Product { Code = "PR001", Quantity = 20} };
-            var fluentApi = new FluentImplementer<FakeEditableViewModel>(fakeEditableViewModel);
+            var fluentApi = new FluentImplementer<FakeEditableViewModel, int>(fakeEditableViewModel);
             var tokens = fluentApi.InternalTokens;
             var parser = new Parser();
 
@@ -34,9 +34,9 @@ namespace GasyTek.Lakana.Mvvm.Tests
 
         #region Helper methods
 
-        private IFluentProperty<FakeEditableViewModel> FluentApi
+        private IFluentProperty<FakeEditableViewModel, int> FluentApi
         {
-            get { return (FluentImplementer<FakeEditableViewModel>)TestContext.Properties[FluentApiProperty]; }
+            get { return (FluentImplementer<FakeEditableViewModel, int>)TestContext.Properties[FluentApiProperty]; }
         }
 
         private Parser Parser

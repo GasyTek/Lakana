@@ -22,7 +22,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         private readonly TViewModel _viewModelInstance;
 
         // contains rule definitions for each property
-        private readonly Dictionary<string, List<FluentImplementer<TViewModel>>> _propertyRuleCollection;
+        private readonly Dictionary<string, List<IFluentImplementer<TViewModel>>> _propertyRuleCollection;
 
         // contains the couple (AST, Error message) for each property.
         private readonly Dictionary<string, List<CompiledRule>> _compiledRules;
@@ -38,7 +38,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         internal FluentValidationEngine(TViewModel viewModelInstance, bool buildRuleImmediatly)
         {
             _parser = new Parser();
-            _propertyRuleCollection = new Dictionary<string, List<FluentImplementer<TViewModel>>>();
+            _propertyRuleCollection = new Dictionary<string, List<IFluentImplementer<TViewModel>>>();
             _compiledRules = new Dictionary<string, List<CompiledRule>>();
             _viewModelInstance = viewModelInstance;
 
@@ -62,7 +62,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
         /// <summary>
         /// Define the rules for all properties.
-        /// Use <see cref="Property" /> to begin defining rules.
+        /// Use <see cref="Property{TPropertyValue}" /> to begin defining rules.
         /// </summary>
         protected abstract void OnDefineRules();
 
@@ -71,7 +71,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         /// </summary>
         /// <param name="propertyExpression">The expression that specify the property to define rule for.</param>
         /// <remarks>This method will typically called from <see cref="OnDefineRules"/> method.</remarks>
-        protected IFluentVerb<TViewModel> Property(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
+        protected IFluentVerb<TViewModel, TPropertyValue> Property<TPropertyValue>(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
         {
             var property = propertyExpression.Compile()(_viewModelInstance);
             if (property == null)
@@ -79,11 +79,11 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
                     "Property instance is null. Please verify that you assigned a model to your view model.");
 
             var propertyName = property.PropertyMetadata.Name;
-            var fluentApi = new FluentImplementer<TViewModel>(_viewModelInstance);
+            var fluentApi = new FluentImplementer<TViewModel, TPropertyValue>(_viewModelInstance);
 
             // registers the rule for this property 
             if (!_propertyRuleCollection.ContainsKey(propertyName))
-                _propertyRuleCollection.Add(propertyName, new List<FluentImplementer<TViewModel>>());
+                _propertyRuleCollection.Add(propertyName, new List<IFluentImplementer<TViewModel>>());
 
             _propertyRuleCollection[propertyName].Add(fluentApi);
 

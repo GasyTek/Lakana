@@ -1,19 +1,159 @@
-﻿<UserControl
-	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-	mc:Ignorable="d"
-	x:Class="Samples.GasyTek.Lakana.Screens.ContactView"
-	d:DesignWidth="640" 
-	d:DesignHeight="480"
-	Style="{StaticResource ScreenStyle}" 
-	Background="{DynamicResource WorkspaceBackgroundBrush}">
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:ui="http://schemas.gasytek.com/wpf/ui" mc:Ignorable="d"
+             x:Class="Samples.GasyTek.Lakana.Screens.ContactView"
+             d:DesignWidth="640"
+             d:DesignHeight="480"
+             Background="{DynamicResource WorkspaceBackgroundBrush}"
+             Style="{StaticResource ScreenStyle}">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
 
-	<DockPanel x:Name="LayoutRoot">
-		<TextBlock DockPanel.Dock="Top" 
-					Text="Contact"
-					Foreground="{DynamicResource WindowBackgorundBrush}" Style="{DynamicResource ScreenTitleStyle}" />
-			
-	</DockPanel>
+    <DockPanel x:Name="LayoutRoot">
+        <TextBlock DockPanel.Dock="Top"
+                   Text="Contact"
+                   Foreground="{DynamicResource WindowBackgorundBrush}"
+                   Style="{DynamicResource ScreenTitleStyle}" />
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="20" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="3*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition />
+                <ColumnDefinition Width="20" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <!-- FirstName -->
+            <TextBlock Grid.Row="1"
+                       Text="Firstname"
+                       Style="{DynamicResource FieldTitleStyle}"
+                       Grid.Column="1" />
+            <TextBlock Grid.Row="1"
+                       Grid.Column="2"
+                       Text="*"
+                       Foreground="{DynamicResource MetroRedBrush}"
+                       VerticalAlignment="Center"
+                       FontSize="14.667"
+                       HorizontalAlignment="Center" />
+            <TextBox Grid.Row="1"
+                     Grid.Column="3"
+                     Text="{ui:Binding FirstName.Value}"
+                     Style="{DynamicResource TextBoxStyle}" />
+
+            <!-- LastName -->
+            <TextBlock Grid.Row="3"
+                       Text="Lastname"
+                       Style="{DynamicResource FieldTitleStyle}"
+                       Grid.Column="1" />
+            <TextBlock Grid.Row="3"
+                       Grid.Column="2"
+                       Text="*"
+                       Foreground="{DynamicResource MetroRedBrush}"
+                       VerticalAlignment="Center"
+                       FontSize="14.667"
+                       HorizontalAlignment="Center" />
+            <TextBox Grid.Row="3"
+                     Grid.Column="3"
+                     Text="{ui:Binding LastName.Value}"
+                     Style="{DynamicResource TextBoxStyle}" />
+
+            <!-- Phone -->
+            <TextBlock Grid.Row="5"
+                       Text="Phone"
+                       Style="{DynamicResource FieldTitleStyle}"
+                       Grid.Column="1" />
+            <TextBlock Grid.Row="5"
+                       Grid.Column="2"
+                       Text="*"
+                       Foreground="{DynamicResource MetroRedBrush}"
+                       FontSize="14.667"
+                       HorizontalAlignment="Center" />
+            <TextBox Grid.Row="5"
+                     Grid.Column="3"
+                     Text="{ui:Binding PhoneNumber.Value}"
+                     Style="{DynamicResource TextBoxStyle}" />
+            <Border Grid.Row="5"
+                    Grid.Column="4"
+                    Width="10" 
+                    Height="10">
+                <ContentControl Style="{DynamicResource BusyIndicatorStyle}"
+                                Foreground="{DynamicResource MetroGreenBrush}"
+                                Visibility="{Binding PhoneNumber.IsValidating, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                Width="10"
+                                Height="10" />
+            </Border>
+
+            <!-- Email -->
+            <TextBlock Grid.Row="7"
+                       Text="Email"
+                       Style="{DynamicResource FieldTitleStyle}"
+                       Grid.Column="1" />
+            <TextBox Grid.Column="3"
+                     Grid.Row="7"
+                     Text="{ui:Binding Email.Value}"
+                     Style="{DynamicResource TextBoxStyle}" />
+
+            <!-- Date of birth -->
+            <TextBlock Grid.Row="9"
+                       Text="Date of Birth"
+                       Style="{DynamicResource FieldTitleStyle}"
+                       Grid.Column="1" />
+            <DatePicker Grid.Row="9"
+                        Grid.Column="3"
+                        Style="{DynamicResource DatePickerStyle}" 
+                        DisplayDate="{ui:Binding DateOfBirth.Value}"
+                        SelectedDate="{ui:Binding DateOfBirth.Value}" />
+
+            <!-- Date of death -->
+            <TextBlock Grid.Row="11"
+                       Text="Date of Death"
+                       Style="{DynamicResource FieldTitleStyle}"
+                       Grid.Column="1" />
+            <DatePicker Grid.Column="3"
+                        Grid.Row="11"
+                        Style="{DynamicResource DatePickerStyle}"
+                        DisplayDate="{ui:Binding DateOfDeath.Value}"
+                        SelectedDate="{ui:Binding DateOfDeath.Value}" />
+
+            <StackPanel Grid.Row="12"
+                        Orientation="Horizontal"
+                        Grid.ColumnSpan="6"
+                        HorizontalAlignment="Center">
+                <Button Content="Save"
+                        Style="{DynamicResource ActionButtonStyle}"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        MinWidth="120"
+                        Margin="0,0,10,0" 
+                        Command="{Binding SaveCommand}" />
+                <Button Content="Cancel"
+                        Style="{DynamicResource ActionButtonStyle}"
+                        VerticalAlignment="Center"
+                        MinWidth="120"
+                        Margin="9.998,0,0,0"
+                        HorizontalAlignment="Center"
+                        Command="{Binding CancelCommand}" />
+            </StackPanel>
+
+        </Grid>
+    </DockPanel>
 </UserControl>

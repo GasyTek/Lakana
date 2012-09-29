@@ -54,11 +54,13 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         {
             return new Task<bool>(() =>
                                       {
-                                          var cmp1 = LeftValue as IComparable;
-                                          var cmp2 = RightValue as IComparable;
-                                          if (cmp1 == null || cmp2 == null)
+                                          if (LeftValue == null) throw new InvalidOperationException("LeftValue");
+                                          if (RightValue == null) throw new InvalidOperationException("RightValue");
+
+                                          var comparable = LeftValue as IComparable;
+                                          if (comparable == null)
                                               throw new InvalidOperationException("GreaterThan operator : one of the operand is not comparable. Make them implement IComparable.");
-                                          return cmp1.CompareTo(cmp2) > 0;
+                                          return comparable.CompareTo(RightValue) > 0;
                                       }, cancellationToken, TaskCreationOptions.AttachedToParent);
         }
     }
@@ -87,11 +89,13 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         {
             return new Task<bool>(() =>
                                     {
-                                        var cmp1 = LeftValue as IComparable;
-                                        var cmp2 = RightValue as IComparable;
-                                        if (cmp1 == null || cmp2 == null)
+                                        if (LeftValue == null) throw new InvalidOperationException("LeftValue");
+                                        if (RightValue == null) throw new InvalidOperationException("RightValue");
+
+                                        var comparable = LeftValue as IComparable;
+                                        if (comparable == null)
                                             throw new InvalidOperationException("LessThan operator : one of the operand is not comparable. Make them implement IComparable.");
-                                        return cmp1.CompareTo(cmp2) < 0;
+                                        return comparable.CompareTo(RightValue) < 0;
                                     }, cancellationToken, TaskCreationOptions.AttachedToParent);
         }
     }
@@ -127,14 +131,14 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
     /// </summary>
     internal class CustomValidationExpression : EvaluableExpression
     {
-        private readonly CustomValidator _customValidator;
+        private readonly CustomValidator<object> _customValidator;
 
-        public CustomValidator CustomValidator
+        public CustomValidator<object> CustomValidator
         {
             get { return _customValidator; }
         }
 
-        public CustomValidationExpression(Func<object> leftValueProvider, CustomValidator customValidator) 
+        public CustomValidationExpression(Func<object> leftValueProvider, CustomValidator<object> customValidator) 
             : base(leftValueProvider)
         {
             _customValidator = customValidator;

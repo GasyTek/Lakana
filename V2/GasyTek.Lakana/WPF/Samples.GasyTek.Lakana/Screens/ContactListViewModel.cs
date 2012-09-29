@@ -29,20 +29,20 @@ namespace Samples.GasyTek.Lakana.Screens
             Contacts = new ObservableCollection<Contact>(Database.GetContacts());
             SelectedContact = Contacts.First();
 
-            EditContactCommand = new SimpleCommand(param =>
-                                                       {
-                                                           if (SelectedContact == null) return;
-                                                           var viewModel = new ContactViewModel { Model = SelectedContact };
-                                                           var navigationInfo = NavigationInfo.CreateComplex(ScreenId.Contact,
-                                                                                        ScreenId.ContactList,
-                                                                                        viewModel);
-                                                           Singletons.NavigationServiceInstance.NavigateTo<ContactView>(navigationInfo);
-                                                       });
+            EditContactCommand = new SimpleCommand(OnEditContactCommandExecute);
+        }
+
+        private void OnEditContactCommandExecute(object param)
+        {
+            if (SelectedContact == null) return;
+            var viewModel = new ContactViewModel { Model = SelectedContact };
+            var navigationInfo = NavigationInfo.CreateComplex(ScreenId.Contact, ScreenId.ContactList, viewModel);
+            Singletons.NavigationServiceInstance.NavigateTo<ContactView>(navigationInfo);
         }
 
         protected override void OnCreateViewModelProperties()
         {
-            
+
         }
     }
 }

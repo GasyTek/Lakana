@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Threading;
 using System.Threading.Tasks;
 using GasyTek.Lakana.Mvvm.Validation.Fluent;
 using GasyTek.Lakana.Mvvm.ViewModelProperties;
@@ -39,9 +38,9 @@ namespace GasyTek.Lakana.Mvvm.Tests.Fakes
             if (handler != null) handler(this, new EventArgs());
         }
 
-        public IFluentVerb<FakeEditableViewModel> AssertThatProperty(Expression<Func<FakeEditableViewModel, IViewModelProperty>> propertyExpression)
+        public IFluentVerb<FakeEditableViewModel, TPropertyValue> AssertThatProperty<TPropertyValue>(Expression<Func<FakeEditableViewModel, IViewModelProperty>> propertyExpression)
         {
-            return Property(propertyExpression);
+            return Property<TPropertyValue>(propertyExpression);
         }
     }
 }

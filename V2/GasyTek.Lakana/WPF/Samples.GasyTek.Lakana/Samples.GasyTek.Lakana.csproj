@@ -65,12 +65,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Model\DataBase.cs" />
+    <Compile Include="Model\WebService.cs" />
     <Compile Include="SampleData\SampleDataSource\SampleDataSource.xaml.cs">
       <DependentUpon>SampleDataSource.xaml</DependentUpon>
     </Compile>
     <Compile Include="Screens\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Screens\ContactViewModelValidation.cs" />
     <Compile Include="Utils\ScreenId.cs" />
     <Compile Include="Utils\Singletons.cs" />
     <Page Include="Resources\IconsResources.xaml">

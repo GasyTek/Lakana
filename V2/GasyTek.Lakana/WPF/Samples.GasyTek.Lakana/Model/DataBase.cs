@@ -22,7 +22,7 @@ namespace Samples.GasyTek.Lakana.Model
                                             Sex = Sex.Male,
                                             DateOfBirth = new DateTime(1844, 10, 15),
                                             DateOfDeath = new DateTime(1900, 8, 25),
-                                            PlaceOfBirth = "Röcken"
+                                            Email = "friedrich@philosopher.com"
                                         },
                                     new Contact
                                         {
@@ -32,7 +32,7 @@ namespace Samples.GasyTek.Lakana.Model
                                             Sex = Sex.Male,
                                             DateOfBirth = new DateTime(1854, 10, 16),
                                             DateOfDeath = new DateTime(1900, 11, 30),
-                                            PlaceOfBirth = "Dublin"
+                                            Email = "oscar@philosopher.net"
                                         },
                                     new Contact
                                         {
@@ -42,7 +42,17 @@ namespace Samples.GasyTek.Lakana.Model
                                             Sex = Sex.Male,
                                             DateOfBirth = new DateTime(1899, 07, 21),
                                             DateOfDeath = new DateTime(1961, 07, 2),
-                                            PlaceOfBirth = "Oak Park"
+                                            Email = "ernest@philosopher.com"
+                                        },
+                                    new Contact
+                                        {
+                                            Id = 3,
+                                            FirstName = "Arthur",
+                                            LastName = "Schopenhauer",
+                                            Sex = Sex.Male,
+                                            DateOfBirth = new DateTime(1788, 02, 22),
+                                            DateOfDeath = new DateTime(1860, 09, 21),
+                                            Email = "arthur@philosopher.co"
                                         }
                                 };
             }

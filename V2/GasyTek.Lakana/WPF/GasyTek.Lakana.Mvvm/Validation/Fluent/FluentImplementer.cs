@@ -7,16 +7,28 @@ using GasyTek.Lakana.Mvvm.ViewModels;
 
 namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 {
+    internal interface IFluentImplementer<out TViewModel> 
+        where TViewModel : ViewModelBase
+    {
+        List<ExpressionNode> InternalTokens { get; }
+        FluentImplementerContext Context { get; }
+        TViewModel ViewModel { get; }
+
+        bool IsExpressionValid();
+    }
+
     /// <summary>
     /// The object that is used to build fluent sentences.
     /// It implements all fluent interfaces.
     /// </summary>
     /// <typeparam name="TViewModel">The type of the view model.</typeparam>
-    internal sealed class FluentImplementer<TViewModel> 
-        : IFluentProperty<TViewModel>
-        , IFluentVerb<TViewModel>
-        , IFluentEvaluable<TViewModel>
-        , IFluentContinuation<TViewModel> where TViewModel : ViewModelBase
+    /// <typeparam name="TPropertyValue">The type of the property value.</typeparam>
+    internal sealed class FluentImplementer<TViewModel, TPropertyValue>
+        : IFluentImplementer<TViewModel>
+        , IFluentProperty<TViewModel, TPropertyValue>
+        , IFluentVerb<TViewModel, TPropertyValue>
+        , IFluentOperator<TViewModel, TPropertyValue>
+        , IFluentContinuation<TViewModel, TPropertyValue> where TViewModel : ViewModelBase
     {
         private readonly List<ExpressionNode> _internalTokens;
         private readonly TViewModel _viewModel;
@@ -27,14 +39,19 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
         /// <summary>
         /// Used by the infrastructure only.
         /// </summary>
-        internal List<ExpressionNode> InternalTokens
+        public List<ExpressionNode> InternalTokens
         {
             get { return _internalTokens; }
         }
 
-        internal FluentImplementerContext Context
+        public FluentImplementerContext Context
         {
             get { return _context; }
+        }
+
+        public TViewModel ViewModel
+        {
+            get { return _viewModel; }
         }
 
         #endregion
@@ -65,7 +82,12 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
         #region Fluent api property
 
-        public IFluentVerb<TViewModel> Property(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
+        /// <summary>
+        /// Properties the specified property expression.
+        /// </summary>
+        /// <param name="propertyExpression">The property expression.</param>
+        /// <returns></returns>
+        public IFluentVerb<TViewModel, TPropertyValue> Property(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
         {
             UpdateContext(propertyExpression, true, true);
             return this;
@@ -75,12 +97,12 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
         #region Fluent api verbs
 
-        public IFluentEvaluable<TViewModel> Is
+        public IFluentOperator<TViewModel, TPropertyValue> Is
         {
             get { return this; }
         }
 
-        public IFluentEvaluable<TViewModel> IsNot
+        public IFluentOperator<TViewModel, TPropertyValue> IsNot
         {
             get
             {
@@ -89,379 +111,18 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             }
         }
 
-        public IFluentEvaluable<TViewModel> Has
+        public IFluentOperator<TViewModel, TPropertyValue> Has
         {
             get { return this; }
         }
 
-        public IFluentEvaluable<TViewModel> HasNot
+        public IFluentOperator<TViewModel, TPropertyValue> HasNot
         {
             get
             {
                 AddToken(ExpressionNode.Not());
                 return this;
             }
-        }
-
-        #endregion
-
-        #region Fluent api evaluables
-
-        public IFluentContinuation<TViewModel> Valid(CustomValidator customValidator)
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-
-            AddToken(ExpressionNode.CustomValidation(_context.CurrentProperty, customValidator));
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> GreaterThan(object value)
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-            EnsureContextCurrentPropertyValueIsOfType(typeof(IComparable), "GreaterThan");
-
-            AddToken(ExpressionNode.GreaterThanValue(_context.CurrentProperty, value));
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> GreaterThan(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-            EnsureContextCurrentPropertyValueIsOfType(typeof(IComparable), "GreaterThan");
-
-            UpdateContext(propertyExpression);
-
-            AddToken(ExpressionNode.GreaterThanProperty(_context.CurrentProperty, propertyExpression.Compile()(_viewModel)));
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> GreaterThan(LateValue lateValue)
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-
-            AddToken(ExpressionNode.GreaterThanLateValue(_context.CurrentProperty, lateValue));
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> GreaterThanOrEqualTo(object value)
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-            EnsureContextCurrentPropertyValueIsOfType(typeof(IComparable), "GreaterThanOrEqualn");
-
-            AddToken(ExpressionNode.OpenParenthesis());
-            AddToken(ExpressionNode.GreaterThanValue(_context.CurrentProperty, value));
-            AddToken(ExpressionNode.Or());
-            AddToken(ExpressionNode.EqualToValue(_context.CurrentProperty, value));
-            AddToken(ExpressionNode.CloseParenthesis());
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> GreaterThanOrEqualTo(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-            EnsureContextCurrentPropertyValueIsOfType(typeof(IComparable), "GreaterThanOrEqualTo");
-
-            UpdateContext(propertyExpression);
-
-            AddToken(ExpressionNode.OpenParenthesis());
-            AddToken(ExpressionNode.GreaterThanProperty(_context.CurrentProperty, propertyExpression.Compile()(_viewModel)));
-            AddToken(ExpressionNode.Or());
-            AddToken(ExpressionNode.EqualToProperty(_context.CurrentProperty, propertyExpression.Compile()(_viewModel)));
-            AddToken(ExpressionNode.CloseParenthesis());
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> GreaterThanOrEqualTo(LateValue lateValue)
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-
-            AddToken(ExpressionNode.OpenParenthesis());
-            AddToken(ExpressionNode.GreaterThanLateValue(_context.CurrentProperty, lateValue));
-            AddToken(ExpressionNode.Or());
-            AddToken(ExpressionNode.EqualToLateValue(_context.CurrentProperty, lateValue));
-            AddToken(ExpressionNode.CloseParenthesis());
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> LessThan(object value)
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-            EnsureContextCurrentPropertyValueIsOfType(typeof(IComparable), "LessThan");
-
-            AddToken(ExpressionNode.LessThanValue(_context.CurrentProperty, value));
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> LessThan(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-            EnsureContextCurrentPropertyValueIsOfType(typeof(IComparable), "LessThan");
-
-            UpdateContext(propertyExpression);
-
-            AddToken(ExpressionNode.LessThanProperty(_context.CurrentProperty, propertyExpression.Compile()(_viewModel)));
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> LessThan(LateValue lateValue)
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-
-            AddToken(ExpressionNode.LessThanLateValue(_context.CurrentProperty, lateValue));
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> LessThanOrEqualTo(object value)
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-            EnsureContextCurrentPropertyValueIsOfType(typeof(IComparable), "LessThanOrEqualTo");
-
-            AddToken(ExpressionNode.OpenParenthesis());
-            AddToken(ExpressionNode.LessThanValue(_context.CurrentProperty, value));
-            AddToken(ExpressionNode.Or());
-            AddToken(ExpressionNode.EqualToValue(_context.CurrentProperty, value));
-            AddToken(ExpressionNode.CloseParenthesis());
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> LessThanOrEqualTo(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-            EnsureContextCurrentPropertyValueIsOfType(typeof(IComparable), "LessThanOrEqualTo");
-
-            UpdateContext(propertyExpression);
-
-            AddToken(ExpressionNode.OpenParenthesis());
-            AddToken(ExpressionNode.LessThanProperty(_context.CurrentProperty, propertyExpression.Compile()(_viewModel)));
-            AddToken(ExpressionNode.Or());
-            AddToken(ExpressionNode.EqualToProperty(_context.CurrentProperty, propertyExpression.Compile()(_viewModel)));
-            AddToken(ExpressionNode.CloseParenthesis());
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> LessThanOrEqualTo(LateValue lateValue)
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-
-            AddToken(ExpressionNode.OpenParenthesis());
-            AddToken(ExpressionNode.LessThanLateValue(_context.CurrentProperty, lateValue));
-            AddToken(ExpressionNode.Or());
-            AddToken(ExpressionNode.EqualToLateValue(_context.CurrentProperty, lateValue));
-            AddToken(ExpressionNode.CloseParenthesis());
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> EqualTo(object value)
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-
-            AddToken(ExpressionNode.EqualToValue(_context.CurrentProperty, value));
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> EqualTo(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-
-            UpdateContext(propertyExpression);
-
-            AddToken(ExpressionNode.EqualToProperty(_context.CurrentProperty, propertyExpression.Compile()(_viewModel)));
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> EqualTo(LateValue lateValue)
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-
-            AddToken(ExpressionNode.EqualToLateValue(_context.CurrentProperty, lateValue));
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> Null()
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-
-            AddToken(ExpressionNode.EqualToValue(_context.CurrentProperty, null));
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> NullOrEmpty()
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-
-            AddToken(ExpressionNode.EqualToValue(_context.CurrentProperty, null));
-            AddToken(ExpressionNode.Or());
-            AddToken(ExpressionNode.EqualToValue(_context.CurrentProperty, string.Empty));
-            return this;
-        }
-
-        /// <summary>
-        /// Matches the specified regular expression pattern.
-        /// </summary>
-        /// <param name="pattern">The pattern.</param>
-        /// <returns></returns>
-        public IFluentContinuation<TViewModel> Matching(string pattern)
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-            EnsureContextCurrentPropertyValueIsOfType(typeof(string), "Matching");
-
-            AddToken(ExpressionNode.MatchingProperty(_context.CurrentProperty, pattern));
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> ValidEmail()
-        {
-            return Matching(ValidationConstants.EmailPattern);
-        }
-
-        public IFluentContinuation<TViewModel> StartingWith(string start)
-        {
-            return Matching(string.Format("^({0})", start));
-        }
-
-        public IFluentContinuation<TViewModel> EndingWith(string end)
-        {
-            return Matching(string.Format("({0})$", end));
-        }
-
-        public IFluentContinuation<TViewModel> MaxLength(int maxLength)
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-            EnsureContextCurrentPropertyValueIsOfType(typeof(string), "MaxLength");
-
-            if (maxLength <= 0)
-                throw new InvalidOperationException("maxLength must be greater than 0");
-
-            var evaluatedValueProvider = new Func<object>(() =>
-            {
-                var value = (string)_context.CurrentProperty.GetValue();
-                return value == null ? 0 : value.Length;
-            });
-            var valueProvider = new Func<object>(() => maxLength);
-
-            AddToken(ExpressionNode.OpenParenthesis());
-            AddToken(ExpressionNode.LessThanGeneric(evaluatedValueProvider, valueProvider));
-            AddToken(ExpressionNode.Or());
-            AddToken(ExpressionNode.EqualToGeneric(evaluatedValueProvider, valueProvider));
-            AddToken(ExpressionNode.CloseParenthesis());
-
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> MinLength(int minLength)
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-            EnsureContextCurrentPropertyValueIsOfType(typeof(string), "MinLength");
-
-            if (minLength <= 0)
-                throw new InvalidOperationException("minLength must be greater than 0");
-
-            var evaluatedValueProvider = new Func<object>(() =>
-            {
-                var value = (string)_context.CurrentProperty.GetValue();
-                return value == null ? 0 : value.Length;
-            });
-            var valueProvider = new Func<object>(() => minLength);
-
-            AddToken(ExpressionNode.OpenParenthesis());
-            AddToken(ExpressionNode.GreaterThanGeneric(evaluatedValueProvider, valueProvider));
-            AddToken(ExpressionNode.Or());
-            AddToken(ExpressionNode.EqualToGeneric(evaluatedValueProvider, valueProvider));
-            AddToken(ExpressionNode.CloseParenthesis());
-
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> Required()
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-            
-            // required = is neither null nor empty
-            AddToken(ExpressionNode.Not());
-            AddToken(ExpressionNode.OpenParenthesis());
-            AddToken(ExpressionNode.EqualToValue(_context.CurrentProperty, null));
-            AddToken(ExpressionNode.Or());
-            AddToken(ExpressionNode.EqualToValue(_context.CurrentProperty, string.Empty));
-            AddToken(ExpressionNode.CloseParenthesis());
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> DifferentOf(object value)
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-
-            // different of = not equal to value
-            AddToken(ExpressionNode.Not());
-            AddToken(ExpressionNode.EqualToValue(_context.CurrentProperty, value));
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> DifferentOf(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression)
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-
-            UpdateContext(propertyExpression);
-
-            // different of = not equal to property
-            AddToken(ExpressionNode.Not());
-            AddToken(ExpressionNode.EqualToProperty(_context.CurrentProperty, propertyExpression.Compile()(_viewModel)));
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> DifferentOf(LateValue lateValue)
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-
-            AddToken(ExpressionNode.Not());
-            AddToken(ExpressionNode.EqualToLateValue(_context.CurrentProperty, lateValue));
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> Between(object @from, object to)
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-
-            // uses parenthesis to satisfy syntax : IsNot.Between (...)
-            AddToken(ExpressionNode.OpenParenthesis());
-            AddToken(ExpressionNode.OpenParenthesis());
-            AddToken(ExpressionNode.GreaterThanValue(_context.CurrentProperty, @from));
-            AddToken(ExpressionNode.Or());
-            AddToken(ExpressionNode.EqualToValue(_context.CurrentProperty, @from));
-            AddToken(ExpressionNode.CloseParenthesis());
-            AddToken(ExpressionNode.And());
-            AddToken(ExpressionNode.OpenParenthesis());
-            AddToken(ExpressionNode.LessThanValue(_context.CurrentProperty, to));
-            AddToken(ExpressionNode.Or());
-            AddToken(ExpressionNode.EqualToValue(_context.CurrentProperty, to));
-            AddToken(ExpressionNode.CloseParenthesis());
-            AddToken(ExpressionNode.CloseParenthesis());
-
-            return this;
-        }
-
-        public IFluentContinuation<TViewModel> BetweenPoperties(Expression<Func<TViewModel, IViewModelProperty>> @from, Expression<Func<TViewModel, IViewModelProperty>> to)
-        {
-            EnsureContextCurrentPropertyIsNotNull();
-
-            UpdateContext(@from);
-            UpdateContext(to);
-
-            // uses parenthesis to satisfy syntax : IsNot.Between (...)
-            AddToken(ExpressionNode.OpenParenthesis());
-            AddToken(ExpressionNode.OpenParenthesis());
-            AddToken(ExpressionNode.GreaterThanProperty(_context.CurrentProperty, @from.Compile()(_viewModel)));
-            AddToken(ExpressionNode.Or());
-            AddToken(ExpressionNode.EqualToProperty(_context.CurrentProperty, @from.Compile()(_viewModel)));
-            AddToken(ExpressionNode.CloseParenthesis());
-            AddToken(ExpressionNode.And());
-            AddToken(ExpressionNode.OpenParenthesis());
-            AddToken(ExpressionNode.LessThanProperty(_context.CurrentProperty, to.Compile()(_viewModel)));
-            AddToken(ExpressionNode.Or());
-            AddToken(ExpressionNode.EqualToProperty(_context.CurrentProperty, to.Compile()(_viewModel)));
-            AddToken(ExpressionNode.CloseParenthesis());
-            AddToken(ExpressionNode.CloseParenthesis());
-
-            return this;
         }
 
         #endregion
@@ -473,7 +134,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             _context.Message = message;
         }
 
-        public IFluentVerb<TViewModel> And
+        public IFluentVerb<TViewModel, TPropertyValue> And
         {
             get
             {
@@ -482,7 +143,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             }
         }
 
-        public IFluentVerb<TViewModel> Or
+        public IFluentVerb<TViewModel, TPropertyValue> Or
         {
             get
             {
@@ -493,14 +154,14 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
 
         #endregion
 
-        #region Private methods
+        #region Internal methods
 
-        private void AddToken(ExpressionNode token)
+        internal void AddToken(ExpressionNode token)
         {
             _internalTokens.Add(token) ;
         }
 
-        private void UpdateContext(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression
+        internal void UpdateContext(Expression<Func<TViewModel, IViewModelProperty>> propertyExpression
             , bool isCurrentProperty = false
             , bool isInitialProperty = false)
         {
@@ -510,20 +171,10 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             if(isInitialProperty) _context.OwnerProperty = viewModelProperty;
         }
 
-        private void EnsureContextCurrentPropertyIsNotNull()
+        internal void EnsureContextCurrentPropertyIsNotNull()
         {
             if (_context.CurrentProperty == null)
                 throw new InvalidOperationException("The current property must not be null.");
-        }
-
-        private void EnsureContextCurrentPropertyValueIsOfType(Type expectedType, string currentOperatorName)
-        {
-            if (expectedType == null) throw new ArgumentNullException("expectedType");
-
-            var valueType = _context.CurrentProperty.GetValueType();
-            if (expectedType.IsAssignableFrom(valueType) == false)
-                throw new InvalidOperationException(String.Format("The type of the value of the property [{0}] do not support the operator [{1}].", 
-                    _context.CurrentProperty.GetValueType().FullName, currentOperatorName));
         }
 
         #endregion
