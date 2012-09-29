@@ -151,7 +151,7 @@ namespace Expression.Blend.SampleData.SampleDataSource
 				if (this._PlaceOfBirth != value)
 				{
 					this._PlaceOfBirth = value;
-					this.OnPropertyChanged("PlaceOfBirth");
+					this.OnPropertyChanged("Email");
 				}
 			}
 		}

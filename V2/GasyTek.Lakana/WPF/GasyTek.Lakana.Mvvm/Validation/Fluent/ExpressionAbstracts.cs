@@ -85,7 +85,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return EqualToGeneric(leftValueProvider, rightValueProvider);
         }
 
-        public static EqualToExpression EqualToLateValue(IViewModelProperty property, LateValue lateValue)
+        public static EqualToExpression EqualToLateValue(IViewModelProperty property, LateValue<object> lateValue)
         {
             var leftValueProvider = new Func<object>(property.GetValue);
             var rightValueProvider = new Func<object>(() => lateValue());
@@ -111,7 +111,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return GreaterThanGeneric(leftValueProvider, rightValueProvider);
         }
 
-        public static GreaterThanExpression GreaterThanLateValue(IViewModelProperty property, LateValue lateValue)
+        public static GreaterThanExpression GreaterThanLateValue(IViewModelProperty property, LateValue<object> lateValue)
         {
             var leftValueProvider = new Func<object>(property.GetValue);
             var rightValueProvider = new Func<object>(() => lateValue());
@@ -137,7 +137,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return LessThanGeneric(leftValueProvider, rightValueProvider);
         }
 
-        public static LessThanExpression LessThanLateValue(IViewModelProperty property, LateValue lateValue)
+        public static LessThanExpression LessThanLateValue(IViewModelProperty property, LateValue<object> lateValue)
         {
             var leftValueProvider = new Func<object>(property.GetValue);
             var rightValueProvider = new Func<object>(() => lateValue());
@@ -155,7 +155,7 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
             return MatchingGeneric(evaluatedValueProvider, pattern);
         }
 
-        public static CustomValidationExpression CustomValidation(IViewModelProperty property, CustomValidator customValidator)
+        public static CustomValidationExpression CustomValidation(IViewModelProperty property, CustomValidator<object> customValidator)
         {
             var leftValueProvider = new Func<object>(property.GetValue);
             return new CustomValidationExpression(leftValueProvider, customValidator);
