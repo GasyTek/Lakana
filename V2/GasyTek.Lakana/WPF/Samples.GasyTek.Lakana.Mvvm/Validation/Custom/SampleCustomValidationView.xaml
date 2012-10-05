@@ -2,8 +2,9 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:ui="http://schemas.gasytek.com/wpf/ui"
-             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" mc:Ignorable="d" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+             xmlns:lakana="http://schemas.gasytek.com/wpf/lakana" mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300"
              Loaded="UserControlLoaded">
     <UserControl.Resources>
@@ -83,7 +84,7 @@
                            DataContext="{Binding Code}"
                            Style="{StaticResource FieldTitleStyle}" />
                 <TextBox Grid.Column="2"
-                         Text="{ui:Binding Code.Value}"
+                         Text="{lakana:Binding Code.Value}"
                          Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
                 <Image Grid.Column="4"
                        RenderOptions.BitmapScalingMode="HighQuality"
@@ -97,7 +98,7 @@
                            Style="{StaticResource FieldTitleStyle}" />
                 <xctk:IntegerUpDown Grid.Row="2"
                                     Grid.Column="2"
-                                    Value="{ui:Binding Age.Value}"
+                                    Value="{lakana:Binding Age.Value}"
                                     AllowSpin="True"
                                     Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
                 <Image Grid.Row="2"
@@ -114,7 +115,7 @@
                 <ComboBox Grid.Row="4"
                           Grid.Column="2"
                           ItemsSource="{Binding Country.ItemsSource}"
-                          SelectedItem="{ui:Binding Country.SelectedValue}"
+                          SelectedItem="{lakana:Binding Country.SelectedValue}"
                           DisplayMemberPath="Name"
                           Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
                 <Image Grid.Row="4"
@@ -131,7 +132,7 @@
                 <ComboBox Grid.Row="6"
                           Grid.Column="2"
                           ItemsSource="{Binding Rank.ItemsSource}"
-                          SelectedValue="{ui:Binding Rank.SelectedValue}"
+                          SelectedValue="{lakana:Binding Rank.SelectedValue}"
                           SelectedValuePath="Value"
                           DisplayMemberPath="Label"
                           Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
@@ -148,7 +149,7 @@
                            Style="{StaticResource FieldTitleStyle}" />
                 <xctk:DateTimeUpDown Grid.Row="8"
                                      Grid.Column="2"
-                                     Value="{ui:Binding DateOfBirth.Value}"
+                                     Value="{lakana:Binding DateOfBirth.Value}"
                                      Format="ShortDate"
                                      Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
                 <Image Grid.Row="8"
@@ -164,7 +165,7 @@
                            Style="{StaticResource FieldTitleStyle}" />
                 <xctk:DateTimeUpDown Grid.Row="10"
                                      Grid.Column="2"
-                                     Value="{ui:Binding DateOfHire.Value}"
+                                     Value="{lakana:Binding DateOfHire.Value}"
                                      Format="ShortDate"
                                      Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
                 <Image Grid.Row="10"

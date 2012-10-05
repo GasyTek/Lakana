@@ -20,6 +20,12 @@ namespace GasyTek.Lakana.Navigation.Controls
 
         #endregion
 
+        #region Component Keys
+
+        public static ComponentResourceKey BackgroundBrushKey = new ComponentResourceKey(typeof(MessageBoxControl), "BackgroundBrush");
+
+        #endregion
+
         #region Properties
 
         private Canvas ParentPanel { get; set; }

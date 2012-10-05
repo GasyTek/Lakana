@@ -2,7 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:ui="http://schemas.gasytek.com/wpf/ui" mc:Ignorable="d"
+             xmlns:lakana="http://schemas.gasytek.com/wpf/lakana" 
+             mc:Ignorable="d"
              x:Class="Samples.GasyTek.Lakana.Screens.ContactView"
              d:DesignWidth="640"
              d:DesignHeight="480"
@@ -56,7 +57,7 @@
                        HorizontalAlignment="Center" />
             <TextBox Grid.Row="1"
                      Grid.Column="3"
-                     Text="{ui:Binding FirstName.Value}"
+                     Text="{lakana:Binding FirstName.Value}"
                      Style="{DynamicResource TextBoxStyle}" />
 
             <!-- LastName -->
@@ -73,7 +74,7 @@
                        HorizontalAlignment="Center" />
             <TextBox Grid.Row="3"
                      Grid.Column="3"
-                     Text="{ui:Binding LastName.Value}"
+                     Text="{lakana:Binding LastName.Value}"
                      Style="{DynamicResource TextBoxStyle}" />
 
             <!-- Phone -->
@@ -89,7 +90,7 @@
                        HorizontalAlignment="Center" />
             <TextBox Grid.Row="5"
                      Grid.Column="3"
-                     Text="{ui:Binding PhoneNumber.Value}"
+                     Text="{lakana:Binding PhoneNumber.Value}"
                      Style="{DynamicResource TextBoxStyle}" />
             <Border Grid.Row="5"
                     Grid.Column="4"
@@ -109,7 +110,7 @@
                        Grid.Column="1" />
             <TextBox Grid.Column="3"
                      Grid.Row="7"
-                     Text="{ui:Binding Email.Value}"
+                     Text="{lakana:Binding Email.Value}"
                      Style="{DynamicResource TextBoxStyle}" />
 
             <!-- Date of birth -->
@@ -120,8 +121,8 @@
             <DatePicker Grid.Row="9"
                         Grid.Column="3"
                         Style="{DynamicResource DatePickerStyle}" 
-                        DisplayDate="{ui:Binding DateOfBirth.Value}"
-                        SelectedDate="{ui:Binding DateOfBirth.Value}" />
+                        DisplayDate="{lakana:Binding DateOfBirth.Value}"
+                        SelectedDate="{lakana:Binding DateOfBirth.Value}" />
 
             <!-- Date of death -->
             <TextBlock Grid.Row="11"
@@ -131,8 +132,8 @@
             <DatePicker Grid.Column="3"
                         Grid.Row="11"
                         Style="{DynamicResource DatePickerStyle}"
-                        DisplayDate="{ui:Binding DateOfDeath.Value}"
-                        SelectedDate="{ui:Binding DateOfDeath.Value}" />
+                        DisplayDate="{lakana:Binding DateOfDeath.Value}"
+                        SelectedDate="{lakana:Binding DateOfDeath.Value}" />
 
             <StackPanel Grid.Row="12"
                         Orientation="Horizontal"

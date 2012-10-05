@@ -1,8 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:Microsoft_Windows_Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:lakana="http://schemas.gasytek.com/wpf/lakana"
                     mc:Ignorable="d">
 
     <SolidColorBrush x:Key="WindowBackgorundBrush"
@@ -35,6 +35,20 @@
            TargetType="{x:Type UserControl}">
         <Setter Property="Padding"
                 Value="20" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="UserControl">
+                    <Border Padding="{TemplateBinding Padding}"
+                            Margin="{TemplateBinding Margin}">
+                        <AdornerDecorator>
+                            <ContentPresenter Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}" />
+                        </AdornerDecorator>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style x:Key="ScreenTitleStyle"
@@ -232,7 +246,6 @@
                                           HorizontalAlignment="Center"
                                           VerticalAlignment="Center" />
                     </Border>
-
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsKeyboardFocused"
                                  Value="true" />
@@ -253,6 +266,10 @@
                 Value="Segoe UI Light" />
         <Setter Property="FontSize"
                 Value="13.333" />
+        <Setter Property="MinWidth"
+                Value="0" />
+        <Setter Property="MinHeight"
+                Value="0" />
     </Style>
 
     <Style x:Key="BusyIndicatorStyle"
@@ -956,5 +973,403 @@
             </Grid>
         </Border>
     </ControlTemplate>
+
+    <ControlTemplate x:Key="FancyWindowTemplate"
+                     TargetType="{x:Type Window}">
+        <Border BorderBrush="{TemplateBinding BorderBrush}"
+                BorderThickness="{TemplateBinding BorderThickness}"
+                Background="{DynamicResource WindowBackgorundBrush}">
+            <Grid>
+                <AdornerDecorator>
+                    <DockPanel>
+                        <Border Name="PART_DragBorder"
+                                DockPanel.Dock="Top"
+                                Height="20"
+                                Background="{DynamicResource SelectedBackgroundBrush}">
+                            <Button Content="X"
+                                    Command="ApplicationCommands.Close"
+                                    FontSize="12"
+                                    Foreground="Black"
+                                    Margin="0,0,5,0"
+                                    Width="15"
+                                    Height="15"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Center"
+                                    Cursor="Hand">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Border Width="{TemplateBinding Width}"
+                                                Height="{TemplateBinding Height}"
+                                                Background="Transparent">
+                                            <Grid>
+                                                <Ellipse x:Name="path1"
+                                                         Height="15"
+                                                         Width="15"
+                                                         Fill="{x:Null}"
+                                                         Stroke="{DynamicResource WindowBackgorundBrush}" />
+                                                <Path x:Name="path2"
+                                                      Data="M3.5139573,3.7068966 L10.262726,10.275041"
+                                                      Margin="3.514,3.707,3.737,3.725"
+                                                      Stretch="Fill"
+                                                      Stroke="{DynamicResource WindowBackgorundBrush}">
+                                                    <Path.Fill>
+                                                        <RadialGradientBrush>
+                                                            <GradientStop Color="#FF375A9D" />
+                                                            <GradientStop Color="#FF558FCB"
+                                                                          Offset="1" />
+                                                        </RadialGradientBrush>
+                                                    </Path.Fill>
+                                                </Path>
+                                                <Path x:Name="path3"
+                                                      Data="M3.5139573,3.7068966 L10.262726,10.275041"
+                                                      Margin="3.514,3.707,3.737,3.725"
+                                                      Stretch="Fill"
+                                                      RenderTransformOrigin="0.5,0.5"
+                                                      Stroke="{DynamicResource WindowBackgorundBrush}">
+                                                    <Path.RenderTransform>
+                                                        <TransformGroup>
+                                                            <ScaleTransform />
+                                                            <SkewTransform />
+                                                            <RotateTransform Angle="90.049" />
+                                                            <TranslateTransform />
+                                                        </TransformGroup>
+                                                    </Path.RenderTransform>
+                                                    <Path.Fill>
+                                                        <RadialGradientBrush>
+                                                            <GradientStop Color="#FF375A9D" />
+                                                            <GradientStop Color="#FF558FCB"
+                                                                          Offset="1" />
+                                                        </RadialGradientBrush>
+                                                    </Path.Fill>
+                                                </Path>
+                                            </Grid>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsMouseOver"
+                                                     Value="True">
+                                                <Setter TargetName="path1"
+                                                        Property="Stroke"
+                                                        Value="White" />
+                                                <Setter TargetName="path2"
+                                                        Property="Stroke"
+                                                        Value="White" />
+                                                <Setter TargetName="path3"
+                                                        Property="Stroke"
+                                                        Value="White" />
+                                            </Trigger>
+                                            <Trigger Property="IsEnabled"
+                                                     Value="False">
+                                                <Setter TargetName="path1"
+                                                        Property="Stroke"
+                                                        Value="LightGray" />
+                                                <Setter TargetName="path2"
+                                                        Property="Stroke"
+                                                        Value="LightGray" />
+                                                <Setter TargetName="path3"
+                                                        Property="Stroke"
+                                                        Value="LightGray" />
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Button.Template>
+                            </Button>
+                        </Border>
+                        <ContentPresenter />
+                    </DockPanel>
+                </AdornerDecorator>
+
+                <ResizeGrip x:Name="WindowResizeGrip"
+                            HorizontalAlignment="Right"
+                            IsTabStop="false"
+                            Visibility="Collapsed"
+                            VerticalAlignment="Bottom" />
+            </Grid>
+        </Border>
+        <ControlTemplate.Triggers>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="ResizeMode"
+                               Value="CanResizeWithGrip" />
+                    <Condition Property="WindowState"
+                               Value="Normal" />
+                </MultiTrigger.Conditions>
+                <Setter Property="Visibility"
+                        TargetName="WindowResizeGrip"
+                        Value="Visible" />
+            </MultiTrigger>
+        </ControlTemplate.Triggers>
+    </ControlTemplate>
+
+    <Style x:Key="FancyWindowStyle"
+           TargetType="{x:Type Window}">
+        <Setter Property="WindowStyle"
+                Value="None" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource {x:Static SystemColors.WindowTextBrushKey}}" />
+        <Setter Property="ResizeMode"
+                Value="CanResizeWithGrip" />
+        <Setter Property="Template"
+                Value="{StaticResource FancyWindowTemplate}" />
+        <Setter Property="BorderThickness"
+                Value="2" />
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource SelectedBackgroundBrush}" />
+        <Setter Property="AllowsTransparency"
+                Value="True" />
+        <Setter Property="Background"
+                Value="{x:Null}" />
+        <Setter Property="Icon"
+                Value="lakana.ico" />
+    </Style>
+
+    <DataTemplate x:Key="LakanaTitleTemplate">
+        <DockPanel Margin="10">
+
+            <Border DockPanel.Dock="Left"
+                    VerticalAlignment="Center"
+                    Child="{StaticResource LakanaIcon}"
+                    Height="30"
+                    Width="30" />
+
+            <TextBlock Grid.Column="1"
+                       Margin="10,0,0,0"
+                       VerticalAlignment="Center"
+                       Foreground="White"
+                       FontSize="26.667"
+                       FontFamily="Segoe UI Light"
+                       Text="{Binding}" />
+
+        </DockPanel>
+    </DataTemplate>
+
+    <Style x:Key="MenuButtonStyle"
+           TargetType="{x:Type Button}">
+        <Style.Resources>
+            <Storyboard x:Key="ToBlueAnimation">
+                <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)"
+                                              Storyboard.TargetName="{x:Null}">
+                    <EasingColorKeyFrame KeyTime="0"
+                                         Value="White">
+                        <EasingColorKeyFrame.EasingFunction>
+                            <CircleEase EasingMode="EaseIn" />
+                        </EasingColorKeyFrame.EasingFunction>
+                    </EasingColorKeyFrame>
+                    <EasingColorKeyFrame KeyTime="0:0:0.1"
+                                         Value="#FF1BB5EF" />
+                </ColorAnimationUsingKeyFrames>
+            </Storyboard>
+            <Storyboard x:Key="ToWhiteAnimation">
+                <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)"
+                                              Storyboard.TargetName="{x:Null}">
+                    <EasingColorKeyFrame KeyTime="0"
+                                         Value="White">
+                        <EasingColorKeyFrame.EasingFunction>
+                            <CircleEase EasingMode="EaseIn" />
+                        </EasingColorKeyFrame.EasingFunction>
+                    </EasingColorKeyFrame>
+                    <EasingColorKeyFrame KeyTime="0:0:0.1"
+                                         Value="White" />
+                </ColorAnimationUsingKeyFrames>
+                <ColorAnimationUsingKeyFrames Storyboard.TargetProperty="(TextElement.Foreground).(SolidColorBrush.Color)"
+                                              Storyboard.TargetName="{x:Null}">
+                    <EasingColorKeyFrame KeyTime="0"
+                                         Value="#FF1BB5EF" />
+                    <EasingColorKeyFrame KeyTime="0:0:0.2"
+                                         Value="White" />
+                </ColorAnimationUsingKeyFrames>
+            </Storyboard>
+        </Style.Resources>
+        <Setter Property="Foreground"
+                Value="White" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <ControlTemplate.Resources>
+                        <Storyboard x:Key="Storyboard1" />
+                    </ControlTemplate.Resources>
+                    <Border Background="Transparent"
+                            Cursor="Hand">
+                        <ContentPresenter ContentSource="Content"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          OpacityMask="{x:Null}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Cursor"
+                Value="Hand" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Trigger.ExitActions>
+                    <BeginStoryboard x:Name="ToWhiteAnimation_BeginStoryboard"
+                                     Storyboard="{StaticResource ToWhiteAnimation}" />
+                </Trigger.ExitActions>
+                <Trigger.EnterActions>
+                    <BeginStoryboard x:Name="ToBlueAnimation_BeginStoryboard"
+                                     Storyboard="{StaticResource ToBlueAnimation}" />
+                </Trigger.EnterActions>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Lakana Navigation control styles -->
+
+    <Style x:Key="ShutdownAppControlStyle"
+           TargetType="lakana:ShutdownApplicationControl">
+
+    </Style>
+
+    <Style x:Key="ShutdownAppControlItemStyle"
+           TargetType="lakana:ShutdownApplicationControlItem">
+
+    </Style>
+    
+    <Style x:Key="{x:Type lakana:MessageBoxControl}"
+           TargetType="lakana:MessageBoxControl">
+        <Setter Property="Background"
+                Value="{DynamicResource WindowBackgorundBrush}" />
+        <Setter Property="Foreground"
+                Value="White" />
+        <Setter Property="BorderBrush"
+                Value="{DynamicResource SelectedBackgroundBrush}" />
+        <Setter Property="BorderThickness"
+                Value="1" />
+    </Style>
+
+    <DataTemplate x:Key="{x:Static lakana:MessageBoxControl.QuestionIconContentTemplateKey}">
+        <Viewbox>
+            <Grid>
+                <Grid Name="backgroundGrid"
+                      Width="128"
+                      Height="128"
+                      Visibility="Visible">
+                    <Path Data="M50.5,4.7500001C25.232973,4.75 4.75,25.232973 4.7500001,50.5 4.75,75.767029 25.232973,96.25 50.5,96.25 75.767029,96.25 96.25,75.767029 96.25,50.5 96.25,25.232973 75.767029,4.75 50.5,4.7500001z M50.5,0C78.390381,0 101,22.609621 101,50.5 101,78.390381 78.390381,101 50.5,101 22.609621,101 0,78.390381 0,50.5 0,22.609621 22.609621,0 50.5,0z"
+                          Stretch="Fill"
+                          Fill="#FFFFFFFF"
+                          Name="ztroke"
+                          Visibility="Visible" />
+                </Grid>
+                <Path Data="F1M1355.27,1727.8L1346.08,1727.8C1346.06,1726.48 1346.05,1725.67 1346.05,1725.38 1346.05,1722.41 1346.54,1719.96 1347.52,1718.04 1348.51,1716.12 1350.47,1713.96 1353.43,1711.56 1356.38,1709.16 1358.14,1707.58 1358.72,1706.84 1359.61,1705.66 1360.05,1704.37 1360.05,1702.95 1360.05,1700.98 1359.27,1699.29 1357.7,1697.89 1356.12,1696.49 1354,1695.78 1351.34,1695.78 1348.77,1695.78 1346.62,1696.52 1344.89,1697.98 1343.16,1699.44 1341.98,1701.68 1341.33,1704.68L1332.04,1703.53C1332.3,1699.23 1334.13,1695.58 1337.53,1692.58 1340.93,1689.58 1345.38,1688.08 1350.91,1688.08 1356.72,1688.08 1361.34,1689.6 1364.77,1692.63 1368.21,1695.67 1369.92,1699.2 1369.92,1703.24 1369.92,1705.47 1369.29,1707.58 1368.03,1709.58 1366.77,1711.57 1364.08,1714.28 1359.95,1717.71 1357.81,1719.49 1356.48,1720.92 1355.97,1722 1355.45,1723.08 1355.22,1725.01 1355.27,1727.8z M1346.08,1741.41L1346.08,1731.29 1356.2,1731.29 1356.2,1741.41 1346.08,1741.41z"
+                      Stretch="Uniform"
+                      Fill="#FFFFFFFF"
+                      Width="68"
+                      Height="68"
+                      Margin="0,0,0,0"
+                      RenderTransformOrigin="0.5,0.5">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <TransformGroup.Children>
+                                <RotateTransform Angle="0" />
+                                <ScaleTransform ScaleX="1"
+                                                ScaleY="1" />
+                            </TransformGroup.Children>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+            </Grid>
+        </Viewbox>
+    </DataTemplate>
+
+    <Style x:Key="MessageBoxButtonStyle"
+           TargetType="{x:Type Button}">
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver"
+                     Value="True">
+                <Setter Property="Background"
+                        Value="#FF1BB5EF" />
+            </Trigger>
+        </Style.Triggers>
+        <Setter Property="Background">
+            <Setter.Value>
+                <SolidColorBrush Color="#FF1BB5EF" 
+                                 Opacity="0.7" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BorderBrush"
+                Value="#FF1BB5EF" />
+        <Setter Property="BorderThickness"
+                Value="1" />
+        <Setter Property="Foreground"
+                Value="White" />
+        <Setter Property="HorizontalContentAlignment"
+                Value="Center" />
+        <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+        <Setter Property="Padding"
+                Value="15,3" />
+        <Setter Property="Cursor"
+                Value="Hand" />
+        <Setter Property="FontFamily"
+                Value="Segoe UI Light" />
+        <Setter Property="FontSize"
+                Value="13.333" />
+        <Setter Property="MinWidth"
+                Value="0" />
+        <Setter Property="MinHeight"
+                Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type Button}">
+                    <Border Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Property=Background}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            BorderBrush="{TemplateBinding BorderBrush}">
+                        <ContentPresenter ContentSource="Content"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsKeyboardFocused"
+                                 Value="true" />
+                        <Trigger Property="ToggleButton.IsChecked"
+                                 Value="true" />
+                        <Trigger Property="IsEnabled"
+                                 Value="false">
+                            <Setter Property="Foreground"
+                                    Value="#ADADAD" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style x:Key="{x:Static lakana:MessageBoxControl.YesButtonStyleKey}"
+           TargetType="Button"
+           BasedOn="{StaticResource MessageBoxButtonStyle}">
+        <Setter Property="Width"
+                Value="100" />
+        <Setter Property="Margin"
+                Value="3" />
+    </Style>
+
+    <Style x:Key="{x:Static lakana:MessageBoxControl.NoButtonStyleKey}"
+           TargetType="Button"
+           BasedOn="{StaticResource MessageBoxButtonStyle}">
+        <Setter Property="Width"
+                Value="100" />
+        <Setter Property="Margin"
+                Value="3" />
+    </Style>
+
+    <Style x:Key="{x:Static lakana:MessageBoxControl.CancelButtonStyleKey}"
+           TargetType="Button"
+           BasedOn="{StaticResource MessageBoxButtonStyle}">
+        <Setter Property="Width"
+                Value="100" />
+        <Setter Property="Margin"
+                Value="3" />
+    </Style>
+
+    <Style x:Key="{x:Static lakana:MessageBoxControl.OkButtonStyleKey}"
+           TargetType="Button"
+           BasedOn="{StaticResource MessageBoxButtonStyle}">
+        <Setter Property="Width"
+                Value="100" />
+        <Setter Property="Margin"
+                Value="3" />
+    </Style>
 
 </ResourceDictionary>

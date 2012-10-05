@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -57,5 +56,5 @@ using System.Windows.Markup;
 
 [assembly: InternalsVisibleTo("GasyTek.Lakana.Navigation.Tests")]
 
-[assembly: XmlnsPrefix("http://schemas.gasytek.com/wpf/ui", "ui")]
-[assembly: XmlnsDefinition("http://schemas.gasytek.com/wpf/ui", "GasyTek.Lakana.Navigation.Controls")]
+[assembly: XmlnsPrefix("http://schemas.gasytek.com/wpf/lakana", "lakana")]
+[assembly: XmlnsDefinition("http://schemas.gasytek.com/wpf/lakana", "GasyTek.Lakana.Navigation.Controls")]

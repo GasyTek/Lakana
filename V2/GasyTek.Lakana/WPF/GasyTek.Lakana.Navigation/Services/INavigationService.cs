@@ -42,6 +42,14 @@ namespace GasyTek.Lakana.Navigation.Services
         int NbOpenedViews { get; }
 
         /// <summary>
+        /// Gets a value indicating whether the shutdown application dialog is visible.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if the shutdown application dialog is visible; otherwise, <c>false</c>.
+        /// </value>
+        bool IsShutdownApplicationVisible { get; }
+
+        /// <summary>
         /// Initializes the navigation service and associates the root workspace to it.
         /// </summary>
         /// <param name="rootPanel">The root view that will constitute the shell of the application.</param>
