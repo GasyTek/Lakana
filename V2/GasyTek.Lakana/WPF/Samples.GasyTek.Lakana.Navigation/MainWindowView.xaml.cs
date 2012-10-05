@@ -10,7 +10,7 @@ namespace Samples.GasyTek.Lakana.Navigation
     /// <summary>
     /// Interaction logic for MainWindowView.xaml
     /// </summary>
-    public partial class MainWindowView : Window
+    public partial class MainWindowView
     {
         public MainWindowView()
         {
@@ -61,20 +61,12 @@ namespace Samples.GasyTek.Lakana.Navigation
                 case "menuNoAnimation":
                     menuNoAnimation.IsChecked = true;
                     menuFade.IsChecked = false;
-                    menuRightToLeft.IsChecked = false;
                     Singletons.NavigationService.ChangeTransitionAnimation(Transition.NoTransition);
                     break;
                 case "menuFade":
                     menuNoAnimation.IsChecked = false;
                     menuFade.IsChecked = true;
-                    menuRightToLeft.IsChecked = false;
                     Singletons.NavigationService.ChangeTransitionAnimation(Transition.FadeTransition);
-                    break;
-                case "menuRightToLeft":
-                    menuNoAnimation.IsChecked = false;
-                    menuFade.IsChecked = false;
-                    menuRightToLeft.IsChecked = true;
-                    Singletons.NavigationService.ChangeTransitionAnimation(Transition.SinglePaneRightToLeftTransition);
                     break;
             }
         }

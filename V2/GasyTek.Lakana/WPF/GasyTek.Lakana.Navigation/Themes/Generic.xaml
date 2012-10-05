@@ -4,14 +4,70 @@
                     xmlns:Resources="clr-namespace:GasyTek.Lakana.Navigation.Resources"
                     xmlns:Controls="clr-namespace:GasyTek.Lakana.Navigation.Controls">
 
-    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"></BooleanToVisibilityConverter>
+    <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
     <!-- MessageBoxControl styles -->
+
+    <Style x:Key="{x:Static Controls:MessageBoxControl.YesButtonStyleKey}"
+           TargetType="Button">
+        <Setter Property="Width"
+                Value="100" />
+        <Setter Property="Margin"
+                Value="3" />
+    </Style>
+
+    <Style x:Key="{x:Static Controls:MessageBoxControl.NoButtonStyleKey}"
+           TargetType="Button">
+        <Setter Property="Width"
+                Value="100" />
+        <Setter Property="Margin"
+                Value="3" />
+    </Style>
+
+    <Style x:Key="{x:Static Controls:MessageBoxControl.CancelButtonStyleKey}"
+           TargetType="Button">
+        <Setter Property="Width"
+                Value="100" />
+        <Setter Property="Margin"
+                Value="3" />
+    </Style>
+
+    <Style x:Key="{x:Static Controls:MessageBoxControl.OkButtonStyleKey}"
+           TargetType="Button">
+        <Setter Property="Width"
+                Value="100" />
+        <Setter Property="Margin"
+                Value="3" />
+    </Style>
+
+    <DataTemplate x:Key="{x:Static Controls:MessageBoxControl.InfoIconContentTemplateKey}">
+        <Image x:Name="iconContainer"
+               RenderOptions.BitmapScalingMode="HighQuality"
+               Source="pack://application:,,,/GasyTek.Lakana.Navigation;component/Resources/Images/info.png" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="{x:Static Controls:MessageBoxControl.QuestionIconContentTemplateKey}">
+        <Image x:Name="iconContainer"
+               RenderOptions.BitmapScalingMode="HighQuality"
+               Source="pack://application:,,,/GasyTek.Lakana.Navigation;component/Resources/Images/question.png" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="{x:Static Controls:MessageBoxControl.ErrorIconContentTemplateKey}">
+        <Image x:Name="iconContainer"
+               RenderOptions.BitmapScalingMode="HighQuality"
+               Source="pack://application:,,,/GasyTek.Lakana.Navigation;component/Resources/Images/error.png" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="{x:Static Controls:MessageBoxControl.WarningIconContentTemplateKey}">
+        <Image x:Name="iconContainer"
+               RenderOptions.BitmapScalingMode="HighQuality"
+               Source="pack://application:,,,/GasyTek.Lakana.Navigation;component/Resources/Images/warning.png" />
+    </DataTemplate>
 
     <Style x:Key="{x:Type Controls:MessageBoxControl}"
            TargetType="{x:Type Controls:MessageBoxControl}">
         <Setter Property="BorderBrush"
-                Value="White" />
+                Value="LightGray" />
         <Setter Property="BorderThickness"
                 Value="2" />
         <Setter Property="Background"
@@ -41,12 +97,11 @@
                                 <ColumnDefinition />
                             </Grid.ColumnDefinitions>
 
-                            <Image x:Name="iconContainer"
-                                   RenderOptions.BitmapScalingMode="HighQuality"
-                                   Width="64"
-                                   Height="64"
-                                   Margin="10"
-                                   VerticalAlignment="Center" />
+                            <ContentPresenter x:Name="iconContainer"
+                                              Width="48"
+                                              Height="48"
+                                              Margin="10,0,15,0"
+                                              VerticalAlignment="Center" />
 
                             <TextBlock Grid.Column="1"
                                        Text="{TemplateBinding Message}"
@@ -60,55 +115,49 @@
                                 <StackPanel Orientation="Horizontal">
                                     <Button x:Name="PART_Yes"
                                             Content="{x:Static Resources:Labels.Yes}"
-                                            Visibility="Collapsed"
-                                            Width="100"
-                                            Margin="3" />
+                                            Style="{DynamicResource {x:Static Controls:MessageBoxControl.YesButtonStyleKey}}"
+                                            Visibility="Collapsed" />
                                     <Button x:Name="PART_No"
                                             Content="{x:Static Resources:Labels.No}"
-                                            Visibility="Collapsed"
-                                            Width="100"
-                                            Margin="3" />
+                                            Style="{DynamicResource {x:Static Controls:MessageBoxControl.NoButtonStyleKey}}"
+                                            Visibility="Collapsed" />
                                     <Button x:Name="PART_Ok"
                                             Content="{x:Static Resources:Labels.Ok}"
-                                            Visibility="Collapsed"
-                                            Width="100"
-                                            Margin="3" />
+                                            Style="{DynamicResource {x:Static Controls:MessageBoxControl.OkButtonStyleKey}}"
+                                            Visibility="Collapsed" />
                                     <Button x:Name="PART_Cancel"
                                             Content="{x:Static Resources:Labels.Cancel}"
-                                            Visibility="Collapsed"
-                                            Width="100"
-                                            Margin="3" />
+                                            Style="{DynamicResource {x:Static Controls:MessageBoxControl.CancelButtonStyleKey}}"
+                                            Visibility="Collapsed" />
                                 </StackPanel>
                             </Border>
-
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="MessageBoxImage"
                                  Value="Information">
                             <Setter TargetName="iconContainer"
-                                    Property="Source"
-                                    Value="pack://application:,,,/GasyTek.Lakana.Navigation;component/Resources/Images/info.png" />
+                                    Property="ContentTemplate"
+                                    Value="{DynamicResource {x:Static Controls:MessageBoxControl.InfoIconContentTemplateKey}}" />
                         </Trigger>
                         <Trigger Property="MessageBoxImage"
                                  Value="Question">
                             <Setter TargetName="iconContainer"
-                                    Property="Source"
-                                    Value="pack://application:,,,/GasyTek.Lakana.Navigation;component/Resources/Images/question.png" />
+                                    Property="ContentTemplate"
+                                    Value="{DynamicResource {x:Static Controls:MessageBoxControl.QuestionIconContentTemplateKey}}" />
                         </Trigger>
                         <Trigger Property="MessageBoxImage"
                                  Value="Error">
                             <Setter TargetName="iconContainer"
-                                    Property="Source"
-                                    Value="pack://application:,,,/GasyTek.Lakana.Navigation;component/Resources/Images/error.png" />
+                                    Property="ContentTemplate"
+                                    Value="{DynamicResource {x:Static Controls:MessageBoxControl.ErrorIconContentTemplateKey}}" />
                         </Trigger>
                         <Trigger Property="MessageBoxImage"
                                  Value="Warning">
                             <Setter TargetName="iconContainer"
-                                    Property="Source"
-                                    Value="pack://application:,,,/GasyTek.Lakana.Navigation;component/Resources/Images/warning.png" />
+                                    Property="ContentTemplate"
+                                    Value="{DynamicResource {x:Static Controls:MessageBoxControl.WarningIconContentTemplateKey}}" />
                         </Trigger>
-
                         <Trigger Property="MessageBoxButton"
                                  Value="OK">
                             <Setter TargetName="PART_Ok"
@@ -153,14 +202,14 @@
 
     <!-- ModalHostControl styles -->
 
+    <SolidColorBrush x:Key="{x:Static Controls:ModalHostControl.BackgroundBrushKey}"
+                     Color="Black"
+                     Opacity="0.5" />
+
     <Style x:Key="{x:Type Controls:ModalHostControl}"
            TargetType="{x:Type Controls:ModalHostControl}">
-        <Setter Property="Background">
-            <Setter.Value>
-                <SolidColorBrush Color="Black"
-                                 Opacity="0.5" />
-            </Setter.Value>
-        </Setter>
+        <Setter Property="Background"
+                Value="{DynamicResource {x:Static Controls:ModalHostControl.BackgroundBrushKey}}" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Controls:ModalHostControl}">
@@ -250,6 +299,8 @@
                 Value="White" />
         <Setter Property="BorderThickness"
                 Value="2" />
+        <Setter Property="Background"
+                Value="#FF353535" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Controls:ShutdownApplicationControl">

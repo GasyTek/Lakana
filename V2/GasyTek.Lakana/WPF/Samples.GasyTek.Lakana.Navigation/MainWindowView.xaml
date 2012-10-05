@@ -29,9 +29,6 @@
                           Header="Fade"
                           IsCheckable="True" 
                           IsChecked="True" />
-                <MenuItem x:Name="menuRightToLeft"
-                          Header="Right to Left"
-                          IsCheckable="True" />
             </MenuItem>
             <MenuItem Header="Current Views"
                       ItemsSource="{Binding OpenedViews}" 

@@ -26,6 +26,7 @@ namespace GasyTek.Lakana.Navigation.Services
         private readonly LinkedList<LinkedList<ViewInfo>> _viewCollection;
         private readonly ReadOnlyObservableCollection<ViewInfo> _readonlyOpenedViews;
         private readonly ObservableCollection<ViewInfo> _openedViews;
+        private bool _isShutdownApplicationVisible;
 
         #endregion
 
@@ -55,6 +56,11 @@ namespace GasyTek.Lakana.Navigation.Services
             get { return _viewCollection.Sum(vs => vs.Count); }
         }
 
+        public bool IsShutdownApplicationVisible
+        {
+            get { return _isShutdownApplicationVisible; }
+        }
+
         #endregion
 
         #region Constructor
@@ -72,6 +78,8 @@ namespace GasyTek.Lakana.Navigation.Services
         {
             _rootPanel = rootPanel;
             _animateTransitionAction = Transition.NoTransition;
+            ShutdownApplicationShown += (sender, args) => _isShutdownApplicationVisible = true;
+            ShutdownApplicationHidden += (sender, args) => _isShutdownApplicationVisible = false;
         }
 
         public void ChangeTransitionAnimation(AnimateTransitionAction animateTransitionAction)

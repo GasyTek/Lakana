@@ -1,8 +1,7 @@
 ﻿<Application x:Class="Samples.GasyTek.Lakana.Navigation.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:ctrl="http://schemas.gasytek.com/wpf/ui"
-             ShutdownMode="OnMainWindowClose"
+             xmlns:lakana="http://schemas.gasytek.com/wpf/lakana" ShutdownMode="OnMainWindowClose"
              Startup="ApplicationStartup">
     <Application.Resources>
         <ResourceDictionary>
@@ -62,12 +61,12 @@
 
             <!-- Default style for CloseApplication and MessageBox dialog -->
 
-            <Style TargetType="{x:Type ctrl:ShutdownApplicationControl}">
+            <Style TargetType="{x:Type lakana:ShutdownApplicationControl}">
                 <Setter Property="Background"
                         Value="{DynamicResource WindowBackgroundBrush}" />
             </Style>
 
-            <Style TargetType="{x:Type ctrl:MessageBoxControl}">
+            <Style TargetType="{x:Type lakana:MessageBoxControl}">
                 <Setter Property="Background"
                         Value="{DynamicResource WindowBackgroundBrush}" />
             </Style>

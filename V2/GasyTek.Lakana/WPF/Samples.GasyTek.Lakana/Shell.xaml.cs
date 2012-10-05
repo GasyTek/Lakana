@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using GasyTek.Lakana.Mvvm.Commands;
 using GasyTek.Lakana.Navigation.Services;
@@ -21,6 +22,15 @@ namespace Samples.GasyTek.Lakana
         {
             InitializeComponent();
             InitializeCommands();
+
+            MouseDown += (sender, args) =>
+                             {
+                                 var innerBorder = args.OriginalSource as Border;
+                                 if (innerBorder != null && innerBorder.Name == "PART_DragBorder")
+                                 {
+                                     DragMove();
+                                 }
+                             };
         }
 
         private void InitializeCommands()
@@ -55,6 +65,14 @@ namespace Samples.GasyTek.Lakana
             Singletons.NavigationServiceInstance.NavigateTo<HomeView>(navigationInfo);
         }
 
-        
+        private void CloseCanExecuteHandler(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = (Singletons.NavigationServiceInstance.IsShutdownApplicationVisible == false);
+        }
+
+        private void CloseCommandHandler(object sender, ExecutedRoutedEventArgs e)
+        {
+            Singletons.NavigationServiceInstance.CloseApplication();
+        }
     }
 }

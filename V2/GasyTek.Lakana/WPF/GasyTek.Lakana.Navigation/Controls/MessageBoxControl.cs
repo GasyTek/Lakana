@@ -11,7 +11,7 @@ namespace GasyTek.Lakana.Navigation.Controls
     [TemplatePart(Name = "PART_No", Type = typeof(Button))]
     [TemplatePart(Name = "PART_Cancel", Type = typeof(Button))]
     [TemplatePart(Name = "PART_Ok", Type = typeof(Button))]
-    public class MessageBoxControl : UserControl
+    public class MessageBoxControl : ContentControl
     {
         #region Dependency properties
 
@@ -23,6 +23,20 @@ namespace GasyTek.Lakana.Navigation.Controls
 
         public static readonly DependencyProperty MessageBoxImageProperty =
             DependencyProperty.Register("MessageBoxImage", typeof(MessageBoxImage), typeof(MessageBoxControl), new FrameworkPropertyMetadata(MessageBoxImage.Information));
+        
+        #endregion
+
+        #region Component Keys
+
+        public static ComponentResourceKey YesButtonStyleKey = new ComponentResourceKey(typeof(MessageBoxControl), "YesButtonStyle");
+        public static ComponentResourceKey NoButtonStyleKey = new ComponentResourceKey(typeof(MessageBoxControl), "NoButtonStyle");
+        public static ComponentResourceKey CancelButtonStyleKey = new ComponentResourceKey(typeof(MessageBoxControl), "CancelButtonStyle");
+        public static ComponentResourceKey OkButtonStyleKey = new ComponentResourceKey(typeof(MessageBoxControl), "OkButtonStyle");
+
+        public static ComponentResourceKey InfoIconContentTemplateKey = new ComponentResourceKey(typeof(MessageBoxControl), "InfoIconContentTemplate");
+        public static ComponentResourceKey QuestionIconContentTemplateKey = new ComponentResourceKey(typeof(MessageBoxControl), "QuestionIconContentTemplate");
+        public static ComponentResourceKey ErrorIconContentTemplateKey = new ComponentResourceKey(typeof(MessageBoxControl), "ErrorIconContentTemplate");
+        public static ComponentResourceKey WarningIconContentTemplateKey = new ComponentResourceKey(typeof(MessageBoxControl), "WarningIconContentTemplate");
 
         #endregion
 
@@ -49,6 +63,7 @@ namespace GasyTek.Lakana.Navigation.Controls
             get { return (MessageBoxImage)GetValue(MessageBoxImageProperty); }
             set { SetValue(MessageBoxImageProperty, value); }
         }
+
 
         #endregion
 

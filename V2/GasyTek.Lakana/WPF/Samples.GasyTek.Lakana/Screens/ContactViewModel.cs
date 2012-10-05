@@ -1,3 +1,6 @@
+using System.Threading.Tasks;
+using System.Windows;
+using GasyTek.Lakana.Common.UI;
 using GasyTek.Lakana.Mvvm.Validation;
 using GasyTek.Lakana.Mvvm.ViewModelProperties;
 using GasyTek.Lakana.Mvvm.ViewModels;
@@ -7,7 +10,7 @@ using Samples.GasyTek.Lakana.Utils;
 
 namespace Samples.GasyTek.Lakana.Screens
 {
-    public class ContactViewModel : EditableViewModelBase<Contact>, IViewKeyAware
+    public class ContactViewModel : EditableViewModelBase<Contact>, IViewKeyAware, ICloseable, IPresentable
     {
         public string ViewKey { get; set; }
         public IViewModelProperty FirstName { get; set; }
@@ -17,6 +20,11 @@ namespace Samples.GasyTek.Lakana.Screens
         public IViewModelProperty DateOfBirth { get; set; }
         public IViewModelProperty DateOfDeath { get; set; }
         public IViewModelProperty Email { get; set; }
+
+        public ContactViewModel()
+        {
+            UIMetadata = new UIMetadata {LabelProvider = () => "Contact"};
+        }
 
         protected override void OnCreateViewModelProperties()
         {
@@ -41,7 +49,29 @@ namespace Samples.GasyTek.Lakana.Screens
 
         protected override void OnCancel()
         {
-            Singletons.NavigationServiceInstance.Close(ViewKey);
+            if(CanClose() == false)
+            {
+                var questionResult = Singletons.NavigationServiceInstance.ShowMessageBox(ViewKey
+                    , "Do you want to cancel and loose your current modifications ?"
+                    , MessageBoxImage.Question
+                    , MessageBoxButton.YesNo);
+                questionResult.ContinueWith(result =>
+                                                {
+                                                    if (result.Result == MessageBoxResult.Yes)
+                                                    {
+                                                        Singletons.NavigationServiceInstance.Close(ViewKey);
+                                                    }
+                                                }, TaskScheduler.FromCurrentSynchronizationContext());
+            }
+            else
+            {
+                Singletons.NavigationServiceInstance.Close(ViewKey);
+            }
+        }
+
+        public bool CanClose()
+        {
+            return HasChanged == false;
         }
     }
 }
