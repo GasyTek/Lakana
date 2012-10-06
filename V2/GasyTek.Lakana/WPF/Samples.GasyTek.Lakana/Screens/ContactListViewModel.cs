@@ -37,7 +37,8 @@ namespace Samples.GasyTek.Lakana.Screens
             if (SelectedContact == null) return;
             var viewModel = new ContactViewModel { Model = SelectedContact };
             var navigationInfo = NavigationInfo.CreateComplex(ScreenId.Contact, ScreenId.ContactList, viewModel);
-            Singletons.NavigationServiceInstance.NavigateTo<ContactView>(navigationInfo);
+
+            Singletons.NavigationServiceInstance.ShowModal<ContactView, Contact>(navigationInfo);
         }
 
         protected override void OnCreateViewModelProperties()

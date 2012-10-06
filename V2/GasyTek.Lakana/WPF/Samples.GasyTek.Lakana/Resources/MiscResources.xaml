@@ -51,6 +51,31 @@
         </Setter>
     </Style>
 
+    <Style x:Key="ModalScreenStyle"
+           TargetType="{x:Type UserControl}">
+        <Setter Property="Padding"
+                Value="20,20,10,10" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="UserControl">
+                    <Border Padding="{TemplateBinding Padding}"
+                            Margin="{TemplateBinding Margin}"
+                            BorderBrush="{DynamicResource SelectedBackgroundBrush}"
+                            BorderThickness="1"
+                            Background="{TemplateBinding Background}"
+                            Width="{TemplateBinding Width}"
+                            Height="{TemplateBinding Height}">
+                        <AdornerDecorator>
+                            <ContentPresenter Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              ContentTemplateSelector="{TemplateBinding ContentTemplateSelector}" />
+                        </AdornerDecorator>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="ScreenTitleStyle"
            TargetType="{x:Type TextBlock}">
         <Setter Property="TextWrapping"
@@ -1344,22 +1369,18 @@
                 Value="3" />
     </Style>
 
-    <Style x:Key="{x:Static lakana:MessageBoxControl.CancelButtonStyleKey}"
+    <Style x:Key="{x:Static lakana:ShutdownApplicationWindow.CancelButtonStyleKey}"
            TargetType="Button"
            BasedOn="{StaticResource MessageBoxButtonStyle}">
         <Setter Property="Width"
                 Value="100" />
         <Setter Property="Margin"
-                Value="3" />
+                Value="10,0,0,0" />
     </Style>
 
-    <Style x:Key="{x:Static lakana:MessageBoxControl.OkButtonStyleKey}"
+    <Style x:Key="{x:Static lakana:ShutdownApplicationWindow.ExitButtonStyleKey}"
            TargetType="Button"
            BasedOn="{StaticResource MessageBoxButtonStyle}">
-        <Setter Property="Width"
-                Value="100" />
-        <Setter Property="Margin"
-                Value="3" />
     </Style>
 
 </ResourceDictionary>

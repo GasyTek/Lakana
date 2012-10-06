@@ -362,6 +362,7 @@ namespace GasyTek.Lakana.Navigation.Services
                 _animateTransitionAction(oldView, newView);
             }
 
+            // First hide all views
             foreach (UIElement child in rootPanel.Children)
             {
                 if (ReferenceEquals(child, newView)) continue;
@@ -375,11 +376,12 @@ namespace GasyTek.Lakana.Navigation.Services
             if (isModal)
             {
                 var currentView = GetCurrentView();
-                if (currentView.Previous != null)
+                while (currentView.Previous != null)
                 {
                     var parentViewInfo = currentView.Previous.Value;
                     parentViewInfo.View.Visibility = Visibility.Visible;
                     parentViewInfo.View.IsEnabled = false;
+                    currentView = currentView.Previous;
                 }
             }
         }

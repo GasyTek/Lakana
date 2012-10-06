@@ -23,7 +23,7 @@ namespace Samples.GasyTek.Lakana.Screens
 
         public ContactViewModel()
         {
-            UIMetadata = new UIMetadata {LabelProvider = () => "Contact"};
+            UIMetadata = new UIMetadata {LabelProvider = () => "Modify Contact Informations"};
         }
 
         protected override void OnCreateViewModelProperties()
