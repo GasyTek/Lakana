@@ -5,18 +5,19 @@
              xmlns:lakana="http://schemas.gasytek.com/wpf/lakana" 
              mc:Ignorable="d"
              x:Class="Samples.GasyTek.Lakana.Screens.ContactView"
-             d:DesignWidth="640"
-             d:DesignHeight="480"
+             Width="600"
+             Height="400"
              Background="{DynamicResource WorkspaceBackgroundBrush}"
-             Style="{StaticResource ScreenStyle}">
+             Style="{StaticResource ModalScreenStyle}">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
 
     <DockPanel x:Name="LayoutRoot">
         <TextBlock DockPanel.Dock="Top"
-                   Text="Contact"
+                   Text="{Binding UIMetadata.Label}"
                    Foreground="{DynamicResource WindowBackgorundBrush}"
+                   FontSize="22"
                    Style="{DynamicResource ScreenTitleStyle}" />
         <Grid>
             <Grid.RowDefinitions>

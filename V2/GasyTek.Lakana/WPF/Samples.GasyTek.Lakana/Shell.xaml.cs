@@ -58,7 +58,7 @@ namespace Samples.GasyTek.Lakana
         {
             // Initializes the navigation service
             Singletons.NavigationServiceInstance.Initialize(Workspace);
-            Singletons.NavigationServiceInstance.ChangeTransitionAnimation(Transition.FadeTransition);
+            Singletons.NavigationServiceInstance.ChangeTransitionAnimation(Transition.NoTransition);
 
             // Navigate to "Home" screen first
             var navigationInfo = NavigationInfo.CreateSimple(ScreenId.Home);
