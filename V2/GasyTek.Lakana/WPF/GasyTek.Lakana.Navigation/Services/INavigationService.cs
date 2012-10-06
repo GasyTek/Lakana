@@ -12,16 +12,6 @@ namespace GasyTek.Lakana.Navigation.Services
     public interface INavigationService
     {
         /// <summary>
-        /// Occurs when the closing application view was shown.
-        /// </summary>
-        event EventHandler ShutdownApplicationShown;
-        
-        /// <summary>
-        /// Occurs when the closing application view was hidden.
-        /// </summary>
-        event EventHandler ShutdownApplicationHidden;
-
-        /// <summary>
         /// Workspace root panel which contains all views.
         /// </summary>
         Panel RootPanel { get; }
@@ -40,14 +30,6 @@ namespace GasyTek.Lakana.Navigation.Services
         /// Gets the number of currently opened views.
         /// </summary>
         int NbOpenedViews { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether the shutdown application dialog is visible.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if the shutdown application dialog is visible; otherwise, <c>false</c>.
-        /// </value>
-        bool IsShutdownApplicationVisible { get; }
 
         /// <summary>
         /// Initializes the navigation service and associates the root workspace to it.

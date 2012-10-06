@@ -1,0 +1,204 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:lakana="clr-namespace:GasyTek.Lakana.Navigation.Controls"
+                    xmlns:Resources="clr-namespace:GasyTek.Lakana.Navigation.Resources">
+
+    <!-- MessageBoxControl styles -->
+
+    <Style x:Key="{x:Static lakana:MessageBoxControl.YesButtonStyleKey}"
+           TargetType="Button">
+        <Setter Property="Width"
+                Value="100" />
+        <Setter Property="Margin"
+                Value="3" />
+        <Setter Property="Foreground"
+                Value="Black" />
+    </Style>
+
+    <Style x:Key="{x:Static lakana:MessageBoxControl.NoButtonStyleKey}"
+           TargetType="Button">
+        <Setter Property="Width"
+                Value="100" />
+        <Setter Property="Margin"
+                Value="3" />
+        <Setter Property="Foreground"
+                Value="Black" />
+    </Style>
+
+    <Style x:Key="{x:Static lakana:MessageBoxControl.CancelButtonStyleKey}"
+           TargetType="Button">
+        <Setter Property="Width"
+                Value="100" />
+        <Setter Property="Margin"
+                Value="3" />
+    </Style>
+
+    <Style x:Key="{x:Static lakana:MessageBoxControl.OkButtonStyleKey}"
+           TargetType="Button">
+        <Setter Property="Width"
+                Value="100" />
+        <Setter Property="Margin"
+                Value="3" />
+    </Style>
+
+    <DataTemplate x:Key="{x:Static lakana:MessageBoxControl.InfoIconContentTemplateKey}">
+        <Image x:Name="iconContainer"
+               RenderOptions.BitmapScalingMode="HighQuality"
+               Source="pack://application:,,,/GasyTek.Lakana.Navigation;component/Resources/Images/info.png" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="{x:Static lakana:MessageBoxControl.QuestionIconContentTemplateKey}">
+        <Image x:Name="iconContainer"
+               RenderOptions.BitmapScalingMode="HighQuality"
+               Source="pack://application:,,,/GasyTek.Lakana.Navigation;component/Resources/Images/question.png" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="{x:Static lakana:MessageBoxControl.ErrorIconContentTemplateKey}">
+        <Image x:Name="iconContainer"
+               RenderOptions.BitmapScalingMode="HighQuality"
+               Source="pack://application:,,,/GasyTek.Lakana.Navigation;component/Resources/Images/error.png" />
+    </DataTemplate>
+
+    <DataTemplate x:Key="{x:Static lakana:MessageBoxControl.WarningIconContentTemplateKey}">
+        <Image x:Name="iconContainer"
+               RenderOptions.BitmapScalingMode="HighQuality"
+               Source="pack://application:,,,/GasyTek.Lakana.Navigation;component/Resources/Images/warning.png" />
+    </DataTemplate>
+
+    <Style x:Key="{x:Type lakana:MessageBoxControl}"
+           TargetType="{x:Type lakana:MessageBoxControl}">
+        <Setter Property="BorderBrush"
+                Value="LightGray" />
+        <Setter Property="BorderThickness"
+                Value="2" />
+        <Setter Property="Background"
+                Value="White" />
+        <Setter Property="Background"
+                Value="White" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type lakana:MessageBoxControl}">
+                    <Border x:Name="outerBorder"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="2"
+                            Padding="10"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Width="400"
+                            Height="180">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+
+                            <ContentPresenter x:Name="iconContainer"
+                                              Width="48"
+                                              Height="48"
+                                              Margin="10,0,15,0"
+                                              VerticalAlignment="Center" />
+
+                            <TextBlock Grid.Column="1"
+                                       Text="{TemplateBinding Message}"
+                                       FontSize="16"
+                                       VerticalAlignment="Center"
+                                       TextWrapping="Wrap" />
+
+                            <Border Grid.Row="1"
+                                    Grid.ColumnSpan="2"
+                                    HorizontalAlignment="Center">
+                                <StackPanel Orientation="Horizontal">
+                                    <Button x:Name="PART_Yes"
+                                            Content="{x:Static Resources:Labels.Yes}"
+                                            Style="{DynamicResource {x:Static lakana:MessageBoxControl.YesButtonStyleKey}}"
+                                            Visibility="Collapsed" />
+                                    <Button x:Name="PART_No"
+                                            Content="{x:Static Resources:Labels.No}"
+                                            Style="{DynamicResource {x:Static lakana:MessageBoxControl.NoButtonStyleKey}}"
+                                            Visibility="Collapsed" />
+                                    <Button x:Name="PART_Ok"
+                                            Content="{x:Static Resources:Labels.Ok}"
+                                            Style="{DynamicResource {x:Static lakana:MessageBoxControl.OkButtonStyleKey}}"
+                                            Visibility="Collapsed" />
+                                    <Button x:Name="PART_Cancel"
+                                            Content="{x:Static Resources:Labels.Cancel}"
+                                            Style="{DynamicResource {x:Static lakana:MessageBoxControl.CancelButtonStyleKey}}"
+                                            Visibility="Collapsed" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="MessageBoxImage"
+                                 Value="Information">
+                            <Setter TargetName="iconContainer"
+                                    Property="ContentTemplate"
+                                    Value="{DynamicResource {x:Static lakana:MessageBoxControl.InfoIconContentTemplateKey}}" />
+                        </Trigger>
+                        <Trigger Property="MessageBoxImage"
+                                 Value="Question">
+                            <Setter TargetName="iconContainer"
+                                    Property="ContentTemplate"
+                                    Value="{DynamicResource {x:Static lakana:MessageBoxControl.QuestionIconContentTemplateKey}}" />
+                        </Trigger>
+                        <Trigger Property="MessageBoxImage"
+                                 Value="Error">
+                            <Setter TargetName="iconContainer"
+                                    Property="ContentTemplate"
+                                    Value="{DynamicResource {x:Static lakana:MessageBoxControl.ErrorIconContentTemplateKey}}" />
+                        </Trigger>
+                        <Trigger Property="MessageBoxImage"
+                                 Value="Warning">
+                            <Setter TargetName="iconContainer"
+                                    Property="ContentTemplate"
+                                    Value="{DynamicResource {x:Static lakana:MessageBoxControl.WarningIconContentTemplateKey}}" />
+                        </Trigger>
+                        <Trigger Property="MessageBoxButton"
+                                 Value="OK">
+                            <Setter TargetName="PART_Ok"
+                                    Property="Visibility"
+                                    Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="MessageBoxButton"
+                                 Value="OKCancel">
+                            <Setter TargetName="PART_Ok"
+                                    Property="Visibility"
+                                    Value="Visible" />
+                            <Setter TargetName="PART_Cancel"
+                                    Property="Visibility"
+                                    Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="MessageBoxButton"
+                                 Value="YesNo">
+                            <Setter TargetName="PART_Yes"
+                                    Property="Visibility"
+                                    Value="Visible" />
+                            <Setter TargetName="PART_No"
+                                    Property="Visibility"
+                                    Value="Visible" />
+                        </Trigger>
+                        <Trigger Property="MessageBoxButton"
+                                 Value="YesNoCancel">
+                            <Setter TargetName="PART_Yes"
+                                    Property="Visibility"
+                                    Value="Visible" />
+                            <Setter TargetName="PART_No"
+                                    Property="Visibility"
+                                    Value="Visible" />
+                            <Setter TargetName="PART_Cancel"
+                                    Property="Visibility"
+                                    Value="Visible" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

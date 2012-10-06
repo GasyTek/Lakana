@@ -1215,16 +1215,6 @@
     </Style>
 
     <!-- Lakana Navigation control styles -->
-
-    <Style x:Key="ShutdownAppControlStyle"
-           TargetType="lakana:ShutdownApplicationControl">
-
-    </Style>
-
-    <Style x:Key="ShutdownAppControlItemStyle"
-           TargetType="lakana:ShutdownApplicationControlItem">
-
-    </Style>
     
     <Style x:Key="{x:Type lakana:MessageBoxControl}"
            TargetType="lakana:MessageBoxControl">

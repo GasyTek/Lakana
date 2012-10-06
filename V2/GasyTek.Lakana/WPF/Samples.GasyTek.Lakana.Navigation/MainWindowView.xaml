@@ -21,7 +21,7 @@
                 <MenuItem Header="Product List"
                           Command="{Binding OpenProductListCommand}" />
             </MenuItem>
-            <MenuItem Header="Select Transition" MenuItem.Click="MenuItem_Click">
+            <MenuItem Header="Select Transition" MenuItem.Click="MenuItemClick">
                 <MenuItem x:Name="menuNoAnimation"
                           Header="No animation" 
                           IsCheckable="True" />

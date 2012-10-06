@@ -60,8 +60,9 @@
   <ItemGroup>
     <Compile Include="Controls\MessageBoxControl.cs" />
     <Compile Include="Controls\ModalHostControl.cs" />
-    <Compile Include="Controls\ShutdownApplicationControl.cs" />
-    <Compile Include="Controls\ShutdownApplicationControlItem.cs" />
+    <Compile Include="Controls\ShutdownApplicationItemsControl.cs" />
+    <Compile Include="Controls\ShutdownApplicationItem.cs" />
+    <Compile Include="Controls\ShutdownApplicationWindow.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -122,6 +123,18 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Themes\Generic.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\MessageBoxControlStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ModalHostControlStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Themes\ShutdownApplicationWindowStyles.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

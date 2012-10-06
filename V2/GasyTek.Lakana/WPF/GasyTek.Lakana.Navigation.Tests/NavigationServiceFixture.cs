@@ -692,25 +692,6 @@ namespace GasyTek.Lakana.Navigation.Tests
             }
 
             [TestMethod]
-            public void CancelTheCloseApplicationControlOnModalViewRestoresCorrectModalStates()
-            {
-                // Prepare
-                var navigationInfo = NavigationInfo.CreateSimple("viewKey", new FakeDirtyViewModel());
-                var parentViewInfo = _navigationService.NavigateTo<UserControl>(navigationInfo);
-                _navigationService.ShowMessageBox("viewKey", "Hello");
-                _navigationService.CloseApplication();
-                var closeApplicationControl = (ShutdownApplicationControl)((ModalHostControl)_navigationService.CurrentView.View).ModalContent;
-
-                // Act
-                _navigationService.Close(closeApplicationControl.ViewKey);  // simulates a click on 'Cancel' button
-
-                // Verify
-                Assert.IsTrue(_navigationService.CurrentView.View.Visibility == Visibility.Visible);
-                Assert.IsTrue(_navigationService.OpenedViews.First(v => v == parentViewInfo).View.Visibility == Visibility.Visible);
-                Assert.IsFalse(_navigationService.OpenedViews.First(v => v == parentViewInfo).View.IsEnabled );
-            }
-
-            [TestMethod]
             public void ClosingActiveAwareViewSupported()
             {
                 // Prepare
@@ -730,97 +711,59 @@ namespace GasyTek.Lakana.Navigation.Tests
         [TestClass]
         public class CloseApplication : NavigationServiceFixture
         {
-            [TestMethod]
-            public void CanShowCloseableViewSelection()
-            {
-                // Prepare
-                var navigationInfo1 = NavigationInfo.CreateSimple("viewKey1");
-                var navigationInfo2 = NavigationInfo.CreateComplex("viewKey2", navigationInfo1.ViewKey, new FakeDirtyViewModel());
-                _navigationService.NavigateTo<UserControl>(navigationInfo1);
-                _navigationService.NavigateTo<UserControl>(navigationInfo2);
+            //[TestMethod]
+            //public void CanShowCloseableViewSelection()
+            //{
+            //    // Prepare
+            //    var navigationInfo1 = NavigationInfo.CreateSimple("viewKey1");
+            //    var navigationInfo2 = NavigationInfo.CreateComplex("viewKey2", navigationInfo1.ViewKey, new FakeDirtyViewModel());
+            //    _navigationService.NavigateTo<UserControl>(navigationInfo1);
+            //    _navigationService.NavigateTo<UserControl>(navigationInfo2);
 
-                // Act
-                _navigationService.CloseApplication();
+            //    // Act
+            //    _navigationService.CloseApplication();
 
-                // Verify
-                Assert.IsInstanceOfType(_navigationService.CurrentView.View, typeof(ModalHostControl));
-                Assert.IsInstanceOfType(((ModalHostControl)_navigationService.CurrentView.View).ModalContent, typeof(ShutdownApplicationControl));
-            }
+            //    // Verify
+            //    Assert.IsInstanceOfType(_navigationService.CurrentView.View, typeof(ModalHostControl));
+            //    Assert.IsInstanceOfType(((ModalHostControl)_navigationService.CurrentView.View).ModalContent, typeof(ShutdownApplicationControl));
+            //}
 
-            [TestMethod]
-            public void OnlyTopMostAndCloseableViewsAreProposed()
-            {
-                // Prepare
-                var navigationInfo1 = NavigationInfo.CreateSimple("viewKey1");
-                var navigationInfo2 = NavigationInfo.CreateComplex("viewKey2", navigationInfo1.ViewKey, new FakeDirtyViewModel());
-                var navigationInfo3 = NavigationInfo.CreateSimple("viewKey3", new FakeDirtyViewModel());
-                _navigationService.NavigateTo<UserControl>(navigationInfo1);
-                var expectedViewInfo1 = _navigationService.NavigateTo<UserControl>(navigationInfo2);
-                var expectedViewInfo2 = _navigationService.NavigateTo<UserControl>(navigationInfo3);
+            //[TestMethod]
+            //public void OnlyTopMostAndCloseableViewsAreProposed()
+            //{
+            //    // Prepare
+            //    var navigationInfo1 = NavigationInfo.CreateSimple("viewKey1");
+            //    var navigationInfo2 = NavigationInfo.CreateComplex("viewKey2", navigationInfo1.ViewKey, new FakeDirtyViewModel());
+            //    var navigationInfo3 = NavigationInfo.CreateSimple("viewKey3", new FakeDirtyViewModel());
+            //    _navigationService.NavigateTo<UserControl>(navigationInfo1);
+            //    var expectedViewInfo1 = _navigationService.NavigateTo<UserControl>(navigationInfo2);
+            //    var expectedViewInfo2 = _navigationService.NavigateTo<UserControl>(navigationInfo3);
 
-                // Act
-                _navigationService.CloseApplication();
+            //    // Act
+            //    _navigationService.CloseApplication();
 
-                // Verify
-                var closeApplicationControl = (ShutdownApplicationControl)((ModalHostControl)_navigationService.CurrentView.View).ModalContent;
-                Assert.IsTrue(closeApplicationControl.NbCloseableViews == 2);
-                Assert.IsTrue(closeApplicationControl.ItemsSource.Cast<ViewInfo>().ToList().Contains(expectedViewInfo1));
-                Assert.IsTrue(closeApplicationControl.ItemsSource.Cast<ViewInfo>().Contains(expectedViewInfo2));
-            }
+            //    // Verify
+            //    var closeApplicationControl = (ShutdownApplicationControl)((ModalHostControl)_navigationService.CurrentView.View).ModalContent;
+            //    Assert.IsTrue(closeApplicationControl.NbCloseableViews == 2);
+            //    Assert.IsTrue(closeApplicationControl.ItemsSource.Cast<ViewInfo>().ToList().Contains(expectedViewInfo1));
+            //    Assert.IsTrue(closeApplicationControl.ItemsSource.Cast<ViewInfo>().Contains(expectedViewInfo2));
+            //}
 
-            [TestMethod]
-            public void MessageBoxesAreNotConsideredAsTopMostViewsDuringClosingProcess()
-            {
-                // Prepare
-                var navigationInfo = NavigationInfo.CreateSimple("viewKey", new FakeDirtyViewModel());
-                _navigationService.NavigateTo<UserControl>(navigationInfo);
-                _navigationService.ShowMessageBox("viewKey", "Hello");
+            //[TestMethod]
+            //public void MessageBoxesAreNotConsideredAsTopMostViewsDuringClosingProcess()
+            //{
+            //    // Prepare
+            //    var navigationInfo = NavigationInfo.CreateSimple("viewKey", new FakeDirtyViewModel());
+            //    _navigationService.NavigateTo<UserControl>(navigationInfo);
+            //    _navigationService.ShowMessageBox("viewKey", "Hello");
 
-                // Act
-                _navigationService.CloseApplication();
+            //    // Act
+            //    _navigationService.CloseApplication();
 
-                // Verify
-                Assert.IsInstanceOfType(_navigationService.CurrentView.View, typeof(ModalHostControl));
-                Assert.IsInstanceOfType(((ModalHostControl)_navigationService.CurrentView.View).ModalContent, typeof(ShutdownApplicationControl));
-            }
-
-            [TestMethod]
-            public void CanRaiseClosingApplicationShownEvent()
-            {
-                // Prepare
-                var eventRaised = false;
-                var navigationInfo1 = NavigationInfo.CreateSimple("viewKey1");
-                var navigationInfo2 = NavigationInfo.CreateComplex("viewKey2", navigationInfo1.ViewKey, new FakeDirtyViewModel());
-                _navigationService.NavigateTo<UserControl>(navigationInfo1);
-                _navigationService.NavigateTo<UserControl>(navigationInfo2);
-
-                // Act
-                _navigationService.ShutdownApplicationShown += (sender, e) => eventRaised = true;
-                _navigationService.CloseApplication();
-
-                // Verify
-                Assert.IsTrue(eventRaised);
-            }
-
-            [TestMethod]
-            public void CanRaiseClosingApplicationHiddenEvent()
-            {
-                // Prepare
-                var eventRaised = false;
-                var navigationInfo1 = NavigationInfo.CreateSimple("viewKey1");
-                var navigationInfo2 = NavigationInfo.CreateComplex("viewKey2", navigationInfo1.ViewKey, new FakeDirtyViewModel());
-                _navigationService.NavigateTo<UserControl>(navigationInfo1);
-                _navigationService.NavigateTo<UserControl>(navigationInfo2);
-
-                // Act
-                _navigationService.ShutdownApplicationHidden += (sender, e) => eventRaised = true;
-                _navigationService.CloseApplication();
-                var closingApplicationViewKey = _navigationService.CurrentView.ViewKey;
-                _navigationService.Close(closingApplicationViewKey);
-
-                // Verify
-                Assert.IsTrue(eventRaised);
-            }
+            //    // Verify
+            //    Assert.IsInstanceOfType(_navigationService.CurrentView.View, typeof(ModalHostControl));
+            //    Assert.IsInstanceOfType(((ModalHostControl)_navigationService.CurrentView.View).ModalContent, typeof(ShutdownApplicationControl));
+            //}
         }
     }
 }

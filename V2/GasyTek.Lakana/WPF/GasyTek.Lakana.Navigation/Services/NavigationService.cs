@@ -12,13 +12,6 @@ namespace GasyTek.Lakana.Navigation.Services
 {
     public class NavigationService : INavigationService
     {
-        #region Events
-
-        public event EventHandler ShutdownApplicationShown;
-        public event EventHandler ShutdownApplicationHidden;
-
-        #endregion
-
         #region Fields
 
         private Panel _rootPanel;
@@ -26,7 +19,6 @@ namespace GasyTek.Lakana.Navigation.Services
         private readonly LinkedList<LinkedList<ViewInfo>> _viewCollection;
         private readonly ReadOnlyObservableCollection<ViewInfo> _readonlyOpenedViews;
         private readonly ObservableCollection<ViewInfo> _openedViews;
-        private bool _isShutdownApplicationVisible;
 
         #endregion
 
@@ -56,11 +48,6 @@ namespace GasyTek.Lakana.Navigation.Services
             get { return _viewCollection.Sum(vs => vs.Count); }
         }
 
-        public bool IsShutdownApplicationVisible
-        {
-            get { return _isShutdownApplicationVisible; }
-        }
-
         #endregion
 
         #region Constructor
@@ -78,8 +65,6 @@ namespace GasyTek.Lakana.Navigation.Services
         {
             _rootPanel = rootPanel;
             _animateTransitionAction = Transition.NoTransition;
-            ShutdownApplicationShown += (sender, args) => _isShutdownApplicationVisible = true;
-            ShutdownApplicationHidden += (sender, args) => _isShutdownApplicationVisible = false;
         }
 
         public void ChangeTransitionAnimation(AnimateTransitionAction animateTransitionAction)
@@ -281,12 +266,6 @@ namespace GasyTek.Lakana.Navigation.Services
 
             if (stack.Count == 0) _viewCollection.Remove(stack);
 
-            // Raise ShutdownApplicationHidden event if the view to close is the shutdown application view
-            if (foundViewInfoNode.Value.View is ModalHostControl 
-                && ((ModalHostControl)foundViewInfoNode.Value.View).ModalContent is ShutdownApplicationControl 
-                && ShutdownApplicationHidden != null)
-                    ShutdownApplicationHidden(this, new EventArgs());
-
             // Manage modal views
             if (foundViewInfoNode.Value.IsModal && foundViewInfoNode.Value.View is ModalHostControl)
             {
@@ -319,20 +298,15 @@ namespace GasyTek.Lakana.Navigation.Services
                 return true;
             }
 
-            var viewKey = Guid.NewGuid().ToString();
-            var closeApplicationView = new ShutdownApplicationControl
-                                              {
-                                                 ItemsSource = notCloseableViews.OrderBy(v => v.ViewKey),
-                                                 NavigationService = this,
-                                                 ViewKey = viewKey
-                                              };
-
-            ShowModalInternal<object>(closeApplicationView, viewKey, CurrentView.ViewKey, null, false);
-
-            if(ShutdownApplicationShown != null)
-                ShutdownApplicationShown(this, new EventArgs());
-
-            return false;
+            var shutdownApplicationWindow = new ShutdownApplicationWindow
+                                                {
+                                                    Owner = Application.Current.MainWindow,
+                                                    WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                                                    Views = new ObservableCollection<ViewInfo>(notCloseableViews.OrderBy(v => v.ViewKey).ToList()),
+                                                    NavigationService  = this
+                                                };
+            var dialogResult = shutdownApplicationWindow.ShowDialog();
+            return dialogResult != null && dialogResult.Value;
         }
 
         #region Overridable methods
