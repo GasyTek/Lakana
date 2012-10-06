@@ -30,6 +30,8 @@ namespace GasyTek.Lakana.Navigation.Transitions
         {
             const double animationDuration = 100;
 
+            if(currentView == newView) return;
+
             if (currentView == null)
             {
                 newView.BeginAnimation(UIElement.OpacityProperty, new DoubleAnimation(0, 1, new Duration(TimeSpan.FromMilliseconds(animationDuration))));

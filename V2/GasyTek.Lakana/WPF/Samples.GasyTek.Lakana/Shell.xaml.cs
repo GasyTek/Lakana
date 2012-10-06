@@ -65,11 +65,6 @@ namespace Samples.GasyTek.Lakana
             Singletons.NavigationServiceInstance.NavigateTo<HomeView>(navigationInfo);
         }
 
-        private void CloseCanExecuteHandler(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.CanExecute = (Singletons.NavigationServiceInstance.IsShutdownApplicationVisible == false);
-        }
-
         private void CloseCommandHandler(object sender, ExecutedRoutedEventArgs e)
         {
             Singletons.NavigationServiceInstance.CloseApplication();

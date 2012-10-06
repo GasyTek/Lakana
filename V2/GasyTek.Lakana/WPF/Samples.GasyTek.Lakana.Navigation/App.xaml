@@ -59,12 +59,7 @@
                 </Setter>
             </Style>
 
-            <!-- Default style for CloseApplication and MessageBox dialog -->
-
-            <Style TargetType="{x:Type lakana:ShutdownApplicationControl}">
-                <Setter Property="Background"
-                        Value="{DynamicResource WindowBackgroundBrush}" />
-            </Style>
+            <!-- Default style for MessageBox dialog -->
 
             <Style TargetType="{x:Type lakana:MessageBoxControl}">
                 <Setter Property="Background"

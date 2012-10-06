@@ -14,8 +14,7 @@
         WindowStartupLocation="CenterScreen">
     <Window.CommandBindings>
         <CommandBinding Command="ApplicationCommands.Close"
-                        Executed="CloseCommandHandler"
-                        CanExecute="CloseCanExecuteHandler" />
+                        Executed="CloseCommandHandler" />
     </Window.CommandBindings>
     <DockPanel>
         <UniformGrid DockPanel.Dock="Top"
