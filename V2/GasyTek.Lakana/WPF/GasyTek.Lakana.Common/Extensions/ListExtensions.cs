@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections;
+using System.Linq;
 
 namespace GasyTek.Lakana.Common.Extensions
 {
@@ -16,13 +17,7 @@ namespace GasyTek.Lakana.Common.Extensions
         /// <returns></returns>
         public static IList<T> ToGeneric<T>(this IList source) where T : class
         {
-            IList<T> result = new List<T>();
-            foreach (var item in source)
-            {
-                var typedItem = item as T;
-                if (typedItem != null) result.Add(item as T);
-            }
-            return result;
+            return (from object item in source let typedItem = item as T where typedItem != null select item as T).ToList();
         }
     }
 }

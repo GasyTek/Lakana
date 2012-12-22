@@ -49,7 +49,7 @@ namespace Samples.GasyTek.Lakana.Navigation.Features
         {
             if (!IsDirty)
             {
-                Singletons.NavigationService.Close(ViewKey);
+                NavigationManager.Close(ViewInstanceKey);
                 return;
             }
 
@@ -57,7 +57,7 @@ namespace Samples.GasyTek.Lakana.Navigation.Features
             // The message box returns a Task<MessageBoxResult>, that means that you can use the C#5 async/await pattern to improve this code.
             // Notice that you have to use TaskScheduler.FromCurrentSynchronizationContext()
             // in order to use the UI thread synchronization context
-            var messageBoxResult = Singletons.NavigationService.ShowMessageBox(ViewKey, "Save changes ?", MessageBoxImage.Question, MessageBoxButton.YesNoCancel);
+            var messageBoxResult = NavigationManager.ShowMessageBox(ViewInstanceKey, "Save changes ?", MessageBoxImage.Question, MessageBoxButton.YesNoCancel);
             messageBoxResult.ContinueWith(r =>
                                               {
                                                   switch (r.Result)
@@ -67,13 +67,13 @@ namespace Samples.GasyTek.Lakana.Navigation.Features
                                                           // put here logic that corresponds to Yes action
 
                                                           // close this view
-                                                          Singletons.NavigationService.Close(ViewKey);
+                                                          NavigationManager.Close(ViewInstanceKey);
                                                           break;
                                                       case MessageBoxResult.No:
                                                           // put here logic that corresponds to No action
 
                                                           // close this view
-                                                          Singletons.NavigationService.Close(ViewKey);
+                                                          NavigationManager.Close(ViewInstanceKey);
                                                           break;
                                                       case MessageBoxResult.Cancel:
                                                           // do nothing
@@ -115,7 +115,7 @@ namespace Samples.GasyTek.Lakana.Navigation.Features
 
         #region IViewKeyAware members
 
-        public string ViewKey { get; set; }
+        public string ViewInstanceKey { get; set; }
 
         #endregion
     }

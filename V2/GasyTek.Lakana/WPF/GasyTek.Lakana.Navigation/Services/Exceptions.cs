@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using GasyTek.Lakana.Navigation.Attributes;
 
 namespace GasyTek.Lakana.Navigation.Services
 {
@@ -9,13 +11,19 @@ namespace GasyTek.Lakana.Navigation.Services
     {
         public ViewNotFoundException()
         {
-            
         }
 
         public ViewNotFoundException(string viewkey) 
-            : base("View with key " + viewkey + " was not found")
+            : base("Instance with key " + viewkey + " was not found")
         {
-            
+        }
+    }
+
+    public class ParentViewNotFoundException : ViewNotFoundException
+    {
+        public ParentViewNotFoundException(string viewkey)
+            : base(viewkey)
+        {
         }
     }
 
@@ -27,21 +35,74 @@ namespace GasyTek.Lakana.Navigation.Services
         public ParentViewNotTopMostException(string viewkey) 
             : base("Parent view with key " + viewkey + " is not top most")
         {
-            
         }
     }
 
     /// <summary>
-    /// Thrown when the user tries to link dynamically existing view instance to an existing parent.
+    /// Thrown when the user tries to stack existing view instance onto another view.
     /// Only new view are allowed to be linked with a parent.
     /// </summary>
-    public class ChildViewAlreadyExistsException : ApplicationException
+    public class OnlyNewViewCanBeStackedException : ApplicationException
     {
-        public ChildViewAlreadyExistsException(string viewkey, string parentViewKey)
+        public OnlyNewViewCanBeStackedException(string viewkey, string parentViewKey)
             : base("The view with key " + viewkey + " can't be attached to parent view with key " + parentViewKey + " because the view already exists and is not modifiable")
         {
-            
         }
     }
-    
+
+    /// <summary>
+    /// Thrown when the specified view key was not found.
+    /// </summary>
+    public class ViewKeyNotFoundException : ApplicationException
+    {
+        public ViewKeyNotFoundException(string viewKey)
+            : base("Instance with key " + viewKey + " was not found, please use " + typeof(ViewKeyAttribute).Name + " to associate view unique key to views.")
+        {
+        }
+    }
+
+    /// <summary>
+    /// Thrown when there are duplicate view keys that were regitered by the <see cref="IViewLocator"/>
+    /// </summary>
+    public class ViewKeyDuplicationException : ApplicationException
+    {
+        public ViewKeyDuplicationException(string viewKey, IEnumerable<string> viewTypeNames)
+            : base(string.Format("Instance with key '" + viewKey + "' is duplicated. It is defined on types '{0}'", string.Join("\n", viewTypeNames)))
+        {
+
+        }
+    }
+
+    /// <summary>
+    /// Thrown when there are duplicate view keys that were regitered by the <see cref="IViewLocator"/>
+    /// </summary>
+    public class ViewKeyNullOrEmptyException : ApplicationException
+    {
+        public ViewKeyNullOrEmptyException(string viewTypeName)
+            : base(string.Format("Instance key must be initialized for view of type '{0}'.", viewTypeName))
+        {
+        }
+    }
+
+    /// <summary>
+    /// Thrown when a navigation is in bad format.
+    /// </summary>
+    public class NavigationKeyFormatException : ApplicationException
+    {
+        public NavigationKeyFormatException(string message)
+            : base(message)
+        {
+        }
+    }
+
+    /// <summary>
+    /// Thrown when attempting to close a view that is not top most.
+    /// </summary>
+    public class CannotCloseNotTopMostViewException : ApplicationException
+    {
+        public CannotCloseNotTopMostViewException(string viewKey)
+            : base(viewKey)
+        {
+        }
+    }
 }

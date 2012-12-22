@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Windows.Media.Animation;
 
 namespace GasyTek.Lakana.Navigation.Services
 {
@@ -7,5 +8,5 @@ namespace GasyTek.Lakana.Navigation.Services
     /// </summary>
     /// <param name="currentView">Currently displayed FrameworkElement</param>
     /// <param name="newView">New FrameworkElement to be displayed</param>
-    public delegate void AnimateTransitionAction(FrameworkElement currentView, FrameworkElement newView);
+    public delegate Storyboard TransitionAnimationProvider(FrameworkElement currentView, FrameworkElement newView);
 }

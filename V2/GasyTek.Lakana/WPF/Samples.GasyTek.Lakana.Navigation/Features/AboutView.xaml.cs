@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using System.Windows;
 using GasyTek.Lakana.Common.UI;
+using GasyTek.Lakana.Navigation.Attributes;
 using GasyTek.Lakana.Navigation.Services;
 using Samples.GasyTek.Lakana.Navigation.Common;
 
@@ -9,6 +10,7 @@ namespace Samples.GasyTek.Lakana.Navigation.Features
     /// <summary>
     /// Interaction logic for AboutView.xaml
     /// </summary>
+    [ViewKey(ViewId.About)]
     public partial class AboutView : IPresentable
     {
         private readonly IUIMetadata _uiMetadata;
@@ -33,9 +35,8 @@ namespace Samples.GasyTek.Lakana.Navigation.Features
             // The modal view returns a Task<TResult>, that means that you can use the C#5 async/await pattern to improve this code.
             // Notice that you have to use TaskScheduler.FromCurrentSynchronizationContext()
             // in order to use the UI thread synchronization context
-            var navigationInfo = NavigationInfo.CreateComplex(ViewId.SendMail, ViewId.About, false);
-            var modalResult = Singletons.NavigationService.ShowModal<SendMailView, string>(navigationInfo);
-            modalResult.Result.ContinueWith(r =>
+            var modalResult = NavigationManager.ShowModal<string>(ViewId.About + "/" + ViewId.SendMail);
+            modalResult.AsyncResult.ContinueWith(r =>
                                                 {
                                                     txtDisplayModalResult.Text = "Modal Result : " + r.Result;
                                                 }, TaskScheduler.FromCurrentSynchronizationContext());

@@ -5,6 +5,12 @@
     /// </summary>
     public interface IViewKeyAware
     {
-        string ViewKey { get; set; }
+        /// <summary>
+        /// Gets or sets the view instance identifier.
+        /// </summary>
+        /// <value>
+        /// The view instance key.
+        /// </value>
+        string ViewInstanceKey { get; set; }
     }
 }

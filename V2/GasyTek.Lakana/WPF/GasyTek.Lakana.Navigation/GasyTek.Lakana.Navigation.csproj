@@ -58,6 +58,8 @@
     <Reference Include="PresentationFramework" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adapters\IWorkspaceAdapter.cs" />
+    <Compile Include="Adapters\GridWorkspaceAdapter.cs" />
     <Compile Include="Controls\MessageBoxControl.cs" />
     <Compile Include="Controls\ModalHostControl.cs" />
     <Compile Include="Controls\ShutdownApplicationItemsControl.cs" />
@@ -81,17 +83,23 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Labels.resx</DependentUpon>
     </Compile>
-    <Compile Include="Services\AnimateTransitionAction.cs" />
+    <Compile Include="Attributes\ViewKeyAttribute.cs" />
     <Compile Include="Services\Exceptions.cs" />
     <Compile Include="Services\IActiveAware.cs" />
     <Compile Include="Services\ICloseable.cs" />
-    <Compile Include="Services\INavigationService.cs" />
+    <Compile Include="Services\INavigationManager.cs" />
+    <Compile Include="Services\INavigationManager2.cs" />
     <Compile Include="Services\IPresentable.cs" />
     <Compile Include="Services\IViewKeyAware.cs" />
+    <Compile Include="Services\IViewLocator.cs" />
     <Compile Include="Services\ModalResult.cs" />
     <Compile Include="Services\NavigationInfo.cs" />
-    <Compile Include="Services\NavigationService.cs" />
+    <Compile Include="Services\NavigationManager.cs" />
+    <Compile Include="Services\NavigationManagerImpl.cs" />
+    <Compile Include="Services\TransitionAnimationProvider.cs" />
+    <Compile Include="Services\ViewStackCollectionManager.cs" />
     <Compile Include="Services\ViewInfo.cs" />
+    <Compile Include="Services\ViewLocator.cs" />
     <Compile Include="Transitions\Transition.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

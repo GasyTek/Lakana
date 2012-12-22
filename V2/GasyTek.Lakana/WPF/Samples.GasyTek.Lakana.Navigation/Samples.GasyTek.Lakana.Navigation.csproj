@@ -78,7 +78,6 @@
     </Compile>
     <Compile Include="Common\Constants.cs" />
     <Compile Include="Common\SimpleCommand.cs" />
-    <Compile Include="Common\Singletons.cs" />
     <Compile Include="Data\Product.cs" />
     <Compile Include="Features\AboutView.xaml.cs">
       <DependentUpon>AboutView.xaml</DependentUpon>

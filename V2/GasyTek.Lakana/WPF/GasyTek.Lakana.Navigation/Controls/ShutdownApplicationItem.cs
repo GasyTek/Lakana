@@ -42,7 +42,7 @@ namespace GasyTek.Lakana.Navigation.Controls
 
         #region Properties
 
-        internal INavigationService NavigationService { get; set; }
+        internal INavigationManager NavigationManager { get; set; }
 
         public string TargetViewKey
         {
@@ -63,10 +63,10 @@ namespace GasyTek.Lakana.Navigation.Controls
         {
             Click += (sender, args) =>
                               {
-                                  if (NavigationService == null) return;
+                                  if (NavigationManager == null) return;
                                   if (string.IsNullOrEmpty(TargetViewKey)) return;
                                   RaiseEvent(new RoutedEventArgs(TargetViewSelectedEvent));
-                                  NavigationService.NavigateTo(TargetViewKey);
+                                  NavigationManager.NavigateTo(TargetViewKey);
                               };
         }
 

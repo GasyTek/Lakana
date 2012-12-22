@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Navigation;
 using GasyTek.Lakana.Navigation.Services;
 using GasyTek.Lakana.Navigation.Transitions;
 using Samples.GasyTek.Lakana.Navigation.Common;
@@ -19,21 +20,14 @@ namespace Samples.GasyTek.Lakana.Navigation
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
-            // initializes navigation service
-            Singletons.NavigationService.Initialize(ContentView);
-
-            // Change the transition animation to Fade transition
-            Singletons.NavigationService.ChangeTransitionAnimation(Transition.FadeTransition);
-
             // set HomeView as the first view
-            var homeNavigationInfo = NavigationInfo.CreateSimple(ViewId.Home);
-            Singletons.NavigationService.NavigateTo<HomeView>(homeNavigationInfo);
+            NavigationManager.NavigateTo(ViewId.Home);
         }
 
         private void WindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             // allow to close the application if any task is currently running
-            if (Singletons.NavigationService.CloseApplication() == false)
+            if (NavigationManager.CloseApplication() == false)
             {
                 e.Cancel = true;
             }
@@ -41,15 +35,15 @@ namespace Samples.GasyTek.Lakana.Navigation
 
         private void OpenViewClick(object sender, RoutedEventArgs e)
         {
-            var frameworkElement = e.OriginalSource as FrameworkElement;
-            if (frameworkElement == null) return;
+            //var frameworkElement = e.OriginalSource as FrameworkElement;
+            //if (frameworkElement == null) return;
 
-            var viewInfo = (ViewInfo) frameworkElement.DataContext;
-            if(viewInfo != ViewInfo.Null)
-            {
-                // HOW TO : navigate to a previously opened view
-                Singletons.NavigationService.NavigateTo(viewInfo.ViewKey);
-            }
+            //var viewInfo = (ViewInfo) frameworkElement.DataContext;
+            //if(viewInfo != ViewInfo.Null)
+            //{
+            //    // HOW TO : navigate to a previously opened view
+            //    NavigationManager.NavigateTo(viewInfo.ViewInstanceKey);
+            //}
         }
 
         private void MenuItemClick(object sender, RoutedEventArgs e)
@@ -59,12 +53,12 @@ namespace Samples.GasyTek.Lakana.Navigation
                 case "menuNoAnimation":
                     menuNoAnimation.IsChecked = true;
                     menuFade.IsChecked = false;
-                    Singletons.NavigationService.ChangeTransitionAnimation(Transition.NoTransition);
+                    //NavigationManager.ChangeTransitionAnimation(Transition.NoTransition);
                     break;
                 case "menuFade":
                     menuNoAnimation.IsChecked = false;
                     menuFade.IsChecked = true;
-                    Singletons.NavigationService.ChangeTransitionAnimation(Transition.FadeTransition);
+                    //NavigationManager.ChangeTransitionAnimation(Transition.FadeTransition);
                     break;
             }
         }

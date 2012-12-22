@@ -12,15 +12,29 @@ namespace GasyTek.Lakana.Navigation.Services
         /// <value>
         /// The view key.
         /// </value>
-        public string ViewKey { get; internal set; }
+        public string ViewInstanceKey { get; internal set; }
 
         /// <summary>
-        /// Gets the view.
+        /// Gets the actual view instance.
         /// </summary>
         /// <value>
         /// The view.
         /// </value>
-        public FrameworkElement View { get; internal set; }
+        public FrameworkElement ViewInstance { get; internal set; }
+
+        /// <summary>
+        /// Used by the infrastructure. 
+        /// It can contain either the actual or a container view (for modal views for example). 
+        /// </summary>
+        internal FrameworkElement InternalViewInstance { get; set; }
+
+        /// <summary>
+        /// Gets the view model.
+        /// </summary>
+        /// <value>
+        /// The view.
+        /// </value>
+        public object ViewModelInstance { get; internal set; }
 
         /// <summary>
         /// Gets a value indicating whether the view is modal or not.
@@ -31,12 +45,9 @@ namespace GasyTek.Lakana.Navigation.Services
         public bool IsModal { get; internal set; }
 
         /// <summary>
-        /// Gets a value indicating whether the view will appear in <see cref="INavigationService.OpenedViews"/> or not.
+        /// Used by the infrastructure to determine if this view is a message box or not
         /// </summary>
-        /// <value>
-        /// 	<c>true</c> if the view will appear in <see cref="INavigationService.OpenedViews"/>; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsOpenedViewMember { get; internal set; }
+        internal bool IsMessageBox { get; set; }
 
         /// <summary>
         /// Gets the presentation metadatas associated with the view.
@@ -46,15 +57,10 @@ namespace GasyTek.Lakana.Navigation.Services
         /// </value>
         public IUIMetadata UIMetadata { get; internal set; }
 
-        /// <summary>
-        /// Used by the infrastructure to determine if this view is a message box or not
-        /// </summary>
-        internal bool IsMessageBox { get; set; }
-
-        internal ViewInfo(string viewKey)
+        internal ViewInfo(string viewInstanceKey)
             : this()
         {
-            ViewKey = viewKey;
+            ViewInstanceKey = viewInstanceKey;
         }
 
         public static ViewInfo Null
@@ -62,11 +68,16 @@ namespace GasyTek.Lakana.Navigation.Services
             get { return default(ViewInfo); }
         }
 
+        public bool IsNull()
+        {
+            return this == Null;
+        }
+
         #region Override Equals
 
         public bool Equals(ViewInfo other)
         {
-            return Equals(other.ViewKey, ViewKey);
+            return Equals(other.ViewInstanceKey, ViewInstanceKey);
         }
 
         public override bool Equals(object obj)
@@ -78,7 +89,7 @@ namespace GasyTek.Lakana.Navigation.Services
 
         public override int GetHashCode()
         {
-            return (ViewKey != null ? ViewKey.GetHashCode() : 0);
+            return (ViewInstanceKey != null ? ViewInstanceKey.GetHashCode() : 0);
         }
 
         public static bool operator ==(ViewInfo left, ViewInfo right)

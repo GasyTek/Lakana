@@ -11,7 +11,7 @@ namespace GasyTek.Lakana.Navigation.Controls
     {
         #region Properties
 
-        internal INavigationService NavigationService { get; set; }
+        internal INavigationManager NavigationManager { get; set; }
 
         #endregion
 
@@ -26,7 +26,7 @@ namespace GasyTek.Lakana.Navigation.Controls
 
         protected override DependencyObject GetContainerForItemOverride()
         {
-            return new ShutdownApplicationItem { NavigationService = NavigationService };
+            return new ShutdownApplicationItem { NavigationManager = NavigationManager };
         }
     }
 }
