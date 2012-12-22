@@ -58,3 +58,4 @@ using System.Windows.Markup;
 
 [assembly: XmlnsPrefix("http://schemas.gasytek.com/wpf/lakana", "lakana")]
 [assembly: XmlnsDefinition("http://schemas.gasytek.com/wpf/lakana", "GasyTek.Lakana.Navigation.Controls")]
+[assembly: XmlnsDefinition("http://schemas.gasytek.com/wpf/lakana", "GasyTek.Lakana.Navigation.Services")]

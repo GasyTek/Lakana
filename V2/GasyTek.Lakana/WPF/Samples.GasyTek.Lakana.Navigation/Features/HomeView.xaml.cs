@@ -1,11 +1,14 @@
 ﻿using GasyTek.Lakana.Common.UI;
+using GasyTek.Lakana.Navigation.Attributes;
 using GasyTek.Lakana.Navigation.Services;
+using Samples.GasyTek.Lakana.Navigation.Common;
 
 namespace Samples.GasyTek.Lakana.Navigation.Features
 {
     /// <summary>
     /// Interaction logic for HomeView.xaml
     /// </summary>
+    [ViewKey(ViewId.Home)]
     public partial class HomeView : IPresentable
     {
         private readonly IUIMetadata _uiMetadata;
@@ -14,7 +17,7 @@ namespace Samples.GasyTek.Lakana.Navigation.Features
         {
             InitializeComponent();
 
-            _uiMetadata = new UIMetadata {LabelProvider = () => "Home"};
+            _uiMetadata = new UIMetadata { LabelProvider = () => "Home" };
         }
 
         public IUIMetadata UIMetadata

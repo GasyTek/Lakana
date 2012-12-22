@@ -29,7 +29,7 @@ namespace GasyTek.Lakana.Navigation.Controls
 
         #region Properties
 
-        internal INavigationService NavigationService { get; set; }
+        internal INavigationManager NavigationManager { get; set; }
 
         public ObservableCollection<ViewInfo> Views
         {
@@ -70,10 +70,10 @@ namespace GasyTek.Lakana.Navigation.Controls
             {
                 btnPartExitApplication.Click += (sender, args) =>
                 {
-                    if (NavigationService != null)
+                    if (NavigationManager != null)
                     {
                         DialogResult = true;
-                        NavigationService.CloseApplication(true);
+                        NavigationManager.CloseApplication(true);
                     }
                 };
             }
@@ -82,7 +82,7 @@ namespace GasyTek.Lakana.Navigation.Controls
             var shutdownItemsControl = GetTemplateChild("PART_Views") as ShutdownApplicationItemsControl;
             if(shutdownItemsControl != null)
             {
-                shutdownItemsControl.NavigationService = NavigationService;
+                shutdownItemsControl.NavigationManager = NavigationManager;
             }
         }
 

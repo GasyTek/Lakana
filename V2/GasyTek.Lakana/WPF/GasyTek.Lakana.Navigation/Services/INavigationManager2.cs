@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,12 +8,12 @@ namespace GasyTek.Lakana.Navigation.Services
     /// <summary>
     /// Represents a navigation system.
     /// </summary>
-    public interface INavigationService
+    public interface INavigationManager2
     {
         /// <summary>
         /// Workspace root panel which contains all views.
         /// </summary>
-        Panel RootPanel { get; }
+        Panel MainWorkspace { get; }
         
         /// <summary>
         /// Gets the the view that is currently displayed.
@@ -22,7 +21,7 @@ namespace GasyTek.Lakana.Navigation.Services
         ViewInfo CurrentView { get; }
 
         /// <summary>
-        /// Gets all opened views (event those that are not actually visible) except message boxes.
+        /// Gets all opened views with those that are not currently visible except message boxes.
         /// </summary>
         ReadOnlyObservableCollection<ViewInfo> OpenedViews { get; }
        
@@ -32,43 +31,35 @@ namespace GasyTek.Lakana.Navigation.Services
         int NbOpenedViews { get; }
 
         /// <summary>
-        /// Initializes the navigation service and associates the root workspace to it.
+        /// Assigns the transition animation provider.
         /// </summary>
-        /// <param name="rootPanel">The root view that will constitute the shell of the application.</param>
-        void Initialize(Panel rootPanel);
-
-        /// <summary>
-        /// Assigns the transition animation.
-        /// </summary>
-        /// <param name="animateTransitionAction"></param>
-        void ChangeTransitionAnimation(AnimateTransitionAction animateTransitionAction);
+        /// <param name="transitionAnimationProvider"></param>
+        void ChangeTransitionAnimation(TransitionAnimationProvider transitionAnimationProvider);
 
         /// <summary>
         /// Navigates or creates the specified view.
         /// </summary>
-        /// <typeparam name="TView">The type of the view.</typeparam>
         /// <param name="navigationInfo">The navigation info.</param>
         /// <returns></returns>
-        ViewInfo NavigateTo<TView>(NavigationInfo navigationInfo) where TView : FrameworkElement, new();
+        ViewInfo NavigateTo(NavigationInfo navigationInfo);
 
         /// <summary>
-        /// Navigates to the existing view specified by the key.
+        /// Navigates to and already opened view instance specified by the given key.
         /// </summary>
         /// <param name="viewKey">The view key.</param>
         /// <returns></returns>
         ViewInfo NavigateTo(string viewKey);
 
         /// <summary>
-        /// Shows the view as modal.
+        /// Shows a view as modal.
         /// </summary>
-        /// <typeparam name="TView">The type of the view.</typeparam>
         /// <typeparam name="TResult">The type of the expected result from the modal window </typeparam>
-        /// <param name="navigationInfo">The navigation info. It must specify the parent view key on which to push the view.</param>
+        /// <param name="modalNavigationInfo">The navigation info.</param>
         /// <remarks></remarks>
-        ModalResult<TResult> ShowModal<TView, TResult>(NavigationInfo navigationInfo) where TView : FrameworkElement, new();
+        ModalResult<TResult> ShowModal<TResult>(ModalNavigationInfo modalNavigationInfo);
 
         /// <summary>
-        /// Shows a message box that is modal to the specified parent.
+        /// Shows a message box that is modal only to the specified parent.
         /// </summary>
         /// <param name="parentViewKey">The parent view key.</param>
         /// <param name="message">The message.</param>
@@ -81,7 +72,7 @@ namespace GasyTek.Lakana.Navigation.Services
         /// Closes the specified view.
         /// </summary>
         /// <param name="viewKey">The view key.</param>
-        /// <param name="modalResult">The result that the view must return if it was a modal view. You should set this value if you want your view to return a modal.</param>
+        /// <param name="modalResult">The result that the view returns if it was a modal view that needs to retrieve a value.</param>
         /// <returns>The view info for the closed view.</returns>
         ViewInfo Close(string viewKey, object modalResult = null);
 

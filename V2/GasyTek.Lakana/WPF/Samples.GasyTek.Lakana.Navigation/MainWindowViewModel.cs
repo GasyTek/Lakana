@@ -15,7 +15,10 @@ namespace Samples.GasyTek.Lakana.Navigation
 
         public ReadOnlyObservableCollection<ViewInfo> OpenedViews
         {
-            get { return Singletons.NavigationService.OpenedViews; }
+            get
+            {
+                return new ReadOnlyObservableCollection<ViewInfo>(new ObservableCollection<ViewInfo>());
+            }
         }
 
         public MainWindowViewModel()
@@ -30,7 +33,7 @@ namespace Samples.GasyTek.Lakana.Navigation
         {
             // Navigate to an existing view. 
             // This overload of NavigateTo works only for existing view
-            Singletons.NavigationService.NavigateTo(ViewId.Home);
+            NavigationManager.NavigateTo(ViewId.Home);
         }
 
         private void OnOpenProductListCommandExecute(object param)
@@ -38,19 +41,17 @@ namespace Samples.GasyTek.Lakana.Navigation
             // navigates to product list view. 
             // The view will be created during the first call if it doesn't exist yet
             // Note that we pass the view model to the NavigateTo method 
-            var navigationInfo = NavigationInfo.CreateSimple(ViewId.ProductList, new ProductListViewModel());
-            Singletons.NavigationService.NavigateTo<ProductListView>(navigationInfo);
+            NavigationManager.NavigateTo(ViewId.ProductList, new ProductListViewModel());
         }
 
         private void OnOpenAboutCommandExecute(object obj)
         {
-            var navigationInfo = NavigationInfo.CreateSimple(ViewId.About);
-            Singletons.NavigationService.NavigateTo<AboutView>(navigationInfo);
+            NavigationManager.NavigateTo(ViewId.About);
         }
 
         private void OnExitApplicationCommandExecute(object obj)
         {
-            Singletons.NavigationService.CloseApplication();
+            NavigationManager.CloseApplication();
         }
     }
 }

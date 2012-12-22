@@ -40,9 +40,8 @@ namespace Samples.GasyTek.Lakana.Navigation.Features
             if (p != null)
             {
                 // Opens the ProductEditView on top of ProductEditViewModel
-                // Note that this viewmodel implements IViewKeyAware so that it will have the same ViewKey as its View
-                var navigationInfo = NavigationInfo.CreateComplex(ViewId.ProductEdit, ViewKey, new ProductEditViewModel(p));
-                Singletons.NavigationService.NavigateTo<ProductEditView>(navigationInfo);
+                // Note that this viewmodel implements IViewKeyAware so that it will have the same ViewInstanceKey as its View
+                NavigationManager.NavigateTo(ViewId.ProductEdit);
             }
         }
 
@@ -56,7 +55,7 @@ namespace Samples.GasyTek.Lakana.Navigation.Features
 
         #region IViewKeyAware members
 
-        public string ViewKey { get; set; }
+        public string ViewInstanceKey { get; set; }
 
         #endregion
 

@@ -10,9 +10,10 @@ namespace GasyTek.Lakana.Navigation.Services
         private readonly TaskCompletionSource<TResult> _taskCompletionSource;
 
         /// <summary>
-        /// Gets a task that will return the actual result of the modal operation. You can await this task for this purpose.
+        /// Gets a task that will return the actual result of the modal operation. 
+        /// You can await this task for this purpose.
         /// </summary>
-        public Task<TResult> Result { get { return _taskCompletionSource.Task; } }
+        public Task<TResult> AsyncResult { get { return _taskCompletionSource.Task; } }
 
         /// <summary>
         /// Gets the view info that corresponds to the modal view.

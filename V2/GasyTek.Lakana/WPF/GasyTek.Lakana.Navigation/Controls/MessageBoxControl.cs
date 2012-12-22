@@ -42,9 +42,9 @@ namespace GasyTek.Lakana.Navigation.Controls
 
         #region Properties
 
-        internal INavigationService NavigationService { get; set; }
+        internal INavigationManager NavigationManager { get; set; }
 
-        internal string ViewKey { get; set; }
+        internal string ViewInstanceKey { get; set; }
 
         public string Message
         {
@@ -84,28 +84,28 @@ namespace GasyTek.Lakana.Navigation.Controls
             var btnPartOk = GetTemplateChild("PART_Ok") as Button;
             if (btnPartOk != null)
             {
-                btnPartOk.Click += (sender, args) => NavigationService.Close(ViewKey, MessageBoxResult.OK);
+                btnPartOk.Click += (sender, args) => NavigationManager.Close(ViewInstanceKey, MessageBoxResult.OK);
             }
 
             // Yes button
             var btnPartYes = GetTemplateChild("PART_Yes") as Button;
             if (btnPartYes != null)
             {
-                btnPartYes.Click += (sender, args) => NavigationService.Close(ViewKey, MessageBoxResult.Yes);
+                btnPartYes.Click += (sender, args) => NavigationManager.Close(ViewInstanceKey, MessageBoxResult.Yes);
             }
 
             // No button
             var btnPartNo = GetTemplateChild("PART_No") as Button;
             if (btnPartNo != null)
             {
-                btnPartNo.Click += (sender, args) => NavigationService.Close(ViewKey, MessageBoxResult.No);
+                btnPartNo.Click += (sender, args) => NavigationManager.Close(ViewInstanceKey, MessageBoxResult.No);
             }
 
             // Cancel button
             var btnPartCancel = GetTemplateChild("PART_Cancel") as Button;
             if (btnPartCancel != null)
             {
-                btnPartCancel.Click += (sender, args) => NavigationService.Close(ViewKey, MessageBoxResult.Cancel);
+                btnPartCancel.Click += (sender, args) => NavigationManager.Close(ViewInstanceKey, MessageBoxResult.Cancel);
             }
         }
 
