@@ -87,7 +87,9 @@
     <Compile Include="Services\Exceptions.cs" />
     <Compile Include="Services\IActiveAware.cs" />
     <Compile Include="Services\ICloseable.cs" />
-    <Compile Include="Services\INavigationManager.cs" />
+    <Compile Include="Services\INavigationManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Services\INavigationManager2.cs" />
     <Compile Include="Services\IPresentable.cs" />
     <Compile Include="Services\IViewKeyAware.cs" />
