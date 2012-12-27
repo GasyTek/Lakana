@@ -24,7 +24,7 @@ namespace GasyTek.Lakana.Navigation.Services
 
         /// <summary>
         /// Used by the infrastructure. 
-        /// It can contain either the actual or a container view (for modal views for example). 
+        /// It can contain either the actual or the container view (for modal views for example). 
         /// </summary>
         internal FrameworkElement InternalViewInstance { get; set; }
 

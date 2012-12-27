@@ -11,8 +11,8 @@ namespace GasyTek.Lakana.Navigation.Services
 
         /// <summary>
         /// Gets a task that will return the actual result of the modal operation. 
-        /// You can await this task for this purpose.
         /// </summary>
+        /// <remarks>You can await this task for this purpose.</remarks>
         public Task<TResult> AsyncResult { get { return _taskCompletionSource.Task; } }
 
         /// <summary>

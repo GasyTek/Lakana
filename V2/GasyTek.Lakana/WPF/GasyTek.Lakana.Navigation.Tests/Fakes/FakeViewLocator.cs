@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using GasyTek.Lakana.Navigation.Services;
 
 namespace GasyTek.Lakana.Navigation.Tests.Fakes
@@ -13,19 +12,19 @@ namespace GasyTek.Lakana.Navigation.Tests.Fakes
         public FrameworkElement GetViewInstance(string viewKey)
         {
             if(viewKey == "view1")
-                return new FrameworkElement();
+                return new FakeView();
 
             if (viewKey == "view2")
-                return new FrameworkElement();
+                return new FakeView();
 
             if (viewKey == "view3")
-                return new FrameworkElement();
+                return new FakeView();
 
             if (viewKey == "parentView1")
-                return new FrameworkElement();
+                return new FakeView();
 
             if (viewKey == "parentView2")
-                return new FrameworkElement();
+                return new FakeView();
 
             return null;
         }

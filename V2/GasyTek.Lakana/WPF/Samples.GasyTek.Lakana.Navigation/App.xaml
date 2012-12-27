@@ -10,8 +10,6 @@
             </ResourceDictionary.MergedDictionaries>
 
             <Style TargetType="TextBlock">
-                <Setter Property="Foreground"
-                        Value="White" />
                 <Setter Property="FontFamily"
                         Value="Segoe WP" />
             </Style>
@@ -19,17 +17,22 @@
             <Style TargetType="{x:Type ListBox}">
                 <Setter Property="Background"
                         Value="{DynamicResource WindowBackgroundBrush}" />
+                <Setter Property="Foreground" 
+                        Value="White" />
             </Style>
 
             <!-- Style for views that use MVVM -->
             <Style x:Key="ViewDefaultStyle"
                    TargetType="UserControl">
+                <Setter Property="Background"
+                        Value="{DynamicResource WindowBackgroundBrush}" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="UserControl">
-                            <DockPanel>
+                            <DockPanel Background="{TemplateBinding Background}">
                                 <TextBlock DockPanel.Dock="Top"
                                            Text="{Binding UIMetadata.Label}"
+                                           Foreground="White"
                                            FontSize="40"
                                            Margin="20,10,10,10" />
                                 <ContentPresenter ContentSource="Content"
@@ -43,12 +46,15 @@
             <!-- Style for views that do not use MVVM -->
             <Style x:Key="ViewOnlyDefaultStyle"
                    TargetType="UserControl">
+                <Setter Property="Background"
+                        Value="{DynamicResource WindowBackgroundBrush}" />
                 <Setter Property="Template">
                     <Setter.Value>
                         <ControlTemplate TargetType="UserControl">
-                            <DockPanel>
+                            <DockPanel Background="{TemplateBinding Background}">
                                 <TextBlock DockPanel.Dock="Top"
                                            Text="{Binding RelativeSource={RelativeSource Mode=TemplatedParent}, Path=UIMetadata.Label}"
+                                           Foreground="White"
                                            FontSize="40"
                                            Margin="20,10,10,10" />
                                 <ContentPresenter ContentSource="Content"

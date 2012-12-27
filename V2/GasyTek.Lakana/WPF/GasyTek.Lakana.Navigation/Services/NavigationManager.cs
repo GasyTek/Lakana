@@ -1,6 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using GasyTek.Lakana.Common.Extensions;
 using GasyTek.Lakana.Navigation.Adapters;
 
 namespace GasyTek.Lakana.Navigation.Services
@@ -54,12 +57,12 @@ namespace GasyTek.Lakana.Navigation.Services
                     NavigationManagerImpl.SetMainWorkspace(mainWorkspace, workspaceAdapter);
                 }
 
-                // TODO : implement a better mechanism to assign the workspace adapter according to the grid's type
+                // TODO : implement a better mechanism to assign the workspace adapter according to the panel's concrete type
             }
         }
 
         #endregion
-
+        
         #region Public api
 
         public static ViewInfo ActiveView
@@ -67,15 +70,18 @@ namespace GasyTek.Lakana.Navigation.Services
             get { return NavigationManagerImpl.ActiveView; }
         }
 
-        //public static ReadOnlyObservableCollection<ViewInfo> OpenedViews
-        //{
-        //    get { return NavigationManagerImpl.OpenedViews; }
-        //}
+        public static ReadOnlyObservableCollection<ViewInfo> Views
+        {
+            get
+            {
+                return NavigationManagerImpl.ViewStackCollectionManager.ViewCollection;
+            }
+        }
 
-        //public static int NbOpenedViews
-        //{
-        //    get { return NavigationManagerImpl.NbTotalViews; }
-        //}
+        public static int NbViews
+        {
+            get { return NavigationManagerImpl.NbViews; }
+        }
 
         //public static void ChangeTransitionAnimation(TransitionAnimationProvider transitionAnimationProvider)
         //{

@@ -41,7 +41,7 @@ namespace Samples.GasyTek.Lakana.Navigation.Features
             {
                 // Opens the ProductEditView on top of ProductEditViewModel
                 // Note that this viewmodel implements IViewKeyAware so that it will have the same ViewInstanceKey as its View
-                NavigationManager.NavigateTo(ViewId.ProductEdit);
+                NavigationManager.NavigateTo(ViewInstanceKey + "/" +  ViewId.ProductEdit, new ProductEditViewModel(p));
             }
         }
 

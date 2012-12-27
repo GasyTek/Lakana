@@ -52,9 +52,8 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Fakes\FakeView.cs" />
     <Compile Include="Fakes\FakeWorkspaceAdapter.cs" />
-    <Compile Include="Fakes\FakeDirtyViewModel.cs" />
-    <Compile Include="Fakes\FakeViewKeyAwareViewModel.cs" />
     <Compile Include="Fakes\FakeViewLocator.cs" />
     <Compile Include="Fakes\FakeViewModel.cs" />
     <Compile Include="GridWorkspaceAdapterFixture.cs" />
@@ -62,6 +61,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\GasyTek.Lakana.Common\GasyTek.Lakana.Common.csproj">
+      <Project>{09CF9933-5A0C-4896-9E6D-18A54C3E0FA1}</Project>
+      <Name>GasyTek.Lakana.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\GasyTek.Lakana.Navigation\GasyTek.Lakana.Navigation.csproj">
       <Project>{695CC6AF-40F4-48B8-9CC6-242856B5FC37}</Project>
       <Name>GasyTek.Lakana.Navigation</Name>

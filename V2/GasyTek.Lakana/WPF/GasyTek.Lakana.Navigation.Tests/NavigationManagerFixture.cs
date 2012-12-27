@@ -33,7 +33,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                 // Verify
                 Assert.AreSame(expectedViewInfo.ViewInstance, _navigationManagerImpl.ActiveView.ViewInstance);
                 Assert.AreEqual(expectedViewInfo.ViewInstanceKey, "view1");
-                Assert.IsTrue(_navigationManagerImpl.NbTotalViews == 1);
+                Assert.IsTrue(_navigationManagerImpl.NbViews == 1);
             }
 
             [TestMethod]
@@ -47,7 +47,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                 // Verify
                 Assert.AreSame(expectedViewInfo.ViewInstance, _navigationManagerImpl.ActiveView.ViewInstance);
                 Assert.AreEqual(expectedViewInfo.ViewInstanceKey, "view1#1");
-                Assert.IsTrue(_navigationManagerImpl.NbTotalViews == 1);
+                Assert.IsTrue(_navigationManagerImpl.NbViews == 1);
             }
 
             [TestMethod]
@@ -62,7 +62,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                 // Verify
                 Assert.AreSame(expectedViewInfo.ViewInstance, _navigationManagerImpl.ActiveView.ViewInstance);
                 Assert.AreEqual(expectedViewInfo.ViewInstanceKey, "view1");
-                Assert.IsTrue(_navigationManagerImpl.NbTotalViews == 1);
+                Assert.IsTrue(_navigationManagerImpl.NbViews == 1);
             }
 
             [TestMethod]
@@ -77,7 +77,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                 // Verify
                 Assert.AreSame(expectedViewInfo.ViewInstance, _navigationManagerImpl.ActiveView.ViewInstance);
                 Assert.AreEqual(expectedViewInfo.ViewInstanceKey, "view1#1");
-                Assert.IsTrue(_navigationManagerImpl.NbTotalViews == 1);
+                Assert.IsTrue(_navigationManagerImpl.NbViews == 1);
             }
 
             [TestMethod]
@@ -93,7 +93,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                 // Verify
                 Assert.AreSame(expectedViewInfo.ViewInstance, _navigationManagerImpl.ActiveView.ViewInstance);
                 Assert.AreEqual(expectedViewInfo.ViewInstanceKey, "view1");
-                Assert.IsTrue(_navigationManagerImpl.NbTotalViews == 2);
+                Assert.IsTrue(_navigationManagerImpl.NbViews == 2);
             }
 
             [TestMethod]
@@ -107,7 +107,7 @@ namespace GasyTek.Lakana.Navigation.Tests
 
                 // Verify
                 Assert.AreSame(expectedViewInfo.ViewInstance, _navigationManagerImpl.ActiveView.ViewInstance);
-                Assert.IsTrue(_navigationManagerImpl.NbTotalViews == 2);
+                Assert.IsTrue(_navigationManagerImpl.NbViews == 2);
                 Assert.IsNotNull(_navigationManagerImpl.ActiveNode.Previous);
                 Assert.AreSame(_navigationManagerImpl.ActiveNode.Previous.Value.ViewInstance, parentViewInfo.ViewInstance);
             }
@@ -126,11 +126,11 @@ namespace GasyTek.Lakana.Navigation.Tests
                 // Verify
                 Assert.AreSame(expectedViewInfo.ViewInstance, _navigationManagerImpl.ActiveView.ViewInstance);
                 Assert.AreEqual(expectedViewInfo.ViewInstanceKey, "view1");
-                Assert.IsTrue(_navigationManagerImpl.NbTotalViews == 3);
+                Assert.IsTrue(_navigationManagerImpl.NbViews == 3);
             }
 
             [TestMethod]
-            [ExpectedException(typeof(ParentViewNotFoundException))]
+            [ExpectedException(typeof(ParentViewInstanceNotFoundException))]
             public void CannotStackNewViewOnNotExistingView()
             {
                 // Prepare
@@ -142,7 +142,7 @@ namespace GasyTek.Lakana.Navigation.Tests
             }
 
             [TestMethod]
-            [ExpectedException(typeof(OnlyNewViewCanBeStackedException))]
+            [ExpectedException(typeof(OnlyNewViewInstanceCanBeStackedException))]
             public void CannotStackExistingViewOnDifferentParents()
             {
                 // Prepare
@@ -167,7 +167,7 @@ namespace GasyTek.Lakana.Navigation.Tests
 
                 // Verify
                 Assert.AreSame(expectedViewInfo.ViewInstance, _navigationManagerImpl.ActiveView.ViewInstance);
-                Assert.IsTrue(_navigationManagerImpl.NbTotalViews == 2);
+                Assert.IsTrue(_navigationManagerImpl.NbViews == 2);
                 Assert.IsNotNull(_navigationManagerImpl.ActiveNode.Previous);
                 Assert.AreSame(_navigationManagerImpl.ActiveNode.Previous.Value.ViewInstance, parentViewInfo.ViewInstance);
             }
@@ -184,7 +184,7 @@ namespace GasyTek.Lakana.Navigation.Tests
 
                 // Verify
                 Assert.AreSame(expectedViewInfo.ViewInstance, _navigationManagerImpl.ActiveView.ViewInstance);
-                Assert.IsTrue(_navigationManagerImpl.NbTotalViews == 1);
+                Assert.IsTrue(_navigationManagerImpl.NbViews == 1);
             }
 
             [TestMethod]
@@ -200,12 +200,12 @@ namespace GasyTek.Lakana.Navigation.Tests
 
                 // Verify
                 Assert.AreSame(expectedViewInfo.ViewInstance, _navigationManagerImpl.ActiveView.ViewInstance);
-                Assert.IsTrue(_navigationManagerImpl.NbTotalViews == 2);
+                Assert.IsTrue(_navigationManagerImpl.NbViews == 2);
                 Assert.IsNotNull(_navigationManagerImpl.ActiveNode.Previous);
                 Assert.AreSame(_navigationManagerImpl.ActiveNode.Previous.Value.ViewInstance, parentViewInfo.ViewInstance);
             }
 
-            [ExpectedException(typeof(ParentViewNotTopMostException))]
+            [ExpectedException(typeof(ParentViewInstanceNotTopMostException))]
             [TestMethod]
             public void CannotStackNewViewOnNotTopMostView()
             {
@@ -232,7 +232,7 @@ namespace GasyTek.Lakana.Navigation.Tests
 
                 // Verify
                 Assert.AreSame(expectedViewInfo.ViewInstance, _navigationManagerImpl.ActiveView.ViewInstance);
-                Assert.IsTrue(_navigationManagerImpl.NbTotalViews == 3);
+                Assert.IsTrue(_navigationManagerImpl.NbViews == 3);
             }
 
             [TestMethod]
@@ -248,13 +248,13 @@ namespace GasyTek.Lakana.Navigation.Tests
                 Assert.AreSame(expectedViewInfo.ViewInstance.DataContext, fakeViewModel);
             }
 
-            #region ViewKeyAware support
+            #region IViewKeyAware support
 
             [TestMethod]
             public void CanSupportViewKeyAwareViewModel()
             {
                 // Prepare
-                var fakeViewKeyAwareViewModel = new FakeViewKeyAwareViewModel();
+                var fakeViewKeyAwareViewModel = new FakeViewModel();
 
                 // Act
                 _navigationManagerImpl.NavigateTo("view1", fakeViewKeyAwareViewModel);
@@ -264,10 +264,23 @@ namespace GasyTek.Lakana.Navigation.Tests
             }
 
             [TestMethod]
+            public void CanSupportViewKeyAwareView()
+            {
+                // Prepare
+
+                // Act
+                var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1");
+
+                // Verify
+                Assert.IsNotNull(expectedViewInfo.UIMetadata);
+                Assert.AreEqual("ViewLabel", expectedViewInfo.UIMetadata.Label);
+            }
+
+            [TestMethod]
             public void CanSupportViewKeyAwareViewModelForStackedView()
             {
                 // Prepare
-                var fakeViewKeyAwareViewModel = new FakeViewKeyAwareViewModel();
+                var fakeViewKeyAwareViewModel = new FakeViewModel();
                 _navigationManagerImpl.NavigateTo("parentView1");
 
                 // Act
@@ -277,9 +290,52 @@ namespace GasyTek.Lakana.Navigation.Tests
                 Assert.AreEqual("view1", fakeViewKeyAwareViewModel.ViewInstanceKey);
             }
 
+            [TestMethod]
+            public void CanSupportViewKeyAwareViewForStackedView()
+            {
+                // Prepare
+                _navigationManagerImpl.NavigateTo("parentView1");
+
+                // Act
+                var expectedViewInfo = _navigationManagerImpl.NavigateTo("parentView1/view1");
+
+                // Verify
+                Assert.IsNotNull(expectedViewInfo.UIMetadata);
+                Assert.AreEqual("ViewLabel", expectedViewInfo.UIMetadata.Label);
+            }
+
             #endregion
 
+            #region IPresentable support
 
+            [TestMethod]
+            public void CanSupportPresentableViewModel()
+            {
+                // Prepare
+                var fakePresentableViewModel = new FakeViewModel();
+
+                // Act
+                var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1", fakePresentableViewModel);
+                
+                // Verify
+                Assert.IsNotNull(expectedViewInfo.UIMetadata);
+                Assert.AreEqual("Label", expectedViewInfo.UIMetadata.Label);
+            }
+
+            [TestMethod]
+            public void CanSupportPresentableView()
+            {
+                // Prepare
+
+                // Act
+                var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1");
+
+                // Verify
+                Assert.IsNotNull(expectedViewInfo.UIMetadata);
+                Assert.AreEqual("ViewLabel", expectedViewInfo.UIMetadata.Label);
+            }
+
+            #endregion
         }
 
         [TestClass]
@@ -367,7 +423,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                 var closedViewInfo = _navigationManagerImpl.Close("view1");
 
                 // Verify
-                Assert.IsTrue(_navigationManagerImpl.NbTotalViews == 0);
+                Assert.IsTrue(_navigationManagerImpl.NbViews == 0);
                 Assert.AreSame(viewInfo.ViewInstance, closedViewInfo.ViewInstance);
             }
 

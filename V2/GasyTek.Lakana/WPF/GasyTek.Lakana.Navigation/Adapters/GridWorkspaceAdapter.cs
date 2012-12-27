@@ -8,7 +8,6 @@ namespace GasyTek.Lakana.Navigation.Adapters
     internal class GridWorkspaceAdapter : IWorkspaceAdapter
     {
         private Grid _workspace;
-        private ViewStackCollection _viewStackCollection;
 
         public void SetMainWorkspace(Panel workspace)
         {
@@ -17,7 +16,6 @@ namespace GasyTek.Lakana.Navigation.Adapters
 
         public void SetViewStackCollection(ViewStackCollection viewStackCollection)
         {
-            _viewStackCollection = viewStackCollection;
         }
 
         public void PerformActivation(LinkedListNode<ViewInfo> activatedNode, LinkedListNode<ViewInfo> deactivatedNode)
@@ -32,19 +30,22 @@ namespace GasyTek.Lakana.Navigation.Adapters
 
             if (activatedNode != null)
             {
+                var zIndex = 10;
                 var activatedView = activatedNode.Value.InternalViewInstance;
                 activatedView.Visibility = Visibility.Visible;
+                activatedView.IsEnabled = true;
+                Panel.SetZIndex(activatedView, zIndex);
 
                 if (!_workspace.Children.Contains(activatedView))
                     _workspace.Children.Add(activatedView);
 
                 if (activatedNode.Value.IsModal)
                 {
-                    var zIndex = 0;
+                    zIndex = 0;
                     foreach (var viewInfo in activatedNode.List)
                     {
                         viewInfo.InternalViewInstance.Visibility = Visibility.Visible;
-                        viewInfo.InternalViewInstance.IsEnabled = viewInfo.InternalViewInstance == activatedView;
+                        viewInfo.InternalViewInstance.IsEnabled = Equals(viewInfo.InternalViewInstance, activatedView);
                         Panel.SetZIndex(viewInfo.InternalViewInstance, zIndex);
                         zIndex++;
                     }

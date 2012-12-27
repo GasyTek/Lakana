@@ -5,6 +5,9 @@ using System.Windows.Threading;
 
 namespace GasyTek.Lakana.Common.Extensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class UIExtensions
     {
         /// <summary>

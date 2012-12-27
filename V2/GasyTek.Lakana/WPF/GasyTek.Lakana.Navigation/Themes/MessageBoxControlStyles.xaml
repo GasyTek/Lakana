@@ -1,7 +1,7 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:lakana="clr-namespace:GasyTek.Lakana.Navigation.Controls"
-                    xmlns:Resources="clr-namespace:GasyTek.Lakana.Navigation.Resources">
+                    xmlns:resources="clr-namespace:GasyTek.Lakana.Navigation.Resources">
 
     <!-- MessageBoxControl styles -->
 
@@ -117,19 +117,19 @@
                                     HorizontalAlignment="Center">
                                 <StackPanel Orientation="Horizontal">
                                     <Button x:Name="PART_Yes"
-                                            Content="{x:Static Resources:Labels.Yes}"
+                                            Content="{x:Static resources:Labels.Yes}"
                                             Style="{DynamicResource {x:Static lakana:MessageBoxControl.YesButtonStyleKey}}"
                                             Visibility="Collapsed" />
                                     <Button x:Name="PART_No"
-                                            Content="{x:Static Resources:Labels.No}"
+                                            Content="{x:Static resources:Labels.No}"
                                             Style="{DynamicResource {x:Static lakana:MessageBoxControl.NoButtonStyleKey}}"
                                             Visibility="Collapsed" />
                                     <Button x:Name="PART_Ok"
-                                            Content="{x:Static Resources:Labels.Ok}"
+                                            Content="{x:Static resources:Labels.Ok}"
                                             Style="{DynamicResource {x:Static lakana:MessageBoxControl.OkButtonStyleKey}}"
                                             Visibility="Collapsed" />
                                     <Button x:Name="PART_Cancel"
-                                            Content="{x:Static Resources:Labels.Cancel}"
+                                            Content="{x:Static resources:Labels.Cancel}"
                                             Style="{DynamicResource {x:Static lakana:MessageBoxControl.CancelButtonStyleKey}}"
                                             Visibility="Collapsed" />
                                 </StackPanel>

@@ -3,7 +3,7 @@ using System.Windows;
 namespace GasyTek.Lakana.Navigation.Services
 {
     /// <summary>
-    /// A simple view locator that provides instance of views.
+    /// A view locator that registers and instantiate views.
     /// </summary>
     public interface IViewLocator
     {

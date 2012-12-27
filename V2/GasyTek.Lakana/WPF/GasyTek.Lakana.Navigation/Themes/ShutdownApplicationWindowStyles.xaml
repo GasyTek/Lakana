@@ -8,8 +8,8 @@
 
     <Style x:Key="{x:Static lakana:ShutdownApplicationWindow.ShutdownApplicationItemStyleKey}"
            TargetType="lakana:ShutdownApplicationItem">
-        <Setter Property="TargetViewKey"
-                Value="{Binding ViewKey, Mode=OneWay}" />
+        <Setter Property="TargetViewInstanceKey"
+                Value="{Binding ViewInstanceKey, Mode=OneWay}" />
         <Setter Property="BorderThickness"
                 Value="1" />
         <Setter Property="BorderBrush"

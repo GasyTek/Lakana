@@ -7,6 +7,9 @@ namespace GasyTek.Lakana.Common.Base
     /// </summary>
     public class NotifyPropertyChangedBase : INotifyPropertyChanged
     {
+        /// <summary>
+        /// Occurs when property changed.
+        /// </summary>
         public virtual event PropertyChangedEventHandler PropertyChanged;
 
         protected internal virtual void RaisePropertyChanged(string propertyName)
