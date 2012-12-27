@@ -35,8 +35,8 @@ namespace GasyTek.Lakana.Navigation.Controls
 
         #region Dependency properties
 
-        public static readonly DependencyProperty TargetViewKeyProperty =
-            DependencyProperty.Register("TargetViewKey", typeof(string), typeof(ShutdownApplicationItem), new PropertyMetadata(default(string)));
+        public static readonly DependencyProperty TargetViewInstanceKeyProperty =
+            DependencyProperty.Register("TargetViewInstanceKey", typeof(string), typeof(ShutdownApplicationItem), new PropertyMetadata(default(string)));
 
         #endregion
 
@@ -44,10 +44,10 @@ namespace GasyTek.Lakana.Navigation.Controls
 
         internal INavigationManager NavigationManager { get; set; }
 
-        public string TargetViewKey
+        public string TargetViewInstanceKey
         {
-            get { return (string)GetValue(TargetViewKeyProperty); }
-            set { SetValue(TargetViewKeyProperty, value); }
+            get { return (string)GetValue(TargetViewInstanceKeyProperty); }
+            set { SetValue(TargetViewInstanceKeyProperty, value); }
         }
 
         #endregion
@@ -64,9 +64,9 @@ namespace GasyTek.Lakana.Navigation.Controls
             Click += (sender, args) =>
                               {
                                   if (NavigationManager == null) return;
-                                  if (string.IsNullOrEmpty(TargetViewKey)) return;
+                                  if (string.IsNullOrEmpty(TargetViewInstanceKey)) return;
                                   RaiseEvent(new RoutedEventArgs(TargetViewSelectedEvent));
-                                  NavigationManager.NavigateTo(TargetViewKey);
+                                  NavigationManager.NavigateTo(TargetViewInstanceKey);
                               };
         }
 

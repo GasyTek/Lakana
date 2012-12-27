@@ -32,6 +32,15 @@ namespace GasyTek.Lakana.Navigation.Services
         ModalResult<TResult> ShowModal<TResult>(string navigationKey);
 
         /// <summary>
+        /// Shows the modal.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="navigationKey">The navigation key.</param>
+        /// <param name="viewModel">The view model to be associated to the opened view.</param>
+        /// <returns></returns>
+        ModalResult<TResult> ShowModal<TResult>(string navigationKey, object viewModel);
+
+        /// <summary>
         /// Shows the message box.
         /// </summary>
         /// <param name="ownerViewKey">The parent instance key.</param>

@@ -35,15 +35,15 @@ namespace Samples.GasyTek.Lakana.Navigation
 
         private void OpenViewClick(object sender, RoutedEventArgs e)
         {
-            //var frameworkElement = e.OriginalSource as FrameworkElement;
-            //if (frameworkElement == null) return;
+            var frameworkElement = e.OriginalSource as FrameworkElement;
+            if (frameworkElement == null) return;
 
-            //var viewInfo = (ViewInfo) frameworkElement.DataContext;
-            //if(viewInfo != ViewInfo.Null)
-            //{
-            //    // HOW TO : navigate to a previously opened view
-            //    NavigationManager.NavigateTo(viewInfo.ViewInstanceKey);
-            //}
+            var viewInfo = (ViewInfo)frameworkElement.DataContext;
+            if (viewInfo != ViewInfo.Null)
+            {
+                // HOW TO : navigate to a previously opened view
+                NavigationManager.NavigateTo(viewInfo.ViewInstanceKey);
+            }
         }
 
         private void MenuItemClick(object sender, RoutedEventArgs e)

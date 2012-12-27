@@ -18,7 +18,8 @@
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
             <TextBlock Text="Mail to : "
-                       Margin="8" />
+                       Margin="8" 
+                       Foreground="White" />
             <TextBox Grid.Column="1" 
                      Text="gasytek@gmail.com"
                      VerticalAlignment="Center" />

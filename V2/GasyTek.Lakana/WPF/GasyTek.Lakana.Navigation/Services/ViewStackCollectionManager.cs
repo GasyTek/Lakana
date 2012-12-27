@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace GasyTek.Lakana.Navigation.Services
@@ -6,22 +7,27 @@ namespace GasyTek.Lakana.Navigation.Services
     public class ViewStackCollectionManager
     {
         private readonly ViewStackCollection _viewStackCollection;
+        private readonly ObservableCollection<ViewInfo> _viewCollection;
+        private readonly ReadOnlyObservableCollection<ViewInfo> _readOnlyViewCollection;
 
         #region Properties
 
-        public IEnumerable<ViewInfo> ViewCollection
+        public ReadOnlyObservableCollection<ViewInfo> ViewCollection
         {
             get
             {
-                return (from stack in _viewStackCollection
-                        from v in stack
-                        select v).ToList();
+                return _readOnlyViewCollection;
             }
         }
 
         public int NbViews
         {
             get { return _viewStackCollection.Sum(v => v.Count); }
+        }
+
+        public ViewStackCollection ViewStackCollection
+        {
+            get { return _viewStackCollection; }
         }
 
         #endregion
@@ -31,6 +37,8 @@ namespace GasyTek.Lakana.Navigation.Services
         internal ViewStackCollectionManager()
         {
             _viewStackCollection = new ViewStackCollection();
+            _viewCollection = new ObservableCollection<ViewInfo>();
+            _readOnlyViewCollection = new ReadOnlyObservableCollection<ViewInfo>(_viewCollection);
         }
 
         #endregion
@@ -79,6 +87,9 @@ namespace GasyTek.Lakana.Navigation.Services
                 newStack.AddLast(newNode);
                 _viewStackCollection.AddLast(newStack);
             }
+
+            if (!newNode.Value.IsMessageBox)
+                _viewCollection.Add(newNode.Value);
         }
 
         internal LinkedListNode<ViewInfo> FindViewNode(string viewInstanceKey)
@@ -88,7 +99,7 @@ namespace GasyTek.Lakana.Navigation.Services
             {
                 return node;
             }
-            throw new ViewNotFoundException(viewInstanceKey);
+            throw new ViewInstanceNotFoundException(viewInstanceKey);
         }
 
         internal bool ContainsViewNode(string viewInstanceKey)
@@ -118,6 +129,8 @@ namespace GasyTek.Lakana.Navigation.Services
 
                 if (stack.Count == 0)
                     _viewStackCollection.Remove(stack);
+
+                _viewCollection.Remove(node.Value);
             }
 
             return node;
@@ -164,11 +177,11 @@ namespace GasyTek.Lakana.Navigation.Services
 
     public class ViewStack : LinkedList<ViewInfo>
     {
-        
+
     }
 
     public class ViewStackCollection : LinkedList<ViewStack>
     {
-        
+
     }
 }

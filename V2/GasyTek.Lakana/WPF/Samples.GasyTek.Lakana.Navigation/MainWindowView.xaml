@@ -32,7 +32,7 @@
                           IsChecked="True" />
             </MenuItem>
             <MenuItem Header="Current Views"
-                      ItemsSource="{Binding OpenedViews}" 
+                      ItemsSource="{Binding Views}" 
                       MenuItem.Click="OpenViewClick">
                 <MenuItem.ItemTemplate>
                     <DataTemplate>

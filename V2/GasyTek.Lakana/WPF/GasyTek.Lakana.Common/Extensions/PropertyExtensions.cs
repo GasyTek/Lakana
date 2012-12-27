@@ -4,6 +4,9 @@ using System.Reflection;
 
 namespace GasyTek.Lakana.Common.Extensions
 {
+    /// <summary>
+    /// Extension methods
+    /// </summary>
     public static class PropertyExtensions
     {
         /// <summary>
@@ -17,7 +20,7 @@ namespace GasyTek.Lakana.Common.Extensions
         private static string GetPropertyNameCore(Expression propertyRefExpr)
         {
             if (propertyRefExpr == null)
-                throw new ArgumentNullException("propertyRefExpr", "propertyRefExpr is null.");
+                throw new ArgumentNullException("propertyRefExpr", @"propertyRefExpr is null.");
 
             var memberExpr = propertyRefExpr as MemberExpression;
             if (memberExpr == null)
@@ -30,7 +33,7 @@ namespace GasyTek.Lakana.Common.Extensions
             if (memberExpr != null && memberExpr.Member.MemberType == MemberTypes.Property)
                 return memberExpr.Member.Name;
 
-            throw new ArgumentException("No property reference expression was found.",
+            throw new ArgumentException(@"No property reference expression was found.",
                                         "propertyRefExpr");
         }
 
@@ -48,7 +51,7 @@ namespace GasyTek.Lakana.Common.Extensions
 
             if (body.NodeType != ExpressionType.MemberAccess)
             {
-                throw new ArgumentException("Property expression must be of the form 'x => x.SomeProperty'", "expression");
+                throw new ArgumentException(@"Property expression must be of the form 'x => x.SomeProperty'", "expression");
             }
 
             // Cast the expression to the appropriate type

@@ -5,23 +5,26 @@ using GasyTek.Lakana.Navigation.Attributes;
 namespace GasyTek.Lakana.Navigation.Services
 {
     /// <summary>
-    /// Thrown when view is not found.
+    /// Thrown when view instance is not found.
     /// </summary>
-    public class ViewNotFoundException : ApplicationException
+    public class ViewInstanceNotFoundException : ApplicationException
     {
-        public ViewNotFoundException()
+        public ViewInstanceNotFoundException()
         {
         }
 
-        public ViewNotFoundException(string viewkey) 
+        public ViewInstanceNotFoundException(string viewkey) 
             : base("Instance with key " + viewkey + " was not found")
         {
         }
     }
 
-    public class ParentViewNotFoundException : ViewNotFoundException
+    /// <summary>
+    /// Thrown when parent view instance is not found.
+    /// </summary>
+    public class ParentViewInstanceNotFoundException : ViewInstanceNotFoundException
     {
-        public ParentViewNotFoundException(string viewkey)
+        public ParentViewInstanceNotFoundException(string viewkey)
             : base(viewkey)
         {
         }
@@ -30,9 +33,9 @@ namespace GasyTek.Lakana.Navigation.Services
     /// <summary>
     /// Thrown when the parent view on which we want to add child is not the top most on the stack of views.
     /// </summary>
-    public class ParentViewNotTopMostException : ApplicationException
+    public class ParentViewInstanceNotTopMostException : ApplicationException
     {
-        public ParentViewNotTopMostException(string viewkey) 
+        public ParentViewInstanceNotTopMostException(string viewkey) 
             : base("Parent view with key " + viewkey + " is not top most")
         {
         }
@@ -42,9 +45,9 @@ namespace GasyTek.Lakana.Navigation.Services
     /// Thrown when the user tries to stack existing view instance onto another view.
     /// Only new view are allowed to be linked with a parent.
     /// </summary>
-    public class OnlyNewViewCanBeStackedException : ApplicationException
+    public class OnlyNewViewInstanceCanBeStackedException : ApplicationException
     {
-        public OnlyNewViewCanBeStackedException(string viewkey, string parentViewKey)
+        public OnlyNewViewInstanceCanBeStackedException(string viewkey, string parentViewKey)
             : base("The view with key " + viewkey + " can't be attached to parent view with key " + parentViewKey + " because the view already exists and is not modifiable")
         {
         }
@@ -53,6 +56,7 @@ namespace GasyTek.Lakana.Navigation.Services
     /// <summary>
     /// Thrown when the specified view key was not found.
     /// </summary>
+    /// <remarks>Views are identified by view key that is used by the <see cref="IViewLocator"/> to instantiate it.</remarks>
     public class ViewKeyNotFoundException : ApplicationException
     {
         public ViewKeyNotFoundException(string viewKey)

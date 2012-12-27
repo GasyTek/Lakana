@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using GasyTek.Lakana.Common.UI;
 using GasyTek.Lakana.Navigation.Adapters;
 using GasyTek.Lakana.Navigation.Controls;
 
@@ -42,7 +43,7 @@ namespace GasyTek.Lakana.Navigation.Services
             get { return _viewStackCollectionManager.GetActiveNode(); }
         }
 
-        internal int NbTotalViews
+        internal int NbViews
         {
             get { return _viewStackCollectionManager.NbViews; }
         }
@@ -168,18 +169,19 @@ namespace GasyTek.Lakana.Navigation.Services
 
             LinkedListNode<ViewInfo> newNode;
 
-            // if the navigation key has a complex form : "view"
+            // if the navigation key has a complex form e.g : "parentView/view"
 
             if (hasParent)
             {
                 if (_viewStackCollectionManager.TryFindViewNode(viewInstanceKey, out newNode))
                 {
+                    // activates an existing node
                     EnsuresViewHasParentAndMatch(newNode, parentViewInstanceKey);
-
                     _viewStackCollectionManager.ActivateExistingNode(newNode);
                 }
                 else
                 {
+                    // activates a new node
                     EnsureParentViewExist(parentViewInstanceKey);
                     EnsureParentViewIsTopMost(parentViewInstanceKey);
 
@@ -195,15 +197,17 @@ namespace GasyTek.Lakana.Navigation.Services
                 return newNode.Value;
             }
 
-            // if the navigation key has a simple form : "view"
+            // if the navigation key has a simple form e.g : "view"
 
             if (_viewStackCollectionManager.TryFindViewNode(viewInstanceKey, out newNode))
             {
+                // activates an existing node
                 newNode = _viewStackCollectionManager.IsTopMostView(viewInstanceKey) ? newNode : newNode.List.Last;
                 _viewStackCollectionManager.ActivateExistingNode(newNode);
             }
             else
             {
+                // activates a new node
                 newNode = CreateNewNodeFrom(viewInstanceKey, viewKey, viewModel, isModal, isMessageBox);
                 _viewStackCollectionManager.ActivateNewNode(newNode);
             }
@@ -225,9 +229,7 @@ namespace GasyTek.Lakana.Navigation.Services
 
             _workspaceAdapter = workspaceAdapter;
             _workspaceAdapter.SetMainWorkspace(mainWorkspace);
-
-            // TODO : do we really need to pass the viewstackcollection ?
-            //_workspaceAdapter.SetViewStackCollection(_viewStackCollectionManager.Vi);
+            _workspaceAdapter.SetViewStackCollection(_viewStackCollectionManager.ViewStackCollection);
 
             _viewLocator.RegisterApplicationViews();
         }
@@ -267,9 +269,10 @@ namespace GasyTek.Lakana.Navigation.Services
                 modalHost.ModalContent = viewInstance;
                 internalViewInstance = modalHost;
             }
-
+           
             var viewInfo = new ViewInfo(viewInstanceKey)
                        {
+                           UIMetadata = GetUIMetadata(viewInstance, viewModel),
                            InternalViewInstance = internalViewInstance,
                            ViewInstance = viewInstance,
                            ViewModelInstance = viewModel,
@@ -280,25 +283,44 @@ namespace GasyTek.Lakana.Navigation.Services
             return new LinkedListNode<ViewInfo>(viewInfo);
         }
 
+        private IUIMetadata GetUIMetadata(object view, object viewModel)
+        {
+            IUIMetadata uiMetadata = null;
+
+            var presentable = view as IPresentable;
+            if (presentable != null)
+            {
+                uiMetadata = presentable.UIMetadata;
+            }
+
+            presentable = viewModel as IPresentable;
+            if (presentable != null)
+            {
+                uiMetadata = presentable.UIMetadata;
+            }
+
+            return uiMetadata;
+        }
+
         private void EnsuresViewHasParentAndMatch(LinkedListNode<ViewInfo> node, string expectedParentViewInstanceKey)
         {
             var expectedParentView = new ViewInfo(expectedParentViewInstanceKey);
             if (node.Previous == null || (node.Previous != null && node.Previous.Value != expectedParentView))
             {
-                throw new OnlyNewViewCanBeStackedException(node.Value.ViewInstanceKey, expectedParentViewInstanceKey);
+                throw new OnlyNewViewInstanceCanBeStackedException(node.Value.ViewInstanceKey, expectedParentViewInstanceKey);
             }
         }
 
         private void EnsureParentViewIsTopMost(string parentViewInstanceKey)
         {
             if (_viewStackCollectionManager.IsTopMostView(parentViewInstanceKey) == false)
-                throw new ParentViewNotTopMostException(parentViewInstanceKey);
+                throw new ParentViewInstanceNotTopMostException(parentViewInstanceKey);
         }
 
         private void EnsureParentViewExist(string parentViewInstanceKey)
         {
             if (_viewStackCollectionManager.ContainsViewNode(parentViewInstanceKey) == false)
-                throw new ParentViewNotFoundException(parentViewInstanceKey);
+                throw new ParentViewInstanceNotFoundException(parentViewInstanceKey);
         }
 
         #endregion
@@ -316,54 +338,6 @@ namespace GasyTek.Lakana.Navigation.Services
             var viewKeyAwareViewModel = viewModel as IViewKeyAware;
             if (viewKeyAwareViewModel != null)
                 viewKeyAwareViewModel.ViewInstanceKey = viewInstanceKey;
-        }
-
-        #endregion
-
-        #region IActiveAware helper
-
-        private void EnforceOnActivating(FrameworkElement view, object viewModel)
-        {
-            // Notifies activation on the view 
-            var activeAwareView = view as IActiveAware;
-            if (activeAwareView != null) activeAwareView.OnActivating();
-
-            // Notifies activation on the view model
-            var activeAwareViewModel = viewModel as IActiveAware;
-            if (activeAwareViewModel != null) activeAwareViewModel.OnActivating();
-        }
-
-        private void EnforceOnActivated(FrameworkElement view, object viewModel)
-        {
-            // Notifies activation on the view 
-            var activeAwareView = view as IActiveAware;
-            if (activeAwareView != null) activeAwareView.OnActivated();
-
-            // Notifies activation on the view model
-            var activeAwareViewModel = viewModel as IActiveAware;
-            if (activeAwareViewModel != null) activeAwareViewModel.OnActivated();
-        }
-
-        private void EnforceOnDeactivating(FrameworkElement view, object viewModel)
-        {
-            // Notifies deactivation on the view 
-            var activeAwareView = view as IActiveAware;
-            if (activeAwareView != null) activeAwareView.OnDeactivating();
-
-            // Notifies deactivation on the view model
-            var activeAwareViewModel = viewModel as IActiveAware;
-            if (activeAwareViewModel != null) activeAwareViewModel.OnDeactivating();
-        }
-
-        private void EnforceOnDeactivated(FrameworkElement view, object viewModel)
-        {
-            // Notifies deactivation on the view 
-            var activeAwareView = view as IActiveAware;
-            if (activeAwareView != null) activeAwareView.OnDeactivated();
-
-            // Notifies deactivation on the view model
-            var activeAwareViewModel = viewModel as IActiveAware;
-            if (activeAwareViewModel != null) activeAwareViewModel.OnDeactivated();
         }
 
         #endregion

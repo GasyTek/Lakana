@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using GasyTek.Lakana.Navigation.Adapters;
 using GasyTek.Lakana.Navigation.Services;
-using GasyTek.Lakana.Navigation.Tests.Fakes;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GasyTek.Lakana.Navigation.Tests
@@ -12,8 +10,8 @@ namespace GasyTek.Lakana.Navigation.Tests
     public class GridWorkspaceAdapterFixture
     {
         private Grid _workspace;
-        private GridWorkspaceAdapter _workspaceAdapter;
         private ViewStackCollection _viewStackCollection;
+        private GridWorkspaceAdapter _workspaceAdapter;
 
         [TestInitialize]
         public void OnSetup()
@@ -44,6 +42,39 @@ namespace GasyTek.Lakana.Navigation.Tests
             }
 
             [TestMethod]
+            public void ActivatedViewHasHigherZIndex()
+            {
+                // Prepare
+                var view = new UserControl();
+                var viewStack = new ViewStack();
+                viewStack.AddLast(new ViewInfo("view1") { InternalViewInstance = view });
+
+                // Act
+                _workspaceAdapter.PerformActivation(viewStack.Last, null);
+
+                // Verify
+                Assert.IsTrue(Panel.GetZIndex(_workspace.Children[0]) > 0);
+            }
+
+            [TestMethod]
+            public void ActivatedModalAncestorsHaveAscendingSortedZIndex()
+            {
+                // Prepare
+                var parentView = new UserControl();
+                var view = new UserControl();
+                var viewStack = new ViewStack();
+                viewStack.AddLast(new ViewInfo("parentView1") { InternalViewInstance = parentView });
+                viewStack.AddLast(new ViewInfo("view1") { InternalViewInstance = view, IsModal = true });
+
+                // Act
+                _workspaceAdapter.PerformActivation(viewStack.Last, null);
+
+                // Verify
+                Assert.IsTrue(Panel.GetZIndex(parentView) < Panel.GetZIndex(view));
+
+            }
+            
+            [TestMethod]
             public void ActivatedModalAncestorsVisibleAndDisabled()
             {
                 // Prepare
@@ -61,11 +92,10 @@ namespace GasyTek.Lakana.Navigation.Tests
                 Assert.IsFalse(parentView.IsEnabled);
                 Assert.IsTrue(view.Visibility == Visibility.Visible);
                 Assert.IsTrue(view.IsEnabled);
-                Assert.IsTrue(Panel.GetZIndex(parentView) < Panel.GetZIndex(view));
             }
 
             [TestMethod]
-            public void DeactivatedViewIsHidden()
+            public void DeactivatedViewIsNotVisible()
             {
                 // Prepare
                 var view = new UserControl();
@@ -138,7 +168,7 @@ namespace GasyTek.Lakana.Navigation.Tests
             }
 
             [TestMethod]
-            public void ClosedModalViewParentIsEnabled()
+            public void ClosedModalViewParentIsReEnabled()
             {
                 // Prepare
                 var parentView = new UserControl();

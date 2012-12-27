@@ -39,7 +39,6 @@ namespace GasyTek.Lakana.Navigation.Services
                             select new Mapping  { ViewType = type, ViewAttribute = attr }).ToList();
 
             EnsuresAllKeysAreNotNullOrEmpty(mappings);
-
             EnsuresEachKeyIsUnique(mappings);
 
             foreach (var map in mappings)

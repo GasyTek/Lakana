@@ -90,12 +90,10 @@
     <Compile Include="Services\INavigationManager.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\INavigationManager2.cs" />
     <Compile Include="Services\IPresentable.cs" />
     <Compile Include="Services\IViewKeyAware.cs" />
     <Compile Include="Services\IViewLocator.cs" />
     <Compile Include="Services\ModalResult.cs" />
-    <Compile Include="Services\NavigationInfo.cs" />
     <Compile Include="Services\NavigationManager.cs" />
     <Compile Include="Services\NavigationManagerImpl.cs" />
     <Compile Include="Services\TransitionAnimationProvider.cs" />
