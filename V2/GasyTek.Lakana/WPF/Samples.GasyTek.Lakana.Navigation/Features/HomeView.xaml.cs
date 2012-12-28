@@ -27,7 +27,7 @@ namespace Samples.GasyTek.Lakana.Navigation.Features
 
         private void UserControl_Loaded(object sender, System.Windows.RoutedEventArgs e)
         {
-            contentRun.Text = GetDescription();
+            ContentRun.Text = GetDescription();
         }
 
         public string GetDescription()

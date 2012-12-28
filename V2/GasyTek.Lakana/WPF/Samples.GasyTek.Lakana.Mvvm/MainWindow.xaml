@@ -1,26 +1,26 @@
 ﻿<Window x:Class="Samples.GasyTek.Lakana.Mvvm.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:VewModelProperties="clr-namespace:Samples.GasyTek.Lakana.Mvvm.VewModelProperties"
-        xmlns:DataAnnotation="clr-namespace:Samples.GasyTek.Lakana.Mvvm.Validation.DataAnnotation"
-        xmlns:Fluent="clr-namespace:Samples.GasyTek.Lakana.Mvvm.Validation.Fluent"
-        xmlns:Custom="clr-namespace:Samples.GasyTek.Lakana.Mvvm.Validation.Custom" Width="800" Height="600">
+        xmlns:vewModelProperties="clr-namespace:Samples.GasyTek.Lakana.Mvvm.VewModelProperties"
+        xmlns:dataAnnotation="clr-namespace:Samples.GasyTek.Lakana.Mvvm.Validation.DataAnnotation"
+        xmlns:fluent="clr-namespace:Samples.GasyTek.Lakana.Mvvm.Validation.Fluent"
+        xmlns:custom="clr-namespace:Samples.GasyTek.Lakana.Mvvm.Validation.Custom" Width="800" Height="600">
     <TabControl Margin="5" >
 
         <TabItem Header="- Sample 1 : View model properties">
-            <VewModelProperties:SampleViewModelPropertyView />
+            <vewModelProperties:SampleViewModelPropertyView />
         </TabItem>
 
         <TabItem Header="- Sample 2 : Validation ">
             <TabControl>
                 <TabItem Header="DataAnnotation">
-                    <DataAnnotation:SampleDataAnnotationValidationView />
+                    <dataAnnotation:SampleDataAnnotationValidationView />
                 </TabItem>
                 <TabItem Header="Fluent">
-                    <Fluent:SampleFluentValidationView />
+                    <fluent:SampleFluentValidationView />
                 </TabItem>
                 <TabItem Header="Custom">
-                    <Custom:SampleCustomValidationView />
+                    <custom:SampleCustomValidationView />
                 </TabItem>
             </TabControl>
         </TabItem>

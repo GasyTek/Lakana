@@ -29,7 +29,7 @@ namespace Samples.GasyTek.Lakana.Screens
                 .Otherwise("Phone number is required.");
             Property<string>(vm => vm.PhoneNumber).Has.MaxLength(4)
                 .Otherwise("Phone number should not exceed 4 characters.");
-            Property<string>(vm => vm.PhoneNumber).Is.Valid((phoneNumber, token) => WebService.IsPhoneUnique((string)phoneNumber))
+            Property<string>(vm => vm.PhoneNumber).Is.Valid((phoneNumber, token) => WebService.IsPhoneUnique(phoneNumber))
                 .Otherwise("Phone number already exist.");
             
         }

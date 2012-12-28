@@ -4,6 +4,9 @@ using System.Threading;
 
 namespace Samples.GasyTek.Lakana.Model
 {
+    /// <summary>
+    /// A fake web service.
+    /// </summary>
     public static class WebService
     {
         public static bool IsPhoneUnique(string phone)

@@ -115,7 +115,7 @@
                      Style="{DynamicResource TextBoxStyle}" />
 
             <!-- Date of birth -->
-            <TextBlock Grid.Row="9"
+           <TextBlock Grid.Row="9"
                        Text="Date of Birth"
                        Style="{DynamicResource FieldTitleStyle}"
                        Grid.Column="1" />
@@ -158,4 +158,5 @@
 
         </Grid>
     </DockPanel>
+    
 </UserControl>

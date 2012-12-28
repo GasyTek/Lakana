@@ -15,9 +15,11 @@ namespace GasyTek.Lakana.Mvvm.Tests
         [TestInitialize]
         public void OnSetup()
         {
-            var fakeEditableViewModel = new FakeEditableViewModel();
-            fakeEditableViewModel.ValidationEngineProvider = () => new DataAnnotationValidationEngine();
-            fakeEditableViewModel.Model = new Product { Code = "PR001", Quantity = 10 };
+            var fakeEditableViewModel = new FakeEditableViewModel
+                {
+                    ValidationEngineProvider = () => new DataAnnotationValidationEngine(),
+                    Model = new Product {Code = "PR001", Quantity = 10}
+                };
 
             TestContext.Properties.Add(FakeEditableViewModelProperty, fakeEditableViewModel);
         }

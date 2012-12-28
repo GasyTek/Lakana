@@ -11,7 +11,7 @@
         Background="{DynamicResource WindowBackgroundBrush}">
 
     <DockPanel>
-        <Menu x:Name="mainMenu" DockPanel.Dock="Top">          
+        <Menu x:Name="MainMenu" DockPanel.Dock="Top">          
             <MenuItem Header="File">                
                 <MenuItem Header="Home"
                           Command="{Binding OpenHomeCommand}" />
@@ -23,10 +23,10 @@
                           Command="{Binding OpenProductListCommand}" />
             </MenuItem>
             <MenuItem Header="Select Transition" MenuItem.Click="MenuItemClick">
-                <MenuItem x:Name="menuNoAnimation"
+                <MenuItem x:Name="MenuNoAnimation"
                           Header="No animation" 
                           IsCheckable="True" />
-                <MenuItem x:Name="menuFade"
+                <MenuItem x:Name="MenuFade"
                           Header="Fade"
                           IsCheckable="True" 
                           IsChecked="True" />

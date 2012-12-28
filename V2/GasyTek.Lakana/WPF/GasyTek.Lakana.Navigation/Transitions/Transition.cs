@@ -30,7 +30,7 @@ namespace GasyTek.Lakana.Navigation.Transitions
         {
             const double animationDuration = 200;
 
-            if (currentView == newView) return null;
+            if (Equals(currentView, newView)) return null;
 
             Storyboard transitionAnimation;
 

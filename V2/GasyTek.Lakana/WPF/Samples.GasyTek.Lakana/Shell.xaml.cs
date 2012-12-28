@@ -14,9 +14,9 @@ namespace Samples.GasyTek.Lakana
     /// </summary>
     public partial class Shell
     {
-        public ICommand HomeCommand { get; private set;}
-        public ICommand ContactListCommand { get; private set;}
-        public ICommand AboutCommand { get; private set;}
+        public ICommand HomeCommand { get; private set; }
+        public ICommand ContactListCommand { get; private set; }
+        public ICommand AboutCommand { get; private set; }
 
         public Shell()
         {
@@ -35,39 +35,20 @@ namespace Samples.GasyTek.Lakana
 
         private void InitializeCommands()
         {
-            HomeCommand = new SimpleCommand(param =>
-            {
-                var navigationInfo = NavigationInfo.CreateSimple(ScreenId.Home);
-                Singletons.NavigationServiceInstance.NavigateTo<HomeView>(navigationInfo);
-            });
-
-            ContactListCommand = new SimpleCommand(param =>
-            {
-                var navigationInfo = NavigationInfo.CreateSimple(ScreenId.ContactList, new ContactListViewModel());
-                Singletons.NavigationServiceInstance.NavigateTo<ContactListView>(navigationInfo);
-            });
-
-            AboutCommand = new SimpleCommand(param =>
-            {
-                var navigationInfo = NavigationInfo.CreateSimple(ScreenId.About);
-                Singletons.NavigationServiceInstance.NavigateTo<AboutView>(navigationInfo);
-            });
+            HomeCommand = new SimpleCommand(param => NavigationManager.NavigateTo(ScreenId.Home));
+            ContactListCommand = new SimpleCommand(param => NavigationManager.NavigateTo(ScreenId.ContactList, new ContactListViewModel()));
+            AboutCommand = new SimpleCommand(param => NavigationManager.NavigateTo(ScreenId.About));
         }
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
-            // Initializes the navigation service
-            Singletons.NavigationServiceInstance.Initialize(Workspace);
-            Singletons.NavigationServiceInstance.ChangeTransitionAnimation(Transition.NoTransition);
-
             // Navigate to "Home" screen first
-            var navigationInfo = NavigationInfo.CreateSimple(ScreenId.Home);
-            Singletons.NavigationServiceInstance.NavigateTo<HomeView>(navigationInfo);
+            NavigationManager.NavigateTo(ScreenId.Home);
         }
 
         private void CloseCommandHandler(object sender, ExecutedRoutedEventArgs e)
         {
-            Singletons.NavigationServiceInstance.CloseApplication();
+            NavigationManager.CloseApplication();
         }
     }
 }

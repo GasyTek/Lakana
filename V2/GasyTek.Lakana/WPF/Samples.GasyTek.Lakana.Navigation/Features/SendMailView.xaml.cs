@@ -18,7 +18,7 @@ namespace Samples.GasyTek.Lakana.Navigation.Features
 
         private void CloseClick(object sender, RoutedEventArgs e)
         {
-            NavigationManager.Close(ViewId.SendMail, txtModalResult.Text);
+            NavigationManager.Close(ViewId.SendMail, TxtModalResult.Text);
         }
     }
 }

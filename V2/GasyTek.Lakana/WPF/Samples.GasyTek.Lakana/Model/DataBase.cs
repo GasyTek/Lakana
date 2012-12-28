@@ -4,6 +4,9 @@ using System.Linq;
 
 namespace Samples.GasyTek.Lakana.Model
 {
+    /// <summary>
+    /// A fake database
+    /// </summary>
     public static class Database
     {
         private static List<Contact> _contacts;

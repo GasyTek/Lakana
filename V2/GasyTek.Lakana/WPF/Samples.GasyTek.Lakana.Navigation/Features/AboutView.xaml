@@ -28,7 +28,7 @@
                                   Margin="0,0,0,5">
             <FlowDocument>
                 <Paragraph>
-                    <Run x:Name="description"
+                    <Run x:Name="Description"
                          FontFamily="Segoe"
                          FontSize="12"
                          Foreground="White" />
@@ -40,7 +40,7 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
 
-            <TextBlock x:Name="txtDisplayModalResult"
+            <TextBlock x:Name="TxtDisplayModalResult"
                        Text="Modal Result will be displayed here"
                        Foreground="LightBlue"
                        HorizontalAlignment="Center"
