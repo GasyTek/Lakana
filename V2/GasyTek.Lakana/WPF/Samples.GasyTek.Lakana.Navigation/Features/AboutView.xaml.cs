@@ -38,13 +38,13 @@ namespace Samples.GasyTek.Lakana.Navigation.Features
             var modalResult = NavigationManager.ShowModal<string>(ViewId.About + "/" + ViewId.SendMail);
             modalResult.AsyncResult.ContinueWith(r =>
                                                 {
-                                                    txtDisplayModalResult.Text = "Modal Result : " + r.Result;
+                                                    TxtDisplayModalResult.Text = "Modal Result : " + r.Result;
                                                 }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            description.Text = GetDescription();
+            Description.Text = GetDescription();
         }
 
         private string GetDescription()

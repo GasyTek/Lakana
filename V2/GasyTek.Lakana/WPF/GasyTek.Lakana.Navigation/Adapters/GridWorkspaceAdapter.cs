@@ -51,6 +51,12 @@ namespace GasyTek.Lakana.Navigation.Adapters
                     }
                 }
             }
+
+            //var aView = activatedNode != null ? activatedNode.Value.InternalViewInstance : null;
+            //var dView = deactivatedNode != null ? deactivatedNode.Value.InternalViewInstance : null;
+
+            //var storyboard = Transitions.Transition.FadeTransition(dView, aView);
+            //storyboard.Begin();
         }
 
         public void PerformClose(LinkedListNode<ViewInfo> activatedNode, LinkedListNode<ViewInfo> closedNode)

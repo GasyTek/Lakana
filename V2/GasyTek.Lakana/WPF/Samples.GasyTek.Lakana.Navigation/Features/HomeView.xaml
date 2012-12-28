@@ -18,7 +18,7 @@
                      Foreground="#FCF7A30A" />
             </Paragraph>
             <Paragraph>
-                <Run x:Name="contentRun"
+                <Run x:Name="ContentRun"
                      FontFamily="Segoe"
                      FontSize="12"
                      Foreground="White" />

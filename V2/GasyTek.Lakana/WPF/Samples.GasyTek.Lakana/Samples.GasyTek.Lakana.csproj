@@ -72,7 +72,6 @@
     </Compile>
     <Compile Include="Screens\ContactViewModelValidation.cs" />
     <Compile Include="Utils\ScreenId.cs" />
-    <Compile Include="Utils\Singletons.cs" />
     <Page Include="Resources\IconsResources.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

@@ -6,13 +6,12 @@ using GasyTek.Lakana.Mvvm.ViewModelProperties;
 using GasyTek.Lakana.Mvvm.ViewModels;
 using GasyTek.Lakana.Navigation.Services;
 using Samples.GasyTek.Lakana.Model;
-using Samples.GasyTek.Lakana.Utils;
 
 namespace Samples.GasyTek.Lakana.Screens
 {
     public class ContactViewModel : EditableViewModelBase<Contact>, IViewKeyAware, ICloseable, IPresentable
     {
-        public string ViewKey { get; set; }
+        public string ViewInstanceKey { get; set; }
         public IViewModelProperty FirstName { get; set; }
         public IViewModelProperty LastName { get; set; }
         public IViewModelProperty PhoneNumber { get; set; }
@@ -44,14 +43,14 @@ namespace Samples.GasyTek.Lakana.Screens
 
         protected override void OnSave()
         {
-            Singletons.NavigationServiceInstance.Close(ViewKey);
+            NavigationManager.Close(ViewInstanceKey);
         }
 
         protected override void OnCancel()
         {
             if(CanClose() == false)
             {
-                var questionResult = Singletons.NavigationServiceInstance.ShowMessageBox(ViewKey
+                var questionResult = NavigationManager.ShowMessageBox(ViewInstanceKey
                     , "Do you want to cancel and loose your current modifications ?"
                     , MessageBoxImage.Question
                     , MessageBoxButton.YesNo);
@@ -59,13 +58,13 @@ namespace Samples.GasyTek.Lakana.Screens
                                                 {
                                                     if (result.Result == MessageBoxResult.Yes)
                                                     {
-                                                        Singletons.NavigationServiceInstance.Close(ViewKey);
+                                                        NavigationManager.Close(ViewInstanceKey);
                                                     }
                                                 }, TaskScheduler.FromCurrentSynchronizationContext());
             }
             else
             {
-                Singletons.NavigationServiceInstance.Close(ViewKey);
+                NavigationManager.Close(ViewInstanceKey);
             }
         }
 

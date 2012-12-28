@@ -361,7 +361,7 @@ namespace GasyTek.Lakana.Navigation.Services
             internal string ViewKey { get; private set; }
 
             internal string ParentViewInstanceKey { get; private set; }
-            internal string ParentViewKey { get; private set; }
+            private string ParentViewKey { get; set; }
 
             internal bool HasParent
             {
