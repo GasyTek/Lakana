@@ -1,10 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
 using GasyTek.Lakana.Navigation.Services;
 using GasyTek.Lakana.Navigation.Transitions;
 using Samples.GasyTek.Lakana.Navigation.Common;
-using Samples.GasyTek.Lakana.Navigation.Features;
 
 namespace Samples.GasyTek.Lakana.Navigation
 {
@@ -20,6 +18,9 @@ namespace Samples.GasyTek.Lakana.Navigation
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
+            // set animation transition
+            NavigationManager.ChangeTransitionAnimation(new TransitionAnimation(Transition.FadeTransition));
+
             // set HomeView as the first view
             NavigationManager.NavigateTo(ViewId.Home);
         }
@@ -38,8 +39,8 @@ namespace Samples.GasyTek.Lakana.Navigation
             var frameworkElement = e.OriginalSource as FrameworkElement;
             if (frameworkElement == null) return;
 
-            var viewInfo = (ViewInfo)frameworkElement.DataContext;
-            if (viewInfo != ViewInfo.Null)
+            var viewInfo = (View)frameworkElement.DataContext;
+            if (viewInfo != View.Null)
             {
                 // HOW TO : navigate to a previously opened view
                 NavigationManager.NavigateTo(viewInfo.ViewInstanceKey);

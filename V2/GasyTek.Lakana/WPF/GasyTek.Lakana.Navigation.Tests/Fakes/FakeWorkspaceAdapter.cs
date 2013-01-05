@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Windows.Controls;
 using GasyTek.Lakana.Navigation.Adapters;
@@ -7,7 +8,7 @@ namespace GasyTek.Lakana.Navigation.Tests.Fakes
 {
     public class FakeWorkspaceAdapter : IWorkspaceAdapter
     {
-        public ViewStackCollectionManager ViewStackCollectionManager
+        public ViewGroupCollectionManager ViewGroupCollectionManager
         {
             get { return null; }
         }
@@ -17,15 +18,20 @@ namespace GasyTek.Lakana.Navigation.Tests.Fakes
             
         }
 
-        public void SetViewStackCollection(ViewStackCollection viewStackCollection)
+        public void SetViewGroupCollection(ViewGroupCollection viewGroupCollection)
         {
         }
 
-        public void PerformActivation(LinkedListNode<ViewInfo> activatedNode, LinkedListNode<ViewInfo> deactivatedNode)
+        public void SetTransitionAnimationProvider(Func<TransitionAnimation> transitionAnimationProvider)
+        {
+            
+        }
+
+        public void PerformActivation(LinkedListNode<View> activatedNode, LinkedListNode<View> deactivatedNode)
         {
         }
 
-        public void PerformClose(LinkedListNode<ViewInfo> activatedNode, LinkedListNode<ViewInfo> closedNode)
+        public void PerformClose(LinkedListNode<View> activatedNode, LinkedListNode<View> closedNode)
         {
         }
     }

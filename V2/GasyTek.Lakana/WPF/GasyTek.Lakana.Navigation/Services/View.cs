@@ -4,7 +4,7 @@ using GasyTek.Lakana.Common.UI;
 
 namespace GasyTek.Lakana.Navigation.Services
 {
-    public struct ViewInfo : IEquatable<ViewInfo>
+    public struct View : IEquatable<View>
     {
         /// <summary>
         /// Gets the view key.
@@ -57,15 +57,15 @@ namespace GasyTek.Lakana.Navigation.Services
         /// </value>
         public IUIMetadata UIMetadata { get; internal set; }
 
-        internal ViewInfo(string viewInstanceKey)
+        internal View(string viewInstanceKey)
             : this()
         {
             ViewInstanceKey = viewInstanceKey;
         }
 
-        public static ViewInfo Null
+        public static View Null
         {
-            get { return default(ViewInfo); }
+            get { return default(View); }
         }
 
         public bool IsNull()
@@ -75,7 +75,7 @@ namespace GasyTek.Lakana.Navigation.Services
 
         #region Override Equals
 
-        public bool Equals(ViewInfo other)
+        public bool Equals(View other)
         {
             return Equals(other.ViewInstanceKey, ViewInstanceKey);
         }
@@ -83,8 +83,8 @@ namespace GasyTek.Lakana.Navigation.Services
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
-            if (obj.GetType() != typeof(ViewInfo)) return false;
-            return Equals((ViewInfo)obj);
+            if (obj.GetType() != typeof(View)) return false;
+            return Equals((View)obj);
         }
 
         public override int GetHashCode()
@@ -92,12 +92,12 @@ namespace GasyTek.Lakana.Navigation.Services
             return (ViewInstanceKey != null ? ViewInstanceKey.GetHashCode() : 0);
         }
 
-        public static bool operator ==(ViewInfo left, ViewInfo right)
+        public static bool operator ==(View left, View right)
         {
             return left.Equals(right);
         }
 
-        public static bool operator !=(ViewInfo left, ViewInfo right)
+        public static bool operator !=(View left, View right)
         {
             return !left.Equals(right);
         }

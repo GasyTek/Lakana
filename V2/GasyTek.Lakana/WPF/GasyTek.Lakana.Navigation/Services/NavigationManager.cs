@@ -1,9 +1,8 @@
-﻿using System.Collections.ObjectModel;
-using System.Collections.Specialized;
+﻿using System;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using GasyTek.Lakana.Common.Extensions;
 using GasyTek.Lakana.Navigation.Adapters;
 
 namespace GasyTek.Lakana.Navigation.Services
@@ -30,6 +29,7 @@ namespace GasyTek.Lakana.Navigation.Services
         #region Fields
 
         private static readonly NavigationManagerImpl NavigationManagerImpl;
+        private static TransitionAnimation _transitionAnimation;
 
         #endregion
 
@@ -38,6 +38,7 @@ namespace GasyTek.Lakana.Navigation.Services
         static NavigationManager()
         {
             NavigationManagerImpl = new NavigationManagerImpl(new ViewLocator());
+            _transitionAnimation = new TransitionAnimation();
         }
 
         #endregion
@@ -54,7 +55,7 @@ namespace GasyTek.Lakana.Navigation.Services
                 if (mainWorkspace is Grid)
                 {
                     var workspaceAdapter = new GridWorkspaceAdapter();
-                    NavigationManagerImpl.SetMainWorkspace(mainWorkspace, workspaceAdapter);
+                    NavigationManagerImpl.SetMainWorkspace(mainWorkspace, workspaceAdapter, () => _transitionAnimation);
                 }
 
                 // TODO : implement a better mechanism to assign the workspace adapter according to the panel's concrete type
@@ -65,16 +66,16 @@ namespace GasyTek.Lakana.Navigation.Services
         
         #region Public api
 
-        public static ViewInfo ActiveView
+        public static View ActiveView
         {
             get { return NavigationManagerImpl.ActiveView; }
         }
 
-        public static ReadOnlyObservableCollection<ViewInfo> Views
+        public static ReadOnlyObservableCollection<View> Views
         {
             get
             {
-                return NavigationManagerImpl.ViewStackCollectionManager.ViewCollection;
+                return NavigationManagerImpl.ViewGroupCollectionManager.ViewCollection;
             }
         }
 
@@ -83,17 +84,17 @@ namespace GasyTek.Lakana.Navigation.Services
             get { return NavigationManagerImpl.NbViews; }
         }
 
-        //public static void ChangeTransitionAnimation(TransitionAnimationProvider transitionAnimationProvider)
-        //{
-        //    NavigationManagerImpl.ChangeTransitionAnimation(transitionAnimationProvider);
-        //}
+        public static void ChangeTransitionAnimation(TransitionAnimation transitionAnimation)
+        {
+            _transitionAnimation = transitionAnimation;
+        }
 
-        public static ViewInfo NavigateTo(string navigationKey)
+        public static View NavigateTo(string navigationKey)
         {
             return NavigationManagerImpl.NavigateTo(navigationKey);
         }
 
-        public static ViewInfo NavigateTo(string navigationKey, object viewModel)
+        public static View NavigateTo(string navigationKey, object viewModel)
         {
             return NavigationManagerImpl.NavigateTo(navigationKey, viewModel);
         }
@@ -113,7 +114,7 @@ namespace GasyTek.Lakana.Navigation.Services
             return NavigationManagerImpl.ShowMessageBox(ownerViewKey, message, messageBoxImage, messageBoxButton);
         }
 
-        public static ViewInfo Close(string viewKey, object modalResult = null)
+        public static View Close(string viewKey, object modalResult = null)
         {
             return NavigationManagerImpl.Close(viewKey, modalResult);
         }

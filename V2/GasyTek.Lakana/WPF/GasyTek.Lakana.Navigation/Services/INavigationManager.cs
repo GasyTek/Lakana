@@ -13,7 +13,7 @@ namespace GasyTek.Lakana.Navigation.Services
         /// </summary>
         /// <param name="navigationKey">The navigation key.</param>
         /// <returns></returns>
-        ViewInfo NavigateTo(string navigationKey);
+        View NavigateTo(string navigationKey);
 
         /// <summary>
         /// Navigates to.
@@ -21,7 +21,7 @@ namespace GasyTek.Lakana.Navigation.Services
         /// <param name="navigationKey">The navigation key.</param>
         /// <param name="viewModel">The view model.</param>
         /// <returns></returns>
-        ViewInfo NavigateTo(string navigationKey, object viewModel);
+        View NavigateTo(string navigationKey, object viewModel);
 
         /// <summary>
         /// Shows the modal.
@@ -58,7 +58,7 @@ namespace GasyTek.Lakana.Navigation.Services
         /// <param name="viewKey">The view key.</param>
         /// <param name="modalResult">The modal result.</param>
         /// <returns></returns>
-        ViewInfo Close(string viewKey, object modalResult = null);
+        View Close(string viewKey, object modalResult = null);
 
         /// <summary>
         /// Closes the application.

@@ -17,35 +17,35 @@ namespace GasyTek.Lakana.Navigation.Services
         #region Fields
 
         private readonly IViewLocator _viewLocator;
-        private readonly ViewStackCollectionManager _viewStackCollectionManager;
+        private readonly ViewGroupCollectionManager _viewGroupCollectionManager;
         private IWorkspaceAdapter _workspaceAdapter;
 
         #endregion
 
         #region Properties
 
-        internal ViewStackCollectionManager ViewStackCollectionManager
+        internal ViewGroupCollectionManager ViewGroupCollectionManager
         {
-            get { return _viewStackCollectionManager; }
+            get { return _viewGroupCollectionManager; }
         }
 
-        public ViewInfo ActiveView
+        public View ActiveView
         {
             get
             {
                 var activeNode = ActiveNode;
-                return activeNode != null ? activeNode.Value : ViewInfo.Null;
+                return activeNode != null ? activeNode.Value : View.Null;
             }
         }
 
-        internal LinkedListNode<ViewInfo> ActiveNode
+        internal LinkedListNode<View> ActiveNode
         {
-            get { return _viewStackCollectionManager.GetActiveNode(); }
+            get { return _viewGroupCollectionManager.GetActiveNode(); }
         }
 
         internal int NbViews
         {
-            get { return _viewStackCollectionManager.NbViews; }
+            get { return _viewGroupCollectionManager.NbViews; }
         }
 
         #endregion
@@ -55,19 +55,19 @@ namespace GasyTek.Lakana.Navigation.Services
         public NavigationManagerImpl(IViewLocator viewLocator)
         {
             _viewLocator = viewLocator;
-            _viewStackCollectionManager = new ViewStackCollectionManager();
+            _viewGroupCollectionManager = new ViewGroupCollectionManager();
         }
 
         #endregion
 
         #region Public methods
 
-        public ViewInfo NavigateTo(string navigationKey, object viewModel)
+        public View NavigateTo(string navigationKey, object viewModel)
         {
             return NavigateToInternal(navigationKey, viewModel, false, false);
         }
 
-        public ViewInfo NavigateTo(string navigationKey)
+        public View NavigateTo(string navigationKey)
         {
             return NavigateTo(navigationKey, null);
         }
@@ -79,7 +79,7 @@ namespace GasyTek.Lakana.Navigation.Services
             var viewInfo = NavigateToInternal(navigationKey, viewModel, true, false);
             var modalHostControl = (ModalHostControl)viewInfo.InternalViewInstance;
 
-            return new ModalResult<TResult>(modalHostControl.ResultCompletionSource.Task) { ViewInfo = viewInfo };
+            return new ModalResult<TResult>(modalHostControl.ResultCompletionSource.Task) { View = viewInfo };
         }
 
         public ModalResult<TResult> ShowModal<TResult>(string navigationKey)
@@ -107,12 +107,12 @@ namespace GasyTek.Lakana.Navigation.Services
             return modalResult.AsyncResult;
         }
 
-        public ViewInfo Close(string viewKey, object modalResult = null)
+        public View Close(string viewKey, object modalResult = null)
         {
-            if (!_viewStackCollectionManager.IsTopMostView(viewKey))
+            if (!_viewGroupCollectionManager.IsTopMostView(viewKey))
                 throw new CannotCloseNotTopMostViewException(viewKey);
 
-            var closedNode = _viewStackCollectionManager.RemoveViewNode(viewKey);
+            var closedNode = _viewGroupCollectionManager.RemoveViewNode(viewKey);
 
             if (closedNode.Value.IsModal)
             {
@@ -121,7 +121,7 @@ namespace GasyTek.Lakana.Navigation.Services
             }
 
             // perform update of the UI
-            var newNode = _viewStackCollectionManager.GetActiveNode();
+            var newNode = _viewGroupCollectionManager.GetActiveNode();
             var oldNode = closedNode;
             _workspaceAdapter.PerformClose(newNode, oldNode);
 
@@ -138,7 +138,7 @@ namespace GasyTek.Lakana.Navigation.Services
             }
 
             // if there is no views or view models that prevent the app from closing, then close
-            var notCloseableViews = _viewStackCollectionManager.GetNotCloseableViews().ToList();
+            var notCloseableViews = _viewGroupCollectionManager.GetNotCloseableViews().ToList();
             if (notCloseableViews.Any() == false)
             {
                 OnCloseApplicationExecuted();
@@ -150,7 +150,7 @@ namespace GasyTek.Lakana.Navigation.Services
             {
                 Owner = Application.Current != null ? Application.Current.MainWindow : null,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Views = new ObservableCollection<ViewInfo>(notCloseableViews.OrderBy(v => v.ViewInstanceKey).ToList()),
+                Views = new ObservableCollection<View>(notCloseableViews.OrderBy(v => v.ViewInstanceKey).ToList()),
                 NavigationManager = this
             };
 
@@ -158,26 +158,26 @@ namespace GasyTek.Lakana.Navigation.Services
             return dialogResult != null && dialogResult.Value;
         }
 
-        private ViewInfo NavigateToInternal(string navigationKey, object viewModel, bool isModal, bool isMessageBox)
+        private View NavigateToInternal(string navigationKey, object viewModel, bool isModal, bool isMessageBox)
         {
             var navigationKeyInstance = NavigationKey.Parse(navigationKey);
             var parentViewInstanceKey = navigationKeyInstance.ParentViewInstanceKey;
             var viewInstanceKey = navigationKeyInstance.ViewInstanceKey;
             var viewKey = navigationKeyInstance.ViewKey;
             var hasParent = navigationKeyInstance.HasParent;
-            var oldNode = _viewStackCollectionManager.GetActiveNode();
+            var oldNode = _viewGroupCollectionManager.GetActiveNode();
 
-            LinkedListNode<ViewInfo> newNode;
+            LinkedListNode<View> newNode;
 
             // if the navigation key has a complex form e.g : "parentView/view"
 
             if (hasParent)
             {
-                if (_viewStackCollectionManager.TryFindViewNode(viewInstanceKey, out newNode))
+                if (_viewGroupCollectionManager.TryFindViewNode(viewInstanceKey, out newNode))
                 {
                     // activates an existing node
                     EnsuresViewHasParentAndMatch(newNode, parentViewInstanceKey);
-                    _viewStackCollectionManager.ActivateExistingNode(newNode);
+                    _viewGroupCollectionManager.ActivateExistingNode(newNode);
                 }
                 else
                 {
@@ -187,8 +187,8 @@ namespace GasyTek.Lakana.Navigation.Services
 
                     newNode = CreateNewNodeFrom(viewInstanceKey, viewKey, viewModel, isModal, isMessageBox);
 
-                    var parentNode = _viewStackCollectionManager.FindViewNode(parentViewInstanceKey);
-                    _viewStackCollectionManager.ActivateNewNode(newNode, (ViewStack)parentNode.List);
+                    var parentNode = _viewGroupCollectionManager.FindViewNode(parentViewInstanceKey);
+                    _viewGroupCollectionManager.ActivateNewNode(newNode, (ViewGroup)parentNode.List);
                 }
 
                 // perform update of the UI
@@ -199,17 +199,17 @@ namespace GasyTek.Lakana.Navigation.Services
 
             // if the navigation key has a simple form e.g : "view"
 
-            if (_viewStackCollectionManager.TryFindViewNode(viewInstanceKey, out newNode))
+            if (_viewGroupCollectionManager.TryFindViewNode(viewInstanceKey, out newNode))
             {
                 // activates an existing node
-                newNode = _viewStackCollectionManager.IsTopMostView(viewInstanceKey) ? newNode : newNode.List.Last;
-                _viewStackCollectionManager.ActivateExistingNode(newNode);
+                newNode = _viewGroupCollectionManager.IsTopMostView(viewInstanceKey) ? newNode : newNode.List.Last;
+                _viewGroupCollectionManager.ActivateExistingNode(newNode);
             }
             else
             {
                 // activates a new node
                 newNode = CreateNewNodeFrom(viewInstanceKey, viewKey, viewModel, isModal, isMessageBox);
-                _viewStackCollectionManager.ActivateNewNode(newNode);
+                _viewGroupCollectionManager.ActivateNewNode(newNode);
             }
 
             // perform update of the UI
@@ -222,14 +222,15 @@ namespace GasyTek.Lakana.Navigation.Services
 
         #region Internal methods
 
-        internal void SetMainWorkspace(Panel mainWorkspace, IWorkspaceAdapter workspaceAdapter)
+        internal void SetMainWorkspace(Panel mainWorkspace, IWorkspaceAdapter workspaceAdapter, Func<TransitionAnimation> transitionAnimationsProvider = null)
         {
             if (workspaceAdapter == null)
                 throw new ArgumentNullException("workspaceAdapter");
 
             _workspaceAdapter = workspaceAdapter;
             _workspaceAdapter.SetMainWorkspace(mainWorkspace);
-            _workspaceAdapter.SetViewStackCollection(_viewStackCollectionManager.ViewStackCollection);
+            _workspaceAdapter.SetViewGroupCollection(_viewGroupCollectionManager.ViewGroupCollection);
+            _workspaceAdapter.SetTransitionAnimationProvider(transitionAnimationsProvider);
 
             _viewLocator.RegisterApplicationViews();
         }
@@ -248,7 +249,7 @@ namespace GasyTek.Lakana.Navigation.Services
 
         #region Private methods
 
-        private LinkedListNode<ViewInfo> CreateNewNodeFrom(string viewInstanceKey, string viewKey, object viewModel, bool isModal, bool isMessageBox)
+        private LinkedListNode<View> CreateNewNodeFrom(string viewInstanceKey, string viewKey, object viewModel, bool isModal, bool isMessageBox)
         {
             FrameworkElement viewInstance;
 
@@ -270,7 +271,7 @@ namespace GasyTek.Lakana.Navigation.Services
                 internalViewInstance = modalHost;
             }
            
-            var viewInfo = new ViewInfo(viewInstanceKey)
+            var viewInfo = new View(viewInstanceKey)
                        {
                            UIMetadata = GetUIMetadata(viewInstance, viewModel),
                            InternalViewInstance = internalViewInstance,
@@ -280,7 +281,7 @@ namespace GasyTek.Lakana.Navigation.Services
                            IsMessageBox = isMessageBox
                        };
 
-            return new LinkedListNode<ViewInfo>(viewInfo);
+            return new LinkedListNode<View>(viewInfo);
         }
 
         private IUIMetadata GetUIMetadata(object view, object viewModel)
@@ -302,9 +303,9 @@ namespace GasyTek.Lakana.Navigation.Services
             return uiMetadata;
         }
 
-        private void EnsuresViewHasParentAndMatch(LinkedListNode<ViewInfo> node, string expectedParentViewInstanceKey)
+        private void EnsuresViewHasParentAndMatch(LinkedListNode<View> node, string expectedParentViewInstanceKey)
         {
-            var expectedParentView = new ViewInfo(expectedParentViewInstanceKey);
+            var expectedParentView = new View(expectedParentViewInstanceKey);
             if (node.Previous == null || (node.Previous != null && node.Previous.Value != expectedParentView))
             {
                 throw new OnlyNewViewInstanceCanBeStackedException(node.Value.ViewInstanceKey, expectedParentViewInstanceKey);
@@ -313,13 +314,13 @@ namespace GasyTek.Lakana.Navigation.Services
 
         private void EnsureParentViewIsTopMost(string parentViewInstanceKey)
         {
-            if (_viewStackCollectionManager.IsTopMostView(parentViewInstanceKey) == false)
+            if (_viewGroupCollectionManager.IsTopMostView(parentViewInstanceKey) == false)
                 throw new ParentViewInstanceNotTopMostException(parentViewInstanceKey);
         }
 
         private void EnsureParentViewExist(string parentViewInstanceKey)
         {
-            if (_viewStackCollectionManager.ContainsViewNode(parentViewInstanceKey) == false)
+            if (_viewGroupCollectionManager.ContainsViewNode(parentViewInstanceKey) == false)
                 throw new ParentViewInstanceNotFoundException(parentViewInstanceKey);
         }
 
