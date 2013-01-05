@@ -10,17 +10,17 @@ namespace GasyTek.Lakana.Navigation.Tests
     public class GridWorkspaceAdapterFixture
     {
         private Grid _workspace;
-        private ViewStackCollection _viewStackCollection;
+        private ViewGroupCollection _viewGroupCollection;
         private GridWorkspaceAdapter _workspaceAdapter;
 
         [TestInitialize]
         public void OnSetup()
         {
             _workspace = new Grid();
-            _viewStackCollection = new ViewStackCollection();
+            _viewGroupCollection = new ViewGroupCollection();
             _workspaceAdapter = new GridWorkspaceAdapter();
             _workspaceAdapter.SetMainWorkspace(_workspace);
-            _workspaceAdapter.SetViewStackCollection(_viewStackCollection);
+            _workspaceAdapter.SetViewGroupCollection(_viewGroupCollection);
         }
 
         [TestClass]
@@ -31,8 +31,8 @@ namespace GasyTek.Lakana.Navigation.Tests
             {
                 // Prepare
                 var view = new UserControl();
-                var viewStack = new ViewStack();
-                viewStack.AddLast(new ViewInfo("view1") { InternalViewInstance = view });
+                var viewStack = new ViewGroup();
+                viewStack.AddLast(new View("view1") { InternalViewInstance = view });
 
                 // Act
                 _workspaceAdapter.PerformActivation(viewStack.Last, null);
@@ -46,8 +46,8 @@ namespace GasyTek.Lakana.Navigation.Tests
             {
                 // Prepare
                 var view = new UserControl();
-                var viewStack = new ViewStack();
-                viewStack.AddLast(new ViewInfo("view1") { InternalViewInstance = view });
+                var viewStack = new ViewGroup();
+                viewStack.AddLast(new View("view1") { InternalViewInstance = view });
 
                 // Act
                 _workspaceAdapter.PerformActivation(viewStack.Last, null);
@@ -62,9 +62,9 @@ namespace GasyTek.Lakana.Navigation.Tests
                 // Prepare
                 var parentView = new UserControl();
                 var view = new UserControl();
-                var viewStack = new ViewStack();
-                viewStack.AddLast(new ViewInfo("parentView1") { InternalViewInstance = parentView });
-                viewStack.AddLast(new ViewInfo("view1") { InternalViewInstance = view, IsModal = true });
+                var viewStack = new ViewGroup();
+                viewStack.AddLast(new View("parentView1") { InternalViewInstance = parentView });
+                viewStack.AddLast(new View("view1") { InternalViewInstance = view, IsModal = true });
 
                 // Act
                 _workspaceAdapter.PerformActivation(viewStack.Last, null);
@@ -80,9 +80,9 @@ namespace GasyTek.Lakana.Navigation.Tests
                 // Prepare
                 var parentView = new UserControl();
                 var view = new UserControl();
-                var viewStack = new ViewStack();
-                viewStack.AddLast(new ViewInfo("parentView1") { InternalViewInstance = parentView });
-                viewStack.AddLast(new ViewInfo("view1") { InternalViewInstance = view, IsModal = true });
+                var viewStack = new ViewGroup();
+                viewStack.AddLast(new View("parentView1") { InternalViewInstance = parentView });
+                viewStack.AddLast(new View("view1") { InternalViewInstance = view, IsModal = true });
 
                 // Act
                 _workspaceAdapter.PerformActivation(viewStack.Last, null);
@@ -99,8 +99,8 @@ namespace GasyTek.Lakana.Navigation.Tests
             {
                 // Prepare
                 var view = new UserControl();
-                var viewStack = new ViewStack();
-                viewStack.AddLast(new ViewInfo("view1") { InternalViewInstance = view });
+                var viewStack = new ViewGroup();
+                viewStack.AddLast(new View("view1") { InternalViewInstance = view });
                 _workspaceAdapter.PerformActivation(viewStack.Last, null);
 
                 // Act
@@ -116,9 +116,9 @@ namespace GasyTek.Lakana.Navigation.Tests
                 // Prepare
                 var parentView = new UserControl();
                 var view = new UserControl();
-                var viewStack = new ViewStack();
-                viewStack.AddLast(new ViewInfo("parentView1") { InternalViewInstance = parentView });
-                viewStack.AddLast(new ViewInfo("view1") { InternalViewInstance = view, IsModal = true });
+                var viewStack = new ViewGroup();
+                viewStack.AddLast(new View("parentView1") { InternalViewInstance = parentView });
+                viewStack.AddLast(new View("view1") { InternalViewInstance = view, IsModal = true });
                 _workspaceAdapter.PerformActivation(viewStack.Last, null);
 
                 // Act
@@ -134,8 +134,8 @@ namespace GasyTek.Lakana.Navigation.Tests
             {
                 // Prepare
                 var view = new UserControl();
-                var viewStack = new ViewStack();
-                viewStack.AddLast(new ViewInfo("view1") { InternalViewInstance = view });
+                var viewStack = new ViewGroup();
+                viewStack.AddLast(new View("view1") { InternalViewInstance = view });
                 _workspaceAdapter.PerformActivation(viewStack.Last, null);
                 _workspaceAdapter.PerformActivation(null, viewStack.Last);
 
@@ -156,8 +156,8 @@ namespace GasyTek.Lakana.Navigation.Tests
             {
                 // Prepare
                 var view = new UserControl();
-                var viewStack = new ViewStack();
-                viewStack.AddLast(new ViewInfo("view1") { InternalViewInstance = view });
+                var viewStack = new ViewGroup();
+                viewStack.AddLast(new View("view1") { InternalViewInstance = view });
                 _workspaceAdapter.PerformActivation(viewStack.Last, null);
 
                 // Act
@@ -173,10 +173,10 @@ namespace GasyTek.Lakana.Navigation.Tests
                 // Prepare
                 var parentView = new UserControl();
                 var view = new UserControl();
-                var viewStack = new ViewStack();
-                viewStack.AddLast(new ViewInfo("parentView1") { InternalViewInstance = parentView });
+                var viewStack = new ViewGroup();
+                viewStack.AddLast(new View("parentView1") { InternalViewInstance = parentView });
                 _workspaceAdapter.PerformActivation(viewStack.Last, null);
-                viewStack.AddLast(new ViewInfo("view1") { InternalViewInstance = view, IsModal = true });
+                viewStack.AddLast(new View("view1") { InternalViewInstance = view, IsModal = true });
                 _workspaceAdapter.PerformActivation(viewStack.Last, viewStack.First);
 
                 // Act

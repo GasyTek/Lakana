@@ -18,7 +18,7 @@ namespace GasyTek.Lakana.Navigation.Services
         /// <summary>
         /// Gets the view info that corresponds to the modal view.
         /// </summary>
-        public ViewInfo ViewInfo { get; internal set; }
+        public View View { get; internal set; }
 
         internal ModalResult(Task<object> firstTask)
         {

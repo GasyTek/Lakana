@@ -13,7 +13,7 @@ namespace GasyTek.Lakana.Navigation.Controls
         #region Dependency properties
 
         public static readonly DependencyProperty ViewsProperty =
-                    DependencyProperty.Register("Views", typeof(ObservableCollection<ViewInfo>), typeof(ShutdownApplicationWindow), new UIPropertyMetadata());
+                    DependencyProperty.Register("Views", typeof(ObservableCollection<View>), typeof(ShutdownApplicationWindow), new UIPropertyMetadata());
 
         #endregion
 
@@ -31,9 +31,9 @@ namespace GasyTek.Lakana.Navigation.Controls
 
         internal INavigationManager NavigationManager { get; set; }
 
-        public ObservableCollection<ViewInfo> Views
+        public ObservableCollection<View> Views
         {
-            get { return (ObservableCollection<ViewInfo>)GetValue(ViewsProperty); }
+            get { return (ObservableCollection<View>)GetValue(ViewsProperty); }
             set { SetValue(ViewsProperty, value); }
         }
 

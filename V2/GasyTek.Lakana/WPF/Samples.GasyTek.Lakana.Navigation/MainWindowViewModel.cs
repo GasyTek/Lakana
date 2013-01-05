@@ -13,7 +13,7 @@ namespace Samples.GasyTek.Lakana.Navigation
         public ICommand OpenAboutCommand { get; private set; }
         public ICommand ExitApplicationCommand { get; private set; }
 
-        public ReadOnlyObservableCollection<ViewInfo> Views
+        public ReadOnlyObservableCollection<View> Views
         {
             get
             {

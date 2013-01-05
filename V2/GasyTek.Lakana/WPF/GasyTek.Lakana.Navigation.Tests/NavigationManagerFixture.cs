@@ -351,9 +351,9 @@ namespace GasyTek.Lakana.Navigation.Tests
                 var expectedResult = _navigationManagerImpl.ShowModal<object>("parentView1/view1");
 
                 // Verify
-                Assert.IsTrue(expectedResult.ViewInfo.IsModal);
-                Assert.AreSame(expectedResult.ViewInfo.ViewInstance, _navigationManagerImpl.ActiveView.ViewInstance);
-                Assert.IsInstanceOfType(_navigationManagerImpl.ActiveView.ViewInstance, expectedResult.ViewInfo.ViewInstance.GetType());
+                Assert.IsTrue(expectedResult.View.IsModal);
+                Assert.AreSame(expectedResult.View.ViewInstance, _navigationManagerImpl.ActiveView.ViewInstance);
+                Assert.IsInstanceOfType(_navigationManagerImpl.ActiveView.ViewInstance, expectedResult.View.ViewInstance.GetType());
                 Assert.IsInstanceOfType(_navigationManagerImpl.ActiveView.InternalViewInstance, typeof(ModalHostControl));
                 Assert.IsNotNull(_navigationManagerImpl.ActiveNode.Previous);
                 Assert.AreSame(_navigationManagerImpl.ActiveNode.Previous.Value.ViewInstance, parentViewInfo.ViewInstance);
@@ -379,7 +379,7 @@ namespace GasyTek.Lakana.Navigation.Tests
 
                 // Act
                 var modalResult = _navigationManagerImpl.ShowModal<string>("parentView1/view1");
-                _navigationManagerImpl.Close(modalResult.ViewInfo.ViewInstanceKey, "-- Result --");  // Close the modal view and provide the modal result
+                _navigationManagerImpl.Close(modalResult.View.ViewInstanceKey, "-- Result --");  // Close the modal view and provide the modal result
 
                 // Verify
                 Assert.AreEqual("-- Result --", modalResult.AsyncResult.Result);

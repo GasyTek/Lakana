@@ -60,6 +60,7 @@
   <ItemGroup>
     <Compile Include="Adapters\IWorkspaceAdapter.cs" />
     <Compile Include="Adapters\GridWorkspaceAdapter.cs" />
+    <Compile Include="Adapters\WorkspaceAdapterBase.cs" />
     <Compile Include="Controls\MessageBoxControl.cs" />
     <Compile Include="Controls\ModalHostControl.cs" />
     <Compile Include="Controls\ShutdownApplicationItemsControl.cs" />
@@ -96,9 +97,9 @@
     <Compile Include="Services\ModalResult.cs" />
     <Compile Include="Services\NavigationManager.cs" />
     <Compile Include="Services\NavigationManagerImpl.cs" />
-    <Compile Include="Services\TransitionAnimationProvider.cs" />
-    <Compile Include="Services\ViewStackCollectionManager.cs" />
-    <Compile Include="Services\ViewInfo.cs" />
+    <Compile Include="Services\TransitionAnimation.cs" />
+    <Compile Include="Services\ViewGroupCollectionManager.cs" />
+    <Compile Include="Services\View.cs" />
     <Compile Include="Services\ViewLocator.cs" />
     <Compile Include="Transitions\Transition.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

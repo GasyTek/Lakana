@@ -5,20 +5,9 @@ using GasyTek.Lakana.Navigation.Services;
 
 namespace GasyTek.Lakana.Navigation.Adapters
 {
-    internal class GridWorkspaceAdapter : IWorkspaceAdapter
+    internal class GridWorkspaceAdapter : WorkspaceAdapterBase<Grid>
     {
-        private Grid _workspace;
-
-        public void SetMainWorkspace(Panel workspace)
-        {
-            _workspace = (Grid)workspace;
-        }
-
-        public void SetViewStackCollection(ViewStackCollection viewStackCollection)
-        {
-        }
-
-        public void PerformActivation(LinkedListNode<ViewInfo> activatedNode, LinkedListNode<ViewInfo> deactivatedNode)
+        public override void PerformActivation(LinkedListNode<View> activatedNode, LinkedListNode<View> deactivatedNode)
         {
             if (deactivatedNode != null)
             {
@@ -36,8 +25,8 @@ namespace GasyTek.Lakana.Navigation.Adapters
                 activatedView.IsEnabled = true;
                 Panel.SetZIndex(activatedView, zIndex);
 
-                if (!_workspace.Children.Contains(activatedView))
-                    _workspace.Children.Add(activatedView);
+                if (!Workspace.Children.Contains(activatedView))
+                    Workspace.Children.Add(activatedView);
 
                 if (activatedNode.Value.IsModal)
                 {
@@ -52,18 +41,40 @@ namespace GasyTek.Lakana.Navigation.Adapters
                 }
             }
 
-            //var aView = activatedNode != null ? activatedNode.Value.InternalViewInstance : null;
-            //var dView = deactivatedNode != null ? deactivatedNode.Value.InternalViewInstance : null;
+            if (TransitionAnimationProvider != null)
+            {
+                var transitionAnimation = TransitionAnimationProvider();
+                if (transitionAnimation != null)
+                {
+                    var activatedViewGroup = activatedNode != null 
+                                                ? (ViewGroup) activatedNode.List 
+                                                : new ViewGroup();
+                    var deactivatedViewGroup = deactivatedNode != null
+                                                   ? (ViewGroup) deactivatedNode.List
+                                                   : new ViewGroup();
 
-            //var storyboard = Transitions.Transition.FadeTransition(dView, aView);
-            //storyboard.Begin();
+                    if (activatedViewGroup != deactivatedViewGroup)
+                    {
+                        // if we transition from view group to another
+                        var storyboard = transitionAnimation.TransitionViewGroupAnimation(activatedViewGroup, deactivatedViewGroup);
+                        storyboard.Begin();
+                    }
+                    else
+                    {
+                        // if we transition from view to another view from the same group
+
+                    }
+
+
+                }
+            }
         }
 
-        public void PerformClose(LinkedListNode<ViewInfo> activatedNode, LinkedListNode<ViewInfo> closedNode)
+        public override void PerformClose(LinkedListNode<View> activatedNode, LinkedListNode<View> closedNode)
         {
             if (closedNode != null)
             {
-                _workspace.Children.Remove(closedNode.Value.InternalViewInstance);
+                Workspace.Children.Remove(closedNode.Value.InternalViewInstance);
             }
 
             if (activatedNode != null)

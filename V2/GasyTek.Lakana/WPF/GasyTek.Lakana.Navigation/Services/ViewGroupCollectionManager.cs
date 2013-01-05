@@ -1,18 +1,19 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 
 namespace GasyTek.Lakana.Navigation.Services
 {
-    public class ViewStackCollectionManager
+    public class ViewGroupCollectionManager
     {
-        private readonly ViewStackCollection _viewStackCollection;
-        private readonly ObservableCollection<ViewInfo> _viewCollection;
-        private readonly ReadOnlyObservableCollection<ViewInfo> _readOnlyViewCollection;
+        private readonly ViewGroupCollection _viewGroupCollection;
+        private readonly ObservableCollection<View> _viewCollection;
+        private readonly ReadOnlyObservableCollection<View> _readOnlyViewCollection;
 
         #region Properties
 
-        public ReadOnlyObservableCollection<ViewInfo> ViewCollection
+        public ReadOnlyObservableCollection<View> ViewCollection
         {
             get
             {
@@ -22,79 +23,79 @@ namespace GasyTek.Lakana.Navigation.Services
 
         public int NbViews
         {
-            get { return _viewStackCollection.Sum(v => v.Count); }
+            get { return _viewGroupCollection.Sum(v => v.Count); }
         }
 
-        public ViewStackCollection ViewStackCollection
+        public ViewGroupCollection ViewGroupCollection
         {
-            get { return _viewStackCollection; }
+            get { return _viewGroupCollection; }
         }
 
         #endregion
 
         #region Constructor
 
-        internal ViewStackCollectionManager()
+        internal ViewGroupCollectionManager()
         {
-            _viewStackCollection = new ViewStackCollection();
-            _viewCollection = new ObservableCollection<ViewInfo>();
-            _readOnlyViewCollection = new ReadOnlyObservableCollection<ViewInfo>(_viewCollection);
+            _viewGroupCollection = new ViewGroupCollection();
+            _viewCollection = new ObservableCollection<View>();
+            _readOnlyViewCollection = new ReadOnlyObservableCollection<View>(_viewCollection);
         }
 
         #endregion
 
         #region Public methods
 
-        public ViewInfo GetActiveView()
+        public View GetActiveView()
         {
             var activeNode = GetActiveNode();
-            return activeNode != null ? activeNode.Value : ViewInfo.Null;
+            return activeNode != null ? activeNode.Value : View.Null;
         }
 
-        public LinkedListNode<ViewInfo> GetActiveNode()
+        public LinkedListNode<View> GetActiveNode()
         {
             var activeStack = GetActiveStack();
             return activeStack != null ? activeStack.Last : null;
         }
 
-        public LinkedList<ViewInfo> GetActiveStack()
+        public LinkedList<View> GetActiveStack()
         {
-            if (!_viewStackCollection.Any()) return null;
-            if (!_viewStackCollection.Last.Value.Any()) return null;
-            return _viewStackCollection.Last.Value;
+            if (!_viewGroupCollection.Any()) return null;
+            if (!_viewGroupCollection.Last.Value.Any()) return null;
+            return _viewGroupCollection.Last.Value;
         }
 
         #endregion
 
         #region Internal methods
 
-        internal void ActivateExistingNode(LinkedListNode<ViewInfo> node)
+        internal void ActivateExistingNode(LinkedListNode<View> node)
         {
             if (GetActiveView() != node.Value)
             {
-                _viewStackCollection.Remove((ViewStack)node.List);
-                _viewStackCollection.AddLast((ViewStack)node.List);
+                _viewGroupCollection.Remove((ViewGroup)node.List);
+                _viewGroupCollection.AddLast((ViewGroup)node.List);
             }
         }
 
-        internal void ActivateNewNode(LinkedListNode<ViewInfo> newNode, ViewStack ownerStack = null)
+        internal void ActivateNewNode(LinkedListNode<View> newNode, ViewGroup ownerGroup = null)
         {
-            if (ownerStack != null)
-                ownerStack.AddLast(newNode);
+            if (ownerGroup != null)
+                ownerGroup.AddLast(newNode);
             else
             {
-                var newStack = new ViewStack();
+                var newStack = new ViewGroup();
                 newStack.AddLast(newNode);
-                _viewStackCollection.AddLast(newStack);
+                _viewGroupCollection.AddLast(newStack);
             }
 
             if (!newNode.Value.IsMessageBox)
                 _viewCollection.Add(newNode.Value);
         }
 
-        internal LinkedListNode<ViewInfo> FindViewNode(string viewInstanceKey)
+        internal LinkedListNode<View> FindViewNode(string viewInstanceKey)
         {
-            LinkedListNode<ViewInfo> node;
+            LinkedListNode<View> node;
             if (TryFindViewNode(viewInstanceKey, out node))
             {
                 return node;
@@ -104,14 +105,14 @@ namespace GasyTek.Lakana.Navigation.Services
 
         internal bool ContainsViewNode(string viewInstanceKey)
         {
-            LinkedListNode<ViewInfo> node;
+            LinkedListNode<View> node;
             return TryFindViewNode(viewInstanceKey, out node);
         }
 
-        internal bool TryFindViewNode(string viewInstanceKey, out LinkedListNode<ViewInfo> node)
+        internal bool TryFindViewNode(string viewInstanceKey, out LinkedListNode<View> node)
         {
-            var viewInfo = new ViewInfo(viewInstanceKey);
-            var q = (from stack in _viewStackCollection
+            var viewInfo = new View(viewInstanceKey);
+            var q = (from stack in _viewGroupCollection
                      from v in stack
                      where v == viewInfo
                      select stack.Find(v)).ToList();
@@ -119,16 +120,16 @@ namespace GasyTek.Lakana.Navigation.Services
             return q.Any();
         }
 
-        internal LinkedListNode<ViewInfo> RemoveViewNode(string viewInstanceKey)
+        internal LinkedListNode<View> RemoveViewNode(string viewInstanceKey)
         {
-            LinkedListNode<ViewInfo> node;
+            LinkedListNode<View> node;
             if (TryFindViewNode(viewInstanceKey, out node))
             {
-                var stack = (ViewStack)node.List;
+                var stack = (ViewGroup)node.List;
                 stack.Remove(node);
 
                 if (stack.Count == 0)
-                    _viewStackCollection.Remove(stack);
+                    _viewGroupCollection.Remove(stack);
 
                 _viewCollection.Remove(node.Value);
             }
@@ -138,7 +139,7 @@ namespace GasyTek.Lakana.Navigation.Services
 
         internal bool IsTopMostView(string viewInstanceKey)
         {
-            LinkedListNode<ViewInfo> node;
+            LinkedListNode<View> node;
             if (TryFindViewNode(viewInstanceKey, out node))
             {
                 return node.List.Last.Value == node.Value;
@@ -146,10 +147,10 @@ namespace GasyTek.Lakana.Navigation.Services
             return false;
         }
 
-        internal IEnumerable<ViewInfo> GetNotCloseableViews()
+        internal IEnumerable<View> GetNotCloseableViews()
         {
             // retrieve views that are parent of top most message box views
-            var q1 = (from vs in _viewStackCollection
+            var q1 = (from vs in _viewGroupCollection
                       let last = vs.Last
                       let lastPrevious = vs.Last.Previous
                       where last != null
@@ -158,7 +159,7 @@ namespace GasyTek.Lakana.Navigation.Services
                       select lastPrevious.Value).ToList();
 
             // retrieve top most views except message boxes
-            var q2 = (from vs in _viewStackCollection
+            var q2 = (from vs in _viewGroupCollection
                       let last = vs.Last
                       where last != null
                       select last.Value).Except(q1);
@@ -175,12 +176,15 @@ namespace GasyTek.Lakana.Navigation.Services
         #endregion
     }
 
-    public class ViewStack : LinkedList<ViewInfo>
+    public class ViewGroup : LinkedList<View>
     {
-
+        public Stack<FrameworkElement> ToStack()
+        {
+            return new Stack<FrameworkElement>(this.Select(vi => vi.InternalViewInstance));
+        }
     }
 
-    public class ViewStackCollection : LinkedList<ViewStack>
+    public class ViewGroupCollection : LinkedList<ViewGroup>
     {
 
     }

@@ -1,22 +1,25 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Windows;
 using System;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
+using GasyTek.Lakana.Navigation.Services;
 
 namespace GasyTek.Lakana.Navigation.Transitions
 {
     /// <summary>
     /// Contains default transition animations that users can leverage.
     /// </summary>
-    /// <remarks>Original source : "Ocean Framework" by Karl Shifflett : http://karlshifflett.wordpress.com/ocean/ </remarks>
     public static class Transition
     {
         /// <summary>
         /// A transition without animations
         /// </summary>
-        /// <param name="currentView">The current view.</param>
-        /// <param name="newView">The new view.</param>
-        public static Storyboard NoTransition(FrameworkElement currentView, FrameworkElement newView)
+        /// <param name="activatedGroup">Group of nodes to activate.</param>
+        /// <param name="deactivatedGroup">Group of nodes to deactivat.</param>
+        /// <remarks>The views at the top of each stack are the current and new view.</remarks>
+        public static Storyboard NoTransition(Stack<FrameworkElement> activatedGroup, Stack<FrameworkElement> deactivatedGroup)
         {
             return null;
         }
@@ -24,55 +27,60 @@ namespace GasyTek.Lakana.Navigation.Transitions
         /// <summary>
         /// Fades the transition.
         /// </summary>
-        /// <param name="currentView">The obj current view.</param>
-        /// <param name="newView">The obj new view.</param>
-        public static Storyboard FadeTransition(FrameworkElement currentView, FrameworkElement newView)
+        /// <param name="activatedGroup">Group of nodes to activate.</param>
+        /// <param name="deactivatedGroup">Group of nodes to deactivat.</param>
+        /// <remarks>The views at the top of each stack are the current and new view.</remarks>
+        public static Storyboard FadeTransition(ViewGroup activatedGroup, ViewGroup deactivatedGroup)
         {
             const double animationDuration = 200;
 
-            if (Equals(currentView, newView)) return null;
+            var activatedStack = activatedGroup.ToStack();
+            var deactivatedStack = deactivatedGroup.ToStack();
+            var transitionAnimation = new Storyboard();
+            var deactivatedView = deactivatedStack.Any() ? deactivatedStack.Peek() : null;
+            var activatedView = activatedStack.Any() ? activatedStack.Peek() : null;
 
-            Storyboard transitionAnimation;
+            // if one tries to deactivate then reactivate the same view, do not nothing
+            if (Equals(deactivatedView, activatedView)) return transitionAnimation;
 
-            if (currentView == null)
+            if (deactivatedView != null)
             {
-                // new view animation
-                var newViewOpacityAnimation = new DoubleAnimation(0.5, 1,
-                                                           new Duration(TimeSpan.FromMilliseconds(animationDuration)));
-                Storyboard.SetTarget(newViewOpacityAnimation, newView);
-                Storyboard.SetTargetProperty(newViewOpacityAnimation, new PropertyPath(UIElement.OpacityProperty));
+                foreach (var view in deactivatedStack)
+                {
+                    // current view animation
+                    var opacityAnimation = new DoubleAnimation
+                                                            {
+                                                                From = 1,
+                                                                To = 0,
+                                                                Duration = TimeSpan.FromMilliseconds(animationDuration),
+                                                                FillBehavior = FillBehavior.Stop,
+                                                                AccelerationRatio = 0.5
+                                                            };
 
-                transitionAnimation = new Storyboard();
-                transitionAnimation.Children.Add(newViewOpacityAnimation);
+                    Storyboard.SetTarget(opacityAnimation, view);
+                    Storyboard.SetTargetProperty(opacityAnimation, new PropertyPath(UIElement.OpacityProperty));
+
+                    transitionAnimation.Children.Add(opacityAnimation);
+                }
             }
-            else
+
+            if (activatedView != null)
             {
-                // current view animation
-                var currentViewOpacityAnimation = new DoubleAnimation
-                                                    {
-                                                        From = 1,
-                                                        To = 0,
-                                                        Duration = TimeSpan.FromMilliseconds(animationDuration),
-                                                        FillBehavior = FillBehavior.Stop,
-                                                        AccelerationRatio = 0.5
-                                                    };
-                Storyboard.SetTarget(currentViewOpacityAnimation, currentView);
-                Storyboard.SetTargetProperty(currentViewOpacityAnimation, new PropertyPath(UIElement.OpacityProperty));
+                foreach (var view in activatedStack)
+                {
+                    // new view animation
+                    var opacityAnimation = new DoubleAnimation
+                                                            {
+                                                                From = 0.5,
+                                                                To = 1,
+                                                                Duration = TimeSpan.FromMilliseconds(animationDuration)
+                                                            };
 
-                // new view animation
-                var newViewOpacityAnimation = new DoubleAnimation
-                                                    {
-                                                        From = 0.5,
-                                                        To = 1,
-                                                        Duration = TimeSpan.FromMilliseconds(animationDuration),
-                                                        AccelerationRatio = 0.5
-                                                    };
-                Storyboard.SetTarget(newViewOpacityAnimation, newView);
-                Storyboard.SetTargetProperty(newViewOpacityAnimation, new PropertyPath(UIElement.OpacityProperty));
+                    Storyboard.SetTarget(opacityAnimation, view);
+                    Storyboard.SetTargetProperty(opacityAnimation, new PropertyPath(UIElement.OpacityProperty));
 
-                transitionAnimation = new Storyboard();
-                transitionAnimation.Children.Add(currentViewOpacityAnimation);
-                transitionAnimation.Children.Add(newViewOpacityAnimation);
+                    transitionAnimation.Children.Add(opacityAnimation);
+                }
             }
 
             return transitionAnimation;
