@@ -6,7 +6,7 @@
     public interface IViewKeyAware
     {
         /// <summary>
-        /// Gets or sets the view instance identifier.
+        /// Gets or sets the view instance identifier. It should have the form : viewKey [ instanceID ] where [..] are optional fields.
         /// </summary>
         /// <value>
         /// The view instance key.
