@@ -130,7 +130,7 @@ namespace GasyTek.Lakana.Navigation.Services
 
         public bool CloseApplication(bool forceClose = false)
         {
-            // exit the application without any check
+            // exit the application as is
             if (forceClose)
             {
                 OnCloseApplicationExecuted();
@@ -169,7 +169,7 @@ namespace GasyTek.Lakana.Navigation.Services
 
             LinkedListNode<View> newNode;
 
-            // if the navigation key has a complex form e.g : "parentView/view"
+            // if the navigation key refers to a parent e.g : "parentView/view"
 
             if (hasParent)
             {
@@ -267,7 +267,6 @@ namespace GasyTek.Lakana.Navigation.Services
             if (isModal)
             {
                 var modalHost = new ModalHostControl { ModalContent = viewInstance };
-                modalHost.ModalContent = viewInstance;
                 internalViewInstance = modalHost;
             }
            
@@ -362,7 +361,7 @@ namespace GasyTek.Lakana.Navigation.Services
             internal string ViewKey { get; private set; }
 
             internal string ParentViewInstanceKey { get; private set; }
-            private string ParentViewKey { get; set; }
+            internal string ParentViewKey { get; set; }
 
             internal bool HasParent
             {
@@ -464,7 +463,7 @@ namespace GasyTek.Lakana.Navigation.Services
                 if (Regex.IsMatch(navigationKey, Pattern5)) return;
                 if (Regex.IsMatch(navigationKey, Pattern6)) return;
 
-                throw new NavigationKeyFormatException("Please specify a parent. Allowed format is ' parentViewKey [ # instanceID ] / viewKey [ # instanceID ]'");
+                throw new NavigationKeyFormatException("Please specify a parent view. Allowed format is ' parentViewKey [ # instanceID ] / viewKey [ # instanceID ]'");
             }
         }
 

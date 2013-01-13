@@ -55,16 +55,19 @@ namespace GasyTek.Lakana.Navigation.Adapters
 
                     if (activatedViewGroup != deactivatedViewGroup)
                     {
-                        // if we transition from view group to another
+                        // if transition from view group to another
                         var storyboard = transitionAnimation.TransitionViewGroupAnimation(activatedViewGroup, deactivatedViewGroup);
                         storyboard.Begin();
                     }
                     else
                     {
-                        // if we transition from view to another view from the same group
+                        var activatedView = activatedNode != null ? activatedNode.Value.InternalViewInstance : null;
+                        var deactivatedView = deactivatedNode != null ? deactivatedNode.Value.InternalViewInstance : null;
 
+                        // if transition from view to another view from the same group
+                        var storyboard = transitionAnimation.TransitionViewAnimation(activatedView, deactivatedView);
+                        storyboard.Begin();
                     }
-
 
                 }
             }

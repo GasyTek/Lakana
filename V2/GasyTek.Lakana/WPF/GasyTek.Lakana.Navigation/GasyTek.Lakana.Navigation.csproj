@@ -101,7 +101,7 @@
     <Compile Include="Services\ViewGroupCollectionManager.cs" />
     <Compile Include="Services\View.cs" />
     <Compile Include="Services\ViewLocator.cs" />
-    <Compile Include="Transitions\Transition.cs" />
+    <Compile Include="Transitions\FadeTransition.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

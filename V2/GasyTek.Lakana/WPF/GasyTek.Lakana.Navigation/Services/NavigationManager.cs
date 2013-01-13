@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -89,36 +88,79 @@ namespace GasyTek.Lakana.Navigation.Services
             _transitionAnimation = transitionAnimation;
         }
 
+        /// <summary>
+        /// Navigates to the specified navigation key.
+        /// </summary>
+        /// <param name="navigationKey">The navigation key. It must be of the form : [ parentViewKey [ # instanceID ] / ] viewKey [ # instanceID ] where fields between [..] are optionals.</param>
+        /// <returns></returns>
         public static View NavigateTo(string navigationKey)
         {
             return NavigationManagerImpl.NavigateTo(navigationKey);
         }
 
+        /// <summary>
+        /// Navigates to.
+        /// </summary>
+        /// <param name="navigationKey">The navigation key. It must be of the form : [ parentViewKey [ # instanceID ] / ] viewKey [ # instanceID ] where fields between [..] are optionals.</param>
+        /// <param name="viewModel">The view model.</param>
+        /// <returns></returns>
         public static View NavigateTo(string navigationKey, object viewModel)
         {
             return NavigationManagerImpl.NavigateTo(navigationKey, viewModel);
         }
 
+        /// <summary>
+        /// Shows the modal.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="navigationKey">The navigation key. It must be of the form : [ parentViewKey [ # instanceID ] / ] viewKey [ # instanceID ] where fields between [..] are optionals.</param>
+        /// <returns></returns>
         public static ModalResult<TResult> ShowModal<TResult>(string navigationKey)
         {
             return NavigationManagerImpl.ShowModal<TResult>(navigationKey);
         }
 
+        /// <summary>
+        /// Shows the modal.
+        /// </summary>
+        /// <typeparam name="TResult">The type of the result.</typeparam>
+        /// <param name="navigationKey">The navigation key. It must be of the form : [ parentViewKey [ # instanceID ] / ] viewKey [ # instanceID ] where fields between [..] are optionals.</param>
+        /// <param name="viewModel">The view model to be associated to the opened view.</param>
+        /// <returns></returns>
         public static ModalResult<TResult> ShowModal<TResult>(string navigationKey, object viewModel)
         {
             return NavigationManagerImpl.ShowModal<TResult>(navigationKey, viewModel);
         }
 
+        /// <summary>
+        /// Shows the message box.
+        /// </summary>
+        /// <param name="ownerViewKey">The parent instance key : parentViewKey [ # instanceID ]</param>
+        /// <param name="message">The message.</param>
+        /// <param name="messageBoxImage">The message box image.</param>
+        /// <param name="messageBoxButton">The message box button.</param>
+        /// <returns></returns>
         public static Task<MessageBoxResult> ShowMessageBox(string ownerViewKey, string message = "", MessageBoxImage messageBoxImage = MessageBoxImage.Asterisk, MessageBoxButton messageBoxButton = MessageBoxButton.OK)
         {
             return NavigationManagerImpl.ShowMessageBox(ownerViewKey, message, messageBoxImage, messageBoxButton);
         }
 
+        /// <summary>
+        /// Closes the specified view key.
+        /// </summary>
+        /// <param name="viewKey">The view key.</param>
+        /// <param name="modalResult">The modal result.</param>
+        /// <returns></returns>
         public static View Close(string viewKey, object modalResult = null)
         {
             return NavigationManagerImpl.Close(viewKey, modalResult);
         }
 
+        /// <summary>
+        /// Closes the application.
+        /// </summary>
+        /// <param name="forceClose">if set to <c>true</c> [force close].</param>
+        /// <returns></returns>
         public static bool CloseApplication(bool forceClose = false)
         {
             return NavigationManagerImpl.CloseApplication(forceClose);

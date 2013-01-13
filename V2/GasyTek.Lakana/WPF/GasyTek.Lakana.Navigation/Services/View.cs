@@ -7,7 +7,7 @@ namespace GasyTek.Lakana.Navigation.Services
     public struct View : IEquatable<View>
     {
         /// <summary>
-        /// Gets the view key.
+        /// Gets the view instance key (different than the view key).
         /// </summary>
         /// <value>
         /// The view key.
