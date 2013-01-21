@@ -114,9 +114,9 @@ namespace GasyTek.Lakana.Navigation.Services
 
             var closedNode = _viewGroupCollectionManager.RemoveViewNode(viewKey);
 
-            if (closedNode.Value.IsModal)
+            if (closedNode.View.IsModal)
             {
-                var modalHostControl = (ModalHostControl)closedNode.Value.InternalViewInstance;
+                var modalHostControl = (ModalHostControl)closedNode.View.InternalViewInstance;
                 modalHostControl.ResultCompletionSource.SetResult(modalResult);
             }
 
@@ -125,7 +125,7 @@ namespace GasyTek.Lakana.Navigation.Services
             var oldNode = closedNode;
             _workspaceAdapter.PerformClose(newNode, oldNode);
 
-            return closedNode.Value;
+            return closedNode.View;
         }
 
         public bool CloseApplication(bool forceClose = false)

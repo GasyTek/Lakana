@@ -31,7 +31,7 @@ namespace GasyTek.Lakana.Navigation.Tests.Fakes
         {
         }
 
-        public void PerformClose(LinkedListNode<View> activatedNode, LinkedListNode<View> closedNode)
+        public void PerformClose(LinkedListNode<View> activatedNode, ClosedNode closedNode)
         {
         }
     }

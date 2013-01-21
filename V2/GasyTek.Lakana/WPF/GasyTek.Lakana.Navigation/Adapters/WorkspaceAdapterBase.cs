@@ -31,8 +31,59 @@ namespace GasyTek.Lakana.Navigation.Adapters
             TransitionAnimationProvider = transitionAnimationProvider;
         }
 
-        public abstract void PerformActivation(LinkedListNode<View> activatedNode, LinkedListNode<View> deactivatedNode);
-        public abstract void PerformClose(LinkedListNode<View> activatedNode, LinkedListNode<View> closedNode);
+        public void PerformActivation(LinkedListNode<View> activatedNode, LinkedListNode<View> deactivatedNode)
+        {
+            OnPerformActivation(activatedNode, deactivatedNode);
+
+            // TODO : reactivate animation support
+            return;
+
+            // animates the transition
+            if (TransitionAnimationProvider != null)
+            {
+                var transitionAnimation = TransitionAnimationProvider();
+                if (transitionAnimation != null)
+                {
+                    var activatedViewGroup = activatedNode != null
+                                                ? (ViewGroup)activatedNode.List
+                                                : new ViewGroup();
+                    var deactivatedViewGroup = deactivatedNode != null
+                                                   ? (ViewGroup)deactivatedNode.List
+                                                   : new ViewGroup();
+
+                    if (activatedViewGroup != deactivatedViewGroup)
+                    {
+                        // if transition from one view group to another
+                        var storyboard = transitionAnimation.TransitionViewGroupAnimation(activatedViewGroup, deactivatedViewGroup);
+                        storyboard.Begin();
+                    }
+                    else
+                    {
+                        // if transition from one view to another
+                        var activatedView = activatedNode != null ? activatedNode.Value.InternalViewInstance : null;
+                        var deactivatedView = deactivatedNode != null ? deactivatedNode.Value.InternalViewInstance : null;
+
+                        // if transition from view to another view from the same group
+                        var storyboard = transitionAnimation.TransitionViewAnimation(activatedView, deactivatedView);
+                        storyboard.Begin();
+                    }
+
+                }
+            }
+        }
+
+        public void PerformClose(LinkedListNode<View> activatedNode, ClosedNode closedNode)
+        {
+            if (TransitionAnimationProvider != null)
+            {
+
+            }
+
+            OnPerformClose(activatedNode, closedNode);
+        }
+
+        protected abstract void OnPerformActivation(LinkedListNode<View> activatedNode, LinkedListNode<View> deactivatedNode);
+        protected abstract void OnPerformClose(LinkedListNode<View> activatedNode, ClosedNode closedNode);
 
         #region IActiveAware support
 
