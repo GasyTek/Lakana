@@ -7,84 +7,87 @@ namespace GasyTek.Lakana.Navigation.Adapters
 {
     internal class GridWorkspaceAdapter : WorkspaceAdapterBase<Grid>
     {
-        public override void PerformActivation(LinkedListNode<View> activatedNode, LinkedListNode<View> deactivatedNode)
+        // Maps view groups to their actual framework element equivalent
+        private readonly Dictionary<ViewGroup, Grid> _groupMappings;
+
+        public Dictionary<ViewGroup, Grid> GroupMappings
+        {
+            get { return _groupMappings; }
+        }
+
+        public GridWorkspaceAdapter()
+        {
+            _groupMappings = new Dictionary<ViewGroup, Grid>();
+        }
+
+        protected override void OnPerformActivation(LinkedListNode<View> activatedNode, LinkedListNode<View> deactivatedNode)
         {
             if (deactivatedNode != null)
             {
-                foreach (var viewInfo in deactivatedNode.List)
-                {
-                    viewInfo.InternalViewInstance.Visibility = Visibility.Hidden;
-                }
+                // deactivating a view means deactivate its view group
+                var deactivatedViewGroup = (ViewGroup)deactivatedNode.List;
+                var deactivatedContainer = GroupMappings[deactivatedViewGroup];
+                deactivatedContainer.Visibility = Visibility.Hidden;
             }
 
             if (activatedNode != null)
             {
-                var zIndex = 10;
+                var zIndex = 1;
+                var activatedContainer = new Grid();
+                var activatedViewGroup = (ViewGroup)activatedNode.List;
                 var activatedView = activatedNode.Value.InternalViewInstance;
-                activatedView.Visibility = Visibility.Visible;
-                activatedView.IsEnabled = true;
-                Panel.SetZIndex(activatedView, zIndex);
 
-                if (!Workspace.Children.Contains(activatedView))
-                    Workspace.Children.Add(activatedView);
-
-                if (activatedNode.Value.IsModal)
+                if (GroupMappings.ContainsKey(activatedViewGroup))
                 {
-                    zIndex = 0;
-                    foreach (var viewInfo in activatedNode.List)
-                    {
-                        viewInfo.InternalViewInstance.Visibility = Visibility.Visible;
-                        viewInfo.InternalViewInstance.IsEnabled = Equals(viewInfo.InternalViewInstance, activatedView);
-                        Panel.SetZIndex(viewInfo.InternalViewInstance, zIndex);
-                        zIndex++;
-                    }
+                    activatedContainer = GroupMappings[activatedViewGroup];
+                    activatedContainer.Visibility = Visibility.Visible;
                 }
-            }
-
-            if (TransitionAnimationProvider != null)
-            {
-                var transitionAnimation = TransitionAnimationProvider();
-                if (transitionAnimation != null)
+                else
                 {
-                    var activatedViewGroup = activatedNode != null 
-                                                ? (ViewGroup) activatedNode.List 
-                                                : new ViewGroup();
-                    var deactivatedViewGroup = deactivatedNode != null
-                                                   ? (ViewGroup) deactivatedNode.List
-                                                   : new ViewGroup();
-
-                    if (activatedViewGroup != deactivatedViewGroup)
-                    {
-                        // if transition from view group to another
-                        var storyboard = transitionAnimation.TransitionViewGroupAnimation(activatedViewGroup, deactivatedViewGroup);
-                        storyboard.Begin();
-                    }
-                    else
-                    {
-                        var activatedView = activatedNode != null ? activatedNode.Value.InternalViewInstance : null;
-                        var deactivatedView = deactivatedNode != null ? deactivatedNode.Value.InternalViewInstance : null;
-
-                        // if transition from view to another view from the same group
-                        var storyboard = transitionAnimation.TransitionViewAnimation(activatedView, deactivatedView);
-                        storyboard.Begin();
-                    }
-
+                    Workspace.Children.Add(activatedContainer);
+                    GroupMappings.Add(activatedViewGroup, activatedContainer);
                 }
+
+                if (!activatedContainer.Children.Contains(activatedView))
+                    activatedContainer.Children.Add(activatedView);
+
+                foreach (var view in activatedViewGroup)
+                {
+                    Panel.SetZIndex(view.InternalViewInstance, zIndex);
+
+                    if (activatedNode.Value.IsModal)
+                    {
+                        view.InternalViewInstance.Visibility = Visibility.Visible;
+                    }
+
+                    view.InternalViewInstance.IsEnabled = Equals(activatedView, view.InternalViewInstance);
+
+                    zIndex++;
+                }
+
             }
         }
 
-        public override void PerformClose(LinkedListNode<View> activatedNode, LinkedListNode<View> closedNode)
+        protected override void OnPerformClose(LinkedListNode<View> activatedNode, ClosedNode closedNode)
         {
             if (closedNode != null)
             {
-                Workspace.Children.Remove(closedNode.Value.InternalViewInstance);
+                var closedViewGroup = closedNode.ViewGroup;
+                var closedContainer = GroupMappings[closedViewGroup];
+
+                closedContainer.Children.Remove(closedNode.View.InternalViewInstance);
+
+                if (closedContainer.Children.Count == 0)
+                {
+                    GroupMappings.Remove(closedViewGroup);
+                    Workspace.Children.Remove(closedContainer);
+                }
             }
 
             if (activatedNode != null)
             {
                 PerformActivation(activatedNode, null);
             }
-
         }
     }
 }

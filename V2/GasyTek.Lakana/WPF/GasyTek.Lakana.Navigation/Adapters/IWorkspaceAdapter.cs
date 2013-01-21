@@ -28,11 +28,12 @@ namespace GasyTek.Lakana.Navigation.Adapters
         /// <param name="activatedNode">The activated node.</param>
         /// <param name="deactivatedNode">The deactivated node.</param>
         void PerformActivation(LinkedListNode<View> activatedNode, LinkedListNode<View> deactivatedNode);
+
         /// <summary>
         /// Performs the close.
         /// </summary>
         /// <param name="activatedNode">The activated node.</param>
         /// <param name="closedNode">The closed node.</param>
-        void PerformClose(LinkedListNode<View> activatedNode, LinkedListNode<View> closedNode);
+        void PerformClose(LinkedListNode<View> activatedNode, ClosedNode closedNode);
     }
 }

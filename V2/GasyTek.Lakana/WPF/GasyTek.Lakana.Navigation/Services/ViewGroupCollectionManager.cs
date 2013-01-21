@@ -15,10 +15,7 @@ namespace GasyTek.Lakana.Navigation.Services
 
         public ReadOnlyObservableCollection<View> ViewCollection
         {
-            get
-            {
-                return _readOnlyViewCollection;
-            }
+            get { return _readOnlyViewCollection; }
         }
 
         public int NbViews
@@ -54,11 +51,11 @@ namespace GasyTek.Lakana.Navigation.Services
 
         public LinkedListNode<View> GetActiveNode()
         {
-            var activeStack = GetActiveStack();
-            return activeStack != null ? activeStack.Last : null;
+            var activeViewGroup = GetActiveViewGroup();
+            return activeViewGroup != null ? activeViewGroup.Last : null;
         }
 
-        public LinkedList<View> GetActiveStack()
+        public LinkedList<View> GetActiveViewGroup()
         {
             if (!_viewGroupCollection.Any()) return null;
             if (!_viewGroupCollection.Last.Value.Any()) return null;
@@ -120,21 +117,23 @@ namespace GasyTek.Lakana.Navigation.Services
             return q.Any();
         }
 
-        internal LinkedListNode<View> RemoveViewNode(string viewInstanceKey)
+        internal ClosedNode RemoveViewNode(string viewInstanceKey)
         {
             LinkedListNode<View> node;
             if (TryFindViewNode(viewInstanceKey, out node))
             {
-                var stack = (ViewGroup)node.List;
-                stack.Remove(node);
+                var viewGroup = (ViewGroup)node.List;
+                viewGroup.Remove(node);
 
-                if (stack.Count == 0)
-                    _viewGroupCollection.Remove(stack);
+                if (viewGroup.Count == 0)
+                    _viewGroupCollection.Remove(viewGroup);
 
                 _viewCollection.Remove(node.Value);
+
+                return new ClosedNode { View = node.Value, ViewGroup = viewGroup };
             }
 
-            return node;
+            return new ClosedNode { View = node.Value };
         }
 
         internal bool IsTopMostView(string viewInstanceKey)
@@ -187,5 +186,11 @@ namespace GasyTek.Lakana.Navigation.Services
     public class ViewGroupCollection : LinkedList<ViewGroup>
     {
 
+    }
+
+    public class ClosedNode
+    {
+        public View View { get; internal set; }
+        public ViewGroup ViewGroup { get; internal set; }
     }
 }

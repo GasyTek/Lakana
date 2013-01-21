@@ -10,141 +10,196 @@ namespace GasyTek.Lakana.Navigation.Tests
     public class GridWorkspaceAdapterFixture
     {
         private Grid _workspace;
-        private ViewGroupCollection _viewGroupCollection;
         private GridWorkspaceAdapter _workspaceAdapter;
 
         [TestInitialize]
         public void OnSetup()
         {
             _workspace = new Grid();
-            _viewGroupCollection = new ViewGroupCollection();
             _workspaceAdapter = new GridWorkspaceAdapter();
             _workspaceAdapter.SetMainWorkspace(_workspace);
-            _workspaceAdapter.SetViewGroupCollection(_viewGroupCollection);
+            _workspaceAdapter.SetViewGroupCollection(new ViewGroupCollection());
         }
 
         [TestClass]
         public class PerformActivation : GridWorkspaceAdapterFixture
         {
             [TestMethod]
-            public void ActivatedViewIsAddedIfNew()
+            public void ActivatedViewIsAddedInNewGroup()
             {
                 // Prepare
                 var view = new UserControl();
-                var viewStack = new ViewGroup();
-                viewStack.AddLast(new View("view1") { InternalViewInstance = view });
+                var viewGroup = new ViewGroup();
+                viewGroup.AddLast(new View("view1") { InternalViewInstance = view });
 
                 // Act
-                _workspaceAdapter.PerformActivation(viewStack.Last, null);
+                _workspaceAdapter.PerformActivation(viewGroup.Last, null);
 
                 // Verify
                 Assert.IsTrue(_workspace.Children.Count == 1);
+                Assert.IsInstanceOfType(_workspace.Children[0], typeof(Grid));
+                Assert.IsTrue(((Grid)_workspace.Children[0]).Children.Count == 1);
             }
 
             [TestMethod]
-            public void ActivatedViewHasHigherZIndex()
+            public void ActivatedViewIsAddedInExistingGroup()
+            {
+                // Prepare
+                var view1 = new UserControl();
+                var view2 = new UserControl();
+                var viewGroup = new ViewGroup();
+                var view1Node = viewGroup.AddLast(new View("view1") { InternalViewInstance = view1 });
+                var view2Node = viewGroup.AddLast(new View("view2") { InternalViewInstance = view2 });
+                _workspaceAdapter.PerformActivation(view1Node, null);
+
+                // Act
+                _workspaceAdapter.PerformActivation(view2Node, null);
+
+                // Verify
+                Assert.IsTrue(_workspace.Children.Count == 1);
+                Assert.IsInstanceOfType(_workspace.Children[0], typeof(Grid));
+                Assert.IsTrue(((Grid)_workspace.Children[0]).Children.Count == 2);
+            }
+
+            [TestMethod]
+            public void CanActivateViewMoreThanOnce()
             {
                 // Prepare
                 var view = new UserControl();
-                var viewStack = new ViewGroup();
-                viewStack.AddLast(new View("view1") { InternalViewInstance = view });
+                var viewGroup = new ViewGroup();
+                viewGroup.AddLast(new View("view1") { InternalViewInstance = view });
+                _workspaceAdapter.PerformActivation(viewGroup.Last, null);
 
                 // Act
-                _workspaceAdapter.PerformActivation(viewStack.Last, null);
+                _workspaceAdapter.PerformActivation(viewGroup.Last, null);
 
                 // Verify
-                Assert.IsTrue(Panel.GetZIndex(_workspace.Children[0]) > 0);
+                Assert.IsTrue(((Grid)_workspace.Children[0]).Children.Count == 1);
+            }
+
+            [TestMethod]
+            public void ActivatedViewHasPositiveZIndexInItsGroup()
+            {
+                // Prepare
+                var view = new UserControl();
+                var viewGroup = new ViewGroup();
+                viewGroup.AddLast(new View("view1") { InternalViewInstance = view });
+
+                // Act
+                _workspaceAdapter.PerformActivation(viewGroup.Last, null);
+
+                // Verify
+                Assert.IsTrue(Panel.GetZIndex(view) > 0);
+            }
+
+            [TestMethod]
+            public void ActivatedViewHasHigherZIndexInItsGroup()
+            {
+                // Prepare
+                var view1 = new UserControl();
+                var view2 = new UserControl();
+                var view3 = new UserControl();
+                var viewGroup = new ViewGroup();
+                var view1Node = viewGroup.AddLast(new View("view1") { InternalViewInstance = view1 });
+                var view2Node = viewGroup.AddLast(new View("view2") { InternalViewInstance = view2 });
+                var view3Node = viewGroup.AddLast(new View("view3") { InternalViewInstance = view3 });
+                _workspaceAdapter.PerformActivation(view1Node, null);
+                _workspaceAdapter.PerformActivation(view2Node, null);
+
+                // Act
+                _workspaceAdapter.PerformActivation(view3Node, null);
+
+                // Verify
+                Assert.IsTrue(Panel.GetZIndex(view1) < Panel.GetZIndex(view3));
+                Assert.IsTrue(Panel.GetZIndex(view2) < Panel.GetZIndex(view3));
+
             }
 
             [TestMethod]
             public void ActivatedModalAncestorsHaveAscendingSortedZIndex()
             {
                 // Prepare
-                var parentView = new UserControl();
-                var view = new UserControl();
-                var viewStack = new ViewGroup();
-                viewStack.AddLast(new View("parentView1") { InternalViewInstance = parentView });
-                viewStack.AddLast(new View("view1") { InternalViewInstance = view, IsModal = true });
+                var view1 = new UserControl();
+                var view2 = new UserControl();
+                var modalView = new UserControl();
+                var viewGroup = new ViewGroup();
+                var view1Node = viewGroup.AddLast(new View("view1") { InternalViewInstance = view1 });
+                var view2Node = viewGroup.AddLast(new View("view2") { InternalViewInstance = view2 });
+                var modalViewNode = viewGroup.AddLast(new View("view3") { InternalViewInstance = modalView, IsModal = true });
+                _workspaceAdapter.PerformActivation(view1Node, null);
+                _workspaceAdapter.PerformActivation(view2Node, null);
 
                 // Act
-                _workspaceAdapter.PerformActivation(viewStack.Last, null);
+                _workspaceAdapter.PerformActivation(modalViewNode, null);
 
                 // Verify
-                Assert.IsTrue(Panel.GetZIndex(parentView) < Panel.GetZIndex(view));
-
-            }
-            
-            [TestMethod]
-            public void ActivatedModalAncestorsVisibleAndDisabled()
-            {
-                // Prepare
-                var parentView = new UserControl();
-                var view = new UserControl();
-                var viewStack = new ViewGroup();
-                viewStack.AddLast(new View("parentView1") { InternalViewInstance = parentView });
-                viewStack.AddLast(new View("view1") { InternalViewInstance = view, IsModal = true });
-
-                // Act
-                _workspaceAdapter.PerformActivation(viewStack.Last, null);
-
-                // Verify
-                Assert.IsTrue(parentView.Visibility == Visibility.Visible);
-                Assert.IsFalse(parentView.IsEnabled);
-                Assert.IsTrue(view.Visibility == Visibility.Visible);
-                Assert.IsTrue(view.IsEnabled);
+                Assert.IsTrue(Panel.GetZIndex(view1) < Panel.GetZIndex(view2));
+                Assert.IsTrue(Panel.GetZIndex(view2) < Panel.GetZIndex(modalView));
             }
 
             [TestMethod]
-            public void DeactivatedViewIsNotVisible()
+            public void ActivatedModalAncestorsAreVisibleAndDisabled()
             {
                 // Prepare
-                var view = new UserControl();
-                var viewStack = new ViewGroup();
-                viewStack.AddLast(new View("view1") { InternalViewInstance = view });
-                _workspaceAdapter.PerformActivation(viewStack.Last, null);
+                var view1 = new UserControl();
+                var view2 = new UserControl();
+                var modalView = new UserControl();
+                var viewGroup = new ViewGroup();
+                var view1Node = viewGroup.AddLast(new View("view1") { InternalViewInstance = view1 });
+                var view2Node = viewGroup.AddLast(new View("view2") { InternalViewInstance = view2 });
+                var modalViewNode = viewGroup.AddLast(new View("view3") { InternalViewInstance = modalView, IsModal = true });
+                _workspaceAdapter.PerformActivation(view1Node, null);
+                _workspaceAdapter.PerformActivation(view2Node, null);
 
                 // Act
-                _workspaceAdapter.PerformActivation(null, viewStack.Last);
+                _workspaceAdapter.PerformActivation(modalViewNode, null);
 
                 // Verify
-                Assert.IsTrue(view.Visibility == Visibility.Hidden);
+                Assert.IsTrue(view1.Visibility == Visibility.Visible);
+                Assert.IsFalse(view1.IsEnabled);
+                Assert.IsTrue(view2.Visibility == Visibility.Visible);
+                Assert.IsFalse(view2.IsEnabled);
+                Assert.IsTrue(modalView.Visibility == Visibility.Visible);
+                Assert.IsTrue(modalView.IsEnabled);
             }
 
             [TestMethod]
-            public void DeactivateModalViewShouldHideItsStack()
+            public void DeactivatedViewGroupIsNotVisible()
             {
                 // Prepare
-                var parentView = new UserControl();
-                var view = new UserControl();
-                var viewStack = new ViewGroup();
-                viewStack.AddLast(new View("parentView1") { InternalViewInstance = parentView });
-                viewStack.AddLast(new View("view1") { InternalViewInstance = view, IsModal = true });
-                _workspaceAdapter.PerformActivation(viewStack.Last, null);
+                var view1 = new UserControl();
+                var view2 = new UserControl();
+                var viewGroup1 = new ViewGroup();
+                var viewGroup2 = new ViewGroup();
+                viewGroup1.AddLast(new View("view1") { InternalViewInstance = view1 });
+                viewGroup2.AddLast(new View("view2") { InternalViewInstance = view2 });
+                _workspaceAdapter.PerformActivation(viewGroup1.Last, null);
 
                 // Act
-                _workspaceAdapter.PerformActivation(null, viewStack.Last);
+                _workspaceAdapter.PerformActivation(viewGroup2.Last, viewGroup1.Last);
 
                 // Verify
-                Assert.IsTrue(parentView.Visibility == Visibility.Hidden);
-                Assert.IsTrue(view.Visibility == Visibility.Hidden);
+                Assert.IsTrue(_workspace.Children[0].Visibility == Visibility.Hidden);  // first child corresponds to viewGroup1
             }
 
             [TestMethod]
-            public void PreviouslyDeactivatedViewIsMadeVisibleIfReactivated()
+            public void ReactivatedViewGroupIsVisible()
             {
                 // Prepare
-                var view = new UserControl();
-                var viewStack = new ViewGroup();
-                viewStack.AddLast(new View("view1") { InternalViewInstance = view });
-                _workspaceAdapter.PerformActivation(viewStack.Last, null);
-                _workspaceAdapter.PerformActivation(null, viewStack.Last);
+                var view1 = new UserControl();
+                var view2 = new UserControl();
+                var viewGroup1 = new ViewGroup();
+                var viewGroup2 = new ViewGroup();
+                viewGroup1.AddLast(new View("view1") { InternalViewInstance = view1 });
+                viewGroup2.AddLast(new View("view2") { InternalViewInstance = view2 });
+                _workspaceAdapter.PerformActivation(viewGroup1.Last, null);
+                _workspaceAdapter.PerformActivation(viewGroup2.Last, viewGroup1.Last);
 
                 // Act
-                _workspaceAdapter.PerformActivation(viewStack.Last, null);
+                _workspaceAdapter.PerformActivation(viewGroup1.Last, viewGroup2.Last);
 
                 // Verify
-                Assert.IsTrue(_workspace.Children.Count == 1);
-                Assert.IsTrue(view.Visibility == Visibility.Visible);
+                Assert.IsTrue(_workspace.Children[0].Visibility == Visibility.Visible);  // first child corresponds to viewGroup1
             }
         }
 
@@ -155,13 +210,32 @@ namespace GasyTek.Lakana.Navigation.Tests
             public void ClosedViewIsRemoved()
             {
                 // Prepare
-                var view = new UserControl();
-                var viewStack = new ViewGroup();
-                viewStack.AddLast(new View("view1") { InternalViewInstance = view });
-                _workspaceAdapter.PerformActivation(viewStack.Last, null);
+                var view1 = new UserControl();
+                var view2 = new UserControl();
+                var viewGroup = new ViewGroup();
+                var view1Node = viewGroup.AddLast(new View("view1") { InternalViewInstance = view1 });
+                var view2Node = viewGroup.AddLast(new View("view2") { InternalViewInstance = view2 });
+                _workspaceAdapter.PerformActivation(view1Node, null);
+                _workspaceAdapter.PerformActivation(view2Node, view1Node);
 
                 // Act
-                _workspaceAdapter.PerformClose(null, viewStack.Last);
+                _workspaceAdapter.PerformClose(null, new ClosedNode { View = view2Node.Value, ViewGroup = viewGroup });
+
+                // Verify
+                Assert.IsTrue(((Grid)_workspace.Children[0]).Children.Count == 1);
+            }
+
+            [TestMethod]
+            public void ClosedViewGroupIsRemovedIfEmpty()
+            {
+                // Prepare
+                var view1 = new UserControl();
+                var viewGroup = new ViewGroup();
+                var view1Node = viewGroup.AddLast(new View("view1") { InternalViewInstance = view1 });
+                _workspaceAdapter.PerformActivation(view1Node, null);
+
+                // Act
+                _workspaceAdapter.PerformClose(null, new ClosedNode { View = view1Node.Value, ViewGroup = viewGroup });
 
                 // Verify
                 Assert.IsTrue(_workspace.Children.Count == 0);
@@ -171,20 +245,19 @@ namespace GasyTek.Lakana.Navigation.Tests
             public void ClosedModalViewParentIsReEnabled()
             {
                 // Prepare
-                var parentView = new UserControl();
-                var view = new UserControl();
-                var viewStack = new ViewGroup();
-                viewStack.AddLast(new View("parentView1") { InternalViewInstance = parentView });
-                _workspaceAdapter.PerformActivation(viewStack.Last, null);
-                viewStack.AddLast(new View("view1") { InternalViewInstance = view, IsModal = true });
-                _workspaceAdapter.PerformActivation(viewStack.Last, viewStack.First);
+                var view1 = new UserControl();
+                var view2 = new UserControl();
+                var viewGroup = new ViewGroup();
+                var view1Node = viewGroup.AddLast(new View("view1") { InternalViewInstance = view1 });
+                var view2Node = viewGroup.AddLast(new View("view2") { InternalViewInstance = view2, IsModal = true });
+                _workspaceAdapter.PerformActivation(view1Node, null);
+                _workspaceAdapter.PerformActivation(view2Node, view1Node);
 
                 // Act
-                _workspaceAdapter.PerformClose(viewStack.First, viewStack.Last);
+                _workspaceAdapter.PerformClose(view1Node, new ClosedNode { View = view2Node.Value, ViewGroup = viewGroup });
 
                 // Verify
-                Assert.IsTrue(_workspace.Children.Count == 1);
-                Assert.IsTrue(parentView.IsEnabled);
+                Assert.IsTrue(view1.IsEnabled);
             }
 
         }
