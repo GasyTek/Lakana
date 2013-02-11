@@ -34,10 +34,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
         public void PerformActivation(LinkedListNode<View> activatedNode, LinkedListNode<View> deactivatedNode)
         {
             OnPerformActivation(activatedNode, deactivatedNode);
-
-            // TODO : reactivate animation support
-            return;
-
+            
             // animates the transition
             if (TransitionAnimationProvider != null)
             {
@@ -45,13 +42,13 @@ namespace GasyTek.Lakana.Navigation.Adapters
                 if (transitionAnimation != null)
                 {
                     var activatedViewGroup = activatedNode != null
-                                                ? (ViewGroup)activatedNode.List
-                                                : new ViewGroup();
+                                                ? OnGetViewGroupMapping((ViewGroup)activatedNode.List)
+                                                : null;
                     var deactivatedViewGroup = deactivatedNode != null
-                                                   ? (ViewGroup)deactivatedNode.List
-                                                   : new ViewGroup();
+                                                   ? OnGetViewGroupMapping((ViewGroup)deactivatedNode.List)
+                                                   : null;
 
-                    if (activatedViewGroup != deactivatedViewGroup)
+                    if (!Equals(activatedViewGroup, deactivatedViewGroup))
                     {
                         // if transition from one view group to another
                         var storyboard = transitionAnimation.TransitionViewGroupAnimation(activatedViewGroup, deactivatedViewGroup);
@@ -84,6 +81,8 @@ namespace GasyTek.Lakana.Navigation.Adapters
 
         protected abstract void OnPerformActivation(LinkedListNode<View> activatedNode, LinkedListNode<View> deactivatedNode);
         protected abstract void OnPerformClose(LinkedListNode<View> activatedNode, ClosedNode closedNode);
+
+        protected abstract FrameworkElement OnGetViewGroupMapping(ViewGroup viewGroup);
 
         #region IActiveAware support
 

@@ -133,7 +133,7 @@ namespace GasyTek.Lakana.Navigation.Services
                 return new ClosedNode { View = node.Value, ViewGroup = viewGroup };
             }
 
-            return new ClosedNode { View = node.Value };
+            throw new ViewInstanceNotFoundException(viewInstanceKey);
         }
 
         internal bool IsTopMostView(string viewInstanceKey)
