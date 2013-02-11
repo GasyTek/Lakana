@@ -15,10 +15,7 @@ namespace Samples.GasyTek.Lakana.Navigation
 
         public ReadOnlyObservableCollection<View> Views
         {
-            get
-            {
-                return NavigationManager.Views;
-            }
+            get { return NavigationManager.Views; }
         }
 
         public MainWindowViewModel()

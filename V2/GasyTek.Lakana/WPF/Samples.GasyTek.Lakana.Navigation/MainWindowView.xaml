@@ -9,7 +9,6 @@
         Height="600"
         Title="Lakana - Sample Application"
         Background="{DynamicResource WindowBackgroundBrush}">
-
     <DockPanel>
         <Menu x:Name="MainMenu" DockPanel.Dock="Top">          
             <MenuItem Header="File">                
@@ -26,7 +25,7 @@
                 <MenuItem x:Name="MenuNoAnimation"
                           Header="No animation" 
                           IsCheckable="True" />
-                <MenuItem x:Name="MenuFade"
+                <MenuItem x:Name="MenuFadeAnimation"
                           Header="Fade"
                           IsCheckable="True" 
                           IsChecked="True" />

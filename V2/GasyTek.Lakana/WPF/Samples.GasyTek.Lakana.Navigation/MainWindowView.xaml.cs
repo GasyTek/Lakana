@@ -51,15 +51,15 @@ namespace Samples.GasyTek.Lakana.Navigation
         {
             switch (((MenuItem)e.Source).Name)
             {
-                case "menuNoAnimation":
+                case "MenuNoAnimation":
                     MenuNoAnimation.IsChecked = true;
-                    MenuFade.IsChecked = false;
-                    //NavigationManager.ChangeTransitionAnimation(Transition.NoTransition);
+                    MenuFadeAnimation.IsChecked = false;
+                    NavigationManager.ChangeTransitionAnimation(NoAnimation.Create());
                     break;
-                case "menuFade":
+                case "MenuFadeAnimation":
                     MenuNoAnimation.IsChecked = false;
-                    MenuFade.IsChecked = true;
-                    //NavigationManager.ChangeTransitionAnimation(Transition.FadeTransition);
+                    MenuFadeAnimation.IsChecked = true;
+                    NavigationManager.ChangeTransitionAnimation(FadeTransition.Create());
                     break;
             }
         }

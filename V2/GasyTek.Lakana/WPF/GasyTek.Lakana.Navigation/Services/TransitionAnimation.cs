@@ -6,10 +6,10 @@ namespace GasyTek.Lakana.Navigation.Services
     /// <summary>
     /// Delegate that provides a storyboard to animate the transition between two view groups.
     /// </summary>
-    /// <param name="activateGroup">The activated group.</param>
-    /// <param name="deactivateGroup">The deactivated group.</param>
+    /// <param name="activatedGroup">The activated group.</param>
+    /// <param name="deactivatedGroup">The deactivated group.</param>
     /// <returns></returns>
-    public delegate Storyboard TransitionViewGroupAnimation(ViewGroup activateGroup, ViewGroup deactivateGroup);
+    public delegate Storyboard TransitionViewGroupAnimation(FrameworkElement activatedGroup, FrameworkElement deactivatedGroup);
 
     /// <summary>
     /// Delegate that provides a storyboard to animate the transition between two views.
@@ -25,7 +25,7 @@ namespace GasyTek.Lakana.Navigation.Services
     public class TransitionAnimation
     {
         /// <summary>
-        /// Gets the transition view group animation.
+        /// Gets the animation used when transitioning from one group to another.
         /// </summary>
         /// <value>
         /// The transition view group animation.
@@ -33,7 +33,7 @@ namespace GasyTek.Lakana.Navigation.Services
         public TransitionViewGroupAnimation TransitionViewGroupAnimation { get; private set; }
 
         /// <summary>
-        /// Gets the transition view animation.
+        /// Gets the animation used when transitioning from one view to another.
         /// </summary>
         /// <value>
         /// The transition view animation.

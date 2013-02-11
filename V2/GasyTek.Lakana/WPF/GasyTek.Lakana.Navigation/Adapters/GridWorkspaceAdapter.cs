@@ -89,5 +89,10 @@ namespace GasyTek.Lakana.Navigation.Adapters
                 PerformActivation(activatedNode, null);
             }
         }
+
+        protected override FrameworkElement OnGetViewGroupMapping(ViewGroup viewGroup)
+        {
+            return GroupMappings.ContainsKey(viewGroup) ? GroupMappings[viewGroup] : null;
+        }
     }
 }
