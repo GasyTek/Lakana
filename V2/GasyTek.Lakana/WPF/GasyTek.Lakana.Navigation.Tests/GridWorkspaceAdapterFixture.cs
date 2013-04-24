@@ -30,10 +30,10 @@ namespace GasyTek.Lakana.Navigation.Tests
                 // Prepare
                 var view = new UserControl();
                 var viewGroup = new ViewGroup();
-                viewGroup.AddLast(new View("view1") { InternalViewInstance = view });
+                viewGroup.Push(new View("view1") { InternalViewInstance = view });
 
                 // Act
-                _workspaceAdapter.PerformActivation(viewGroup.Last, null);
+                _workspaceAdapter.PerformActivation(viewGroup.Peek(), null);
 
                 // Verify
                 Assert.IsTrue(_workspace.Children.Count == 1);
@@ -48,8 +48,8 @@ namespace GasyTek.Lakana.Navigation.Tests
                 var view1 = new UserControl();
                 var view2 = new UserControl();
                 var viewGroup = new ViewGroup();
-                var view1Node = viewGroup.AddLast(new View("view1") { InternalViewInstance = view1 });
-                var view2Node = viewGroup.AddLast(new View("view2") { InternalViewInstance = view2 });
+                var view1Node = viewGroup.Push(new View("view1") { InternalViewInstance = view1 });
+                var view2Node = viewGroup.Push(new View("view2") { InternalViewInstance = view2 });
                 _workspaceAdapter.PerformActivation(view1Node, null);
 
                 // Act
@@ -67,11 +67,11 @@ namespace GasyTek.Lakana.Navigation.Tests
                 // Prepare
                 var view = new UserControl();
                 var viewGroup = new ViewGroup();
-                viewGroup.AddLast(new View("view1") { InternalViewInstance = view });
-                _workspaceAdapter.PerformActivation(viewGroup.Last, null);
+                viewGroup.Push(new View("view1") { InternalViewInstance = view });
+                _workspaceAdapter.PerformActivation(viewGroup.Peek(), null);
 
                 // Act
-                _workspaceAdapter.PerformActivation(viewGroup.Last, null);
+                _workspaceAdapter.PerformActivation(viewGroup.Peek(), null);
 
                 // Verify
                 Assert.IsTrue(((Grid)_workspace.Children[0]).Children.Count == 1);
@@ -83,10 +83,10 @@ namespace GasyTek.Lakana.Navigation.Tests
                 // Prepare
                 var view = new UserControl();
                 var viewGroup = new ViewGroup();
-                viewGroup.AddLast(new View("view1") { InternalViewInstance = view });
+                viewGroup.Push(new View("view1") { InternalViewInstance = view });
 
                 // Act
-                _workspaceAdapter.PerformActivation(viewGroup.Last, null);
+                _workspaceAdapter.PerformActivation(viewGroup.Peek(), null);
 
                 // Verify
                 Assert.IsTrue(Panel.GetZIndex(view) > 0);
@@ -100,9 +100,9 @@ namespace GasyTek.Lakana.Navigation.Tests
                 var view2 = new UserControl();
                 var view3 = new UserControl();
                 var viewGroup = new ViewGroup();
-                var view1Node = viewGroup.AddLast(new View("view1") { InternalViewInstance = view1 });
-                var view2Node = viewGroup.AddLast(new View("view2") { InternalViewInstance = view2 });
-                var view3Node = viewGroup.AddLast(new View("view3") { InternalViewInstance = view3 });
+                var view1Node = viewGroup.Push(new View("view1") { InternalViewInstance = view1 });
+                var view2Node = viewGroup.Push(new View("view2") { InternalViewInstance = view2 });
+                var view3Node = viewGroup.Push(new View("view3") { InternalViewInstance = view3 });
                 _workspaceAdapter.PerformActivation(view1Node, null);
                 _workspaceAdapter.PerformActivation(view2Node, null);
 
@@ -123,9 +123,9 @@ namespace GasyTek.Lakana.Navigation.Tests
                 var view2 = new UserControl();
                 var modalView = new UserControl();
                 var viewGroup = new ViewGroup();
-                var view1Node = viewGroup.AddLast(new View("view1") { InternalViewInstance = view1 });
-                var view2Node = viewGroup.AddLast(new View("view2") { InternalViewInstance = view2 });
-                var modalViewNode = viewGroup.AddLast(new View("view3") { InternalViewInstance = modalView, IsModal = true });
+                var view1Node = viewGroup.Push(new View("view1") { InternalViewInstance = view1 });
+                var view2Node = viewGroup.Push(new View("view2") { InternalViewInstance = view2 });
+                var modalViewNode = viewGroup.Push(new View("view3") { InternalViewInstance = modalView, IsModal = true });
                 _workspaceAdapter.PerformActivation(view1Node, null);
                 _workspaceAdapter.PerformActivation(view2Node, null);
 
@@ -145,9 +145,9 @@ namespace GasyTek.Lakana.Navigation.Tests
                 var view2 = new UserControl();
                 var modalView = new UserControl();
                 var viewGroup = new ViewGroup();
-                var view1Node = viewGroup.AddLast(new View("view1") { InternalViewInstance = view1 });
-                var view2Node = viewGroup.AddLast(new View("view2") { InternalViewInstance = view2 });
-                var modalViewNode = viewGroup.AddLast(new View("view3") { InternalViewInstance = modalView, IsModal = true });
+                var view1Node = viewGroup.Push(new View("view1") { InternalViewInstance = view1 });
+                var view2Node = viewGroup.Push(new View("view2") { InternalViewInstance = view2 });
+                var modalViewNode = viewGroup.Push(new View("view3") { InternalViewInstance = modalView, IsModal = true });
                 _workspaceAdapter.PerformActivation(view1Node, null);
                 _workspaceAdapter.PerformActivation(view2Node, null);
 
@@ -171,12 +171,12 @@ namespace GasyTek.Lakana.Navigation.Tests
                 var view2 = new UserControl();
                 var viewGroup1 = new ViewGroup();
                 var viewGroup2 = new ViewGroup();
-                viewGroup1.AddLast(new View("view1") { InternalViewInstance = view1 });
-                viewGroup2.AddLast(new View("view2") { InternalViewInstance = view2 });
-                _workspaceAdapter.PerformActivation(viewGroup1.Last, null);
+                viewGroup1.Push(new View("view1") { InternalViewInstance = view1 });
+                viewGroup2.Push(new View("view2") { InternalViewInstance = view2 });
+                _workspaceAdapter.PerformActivation(viewGroup1.Peek(), null);
 
                 // Act
-                _workspaceAdapter.PerformActivation(viewGroup2.Last, viewGroup1.Last);
+                _workspaceAdapter.PerformActivation(viewGroup2.Peek(), viewGroup1.Peek());
 
                 // Verify
                 Assert.IsTrue(_workspace.Children[0].Visibility == Visibility.Hidden);  // first child corresponds to viewGroup1
@@ -190,13 +190,13 @@ namespace GasyTek.Lakana.Navigation.Tests
                 var view2 = new UserControl();
                 var viewGroup1 = new ViewGroup();
                 var viewGroup2 = new ViewGroup();
-                viewGroup1.AddLast(new View("view1") { InternalViewInstance = view1 });
-                viewGroup2.AddLast(new View("view2") { InternalViewInstance = view2 });
-                _workspaceAdapter.PerformActivation(viewGroup1.Last, null);
-                _workspaceAdapter.PerformActivation(viewGroup2.Last, viewGroup1.Last);
+                viewGroup1.Push(new View("view1") { InternalViewInstance = view1 });
+                viewGroup2.Push(new View("view2") { InternalViewInstance = view2 });
+                _workspaceAdapter.PerformActivation(viewGroup1.Peek(), null);
+                _workspaceAdapter.PerformActivation(viewGroup2.Peek(), viewGroup1.Peek());
 
                 // Act
-                _workspaceAdapter.PerformActivation(viewGroup1.Last, viewGroup2.Last);
+                _workspaceAdapter.PerformActivation(viewGroup1.Peek(), viewGroup2.Peek());
 
                 // Verify
                 Assert.IsTrue(_workspace.Children[0].Visibility == Visibility.Visible);  // first child corresponds to viewGroup1
@@ -213,13 +213,13 @@ namespace GasyTek.Lakana.Navigation.Tests
                 var view1 = new UserControl();
                 var view2 = new UserControl();
                 var viewGroup = new ViewGroup();
-                var view1Node = viewGroup.AddLast(new View("view1") { InternalViewInstance = view1 });
-                var view2Node = viewGroup.AddLast(new View("view2") { InternalViewInstance = view2 });
+                var view1Node = viewGroup.Push(new View("view1") { InternalViewInstance = view1 });
+                var view2Node = viewGroup.Push(new View("view2") { InternalViewInstance = view2 });
                 _workspaceAdapter.PerformActivation(view1Node, null);
                 _workspaceAdapter.PerformActivation(view2Node, view1Node);
 
                 // Act
-                _workspaceAdapter.PerformClose(null, new ClosedNode { View = view2Node.Value, ViewGroup = viewGroup });
+                _workspaceAdapter.PerformClose(null, new ViewGroupNode(viewGroup, view2Node.Value));
 
                 // Verify
                 Assert.IsTrue(((Grid)_workspace.Children[0]).Children.Count == 1);
@@ -231,11 +231,11 @@ namespace GasyTek.Lakana.Navigation.Tests
                 // Prepare
                 var view1 = new UserControl();
                 var viewGroup = new ViewGroup();
-                var view1Node = viewGroup.AddLast(new View("view1") { InternalViewInstance = view1 });
+                var view1Node = viewGroup.Push(new View("view1") { InternalViewInstance = view1 });
                 _workspaceAdapter.PerformActivation(view1Node, null);
 
                 // Act
-                _workspaceAdapter.PerformClose(null, new ClosedNode { View = view1Node.Value, ViewGroup = viewGroup });
+                _workspaceAdapter.PerformClose(null, new ViewGroupNode(viewGroup, view1Node.Value));
 
                 // Verify
                 Assert.IsTrue(_workspace.Children.Count == 0);
@@ -248,13 +248,13 @@ namespace GasyTek.Lakana.Navigation.Tests
                 var view1 = new UserControl();
                 var view2 = new UserControl();
                 var viewGroup = new ViewGroup();
-                var view1Node = viewGroup.AddLast(new View("view1") { InternalViewInstance = view1 });
-                var view2Node = viewGroup.AddLast(new View("view2") { InternalViewInstance = view2, IsModal = true });
+                var view1Node = viewGroup.Push(new View("view1") { InternalViewInstance = view1 });
+                var view2Node = viewGroup.Push(new View("view2") { InternalViewInstance = view2, IsModal = true });
                 _workspaceAdapter.PerformActivation(view1Node, null);
                 _workspaceAdapter.PerformActivation(view2Node, view1Node);
 
                 // Act
-                _workspaceAdapter.PerformClose(view1Node, new ClosedNode { View = view2Node.Value, ViewGroup = viewGroup });
+                _workspaceAdapter.PerformClose(view1Node, new ViewGroupNode(viewGroup, view2Node.Value));
 
                 // Verify
                 Assert.IsTrue(view1.IsEnabled);

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 namespace GasyTek.Lakana.Navigation.Services
 {
     /// <summary>
-    /// An object that represents the result returned by a modal view that was shown.
+    /// An object that represents the result returned by a modal view that was displayed.
     /// </summary>
     public class ModalResult<TResult>
     {
@@ -20,6 +20,10 @@ namespace GasyTek.Lakana.Navigation.Services
         /// </summary>
         public View View { get; internal set; }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ModalResult{TResult}" /> class.
+        /// </summary>
+        /// <param name="firstTask">The first task.</param>
         internal ModalResult(Task<object> firstTask)
         {
             _taskCompletionSource = new TaskCompletionSource<TResult>();

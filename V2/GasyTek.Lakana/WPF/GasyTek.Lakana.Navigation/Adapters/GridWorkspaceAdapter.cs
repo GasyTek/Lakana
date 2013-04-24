@@ -20,12 +20,12 @@ namespace GasyTek.Lakana.Navigation.Adapters
             _groupMappings = new Dictionary<ViewGroup, Grid>();
         }
 
-        protected override void OnPerformActivation(LinkedListNode<View> activatedNode, LinkedListNode<View> deactivatedNode)
+        protected override void OnPerformActivation(ViewGroupNode activatedNode, ViewGroupNode deactivatedNode)
         {
             if (deactivatedNode != null)
             {
                 // deactivating a view means deactivate its view group
-                var deactivatedViewGroup = (ViewGroup)deactivatedNode.List;
+                var deactivatedViewGroup = deactivatedNode.List;
                 var deactivatedContainer = GroupMappings[deactivatedViewGroup];
                 deactivatedContainer.Visibility = Visibility.Hidden;
             }
@@ -34,7 +34,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
             {
                 var zIndex = 1;
                 var activatedContainer = new Grid();
-                var activatedViewGroup = (ViewGroup)activatedNode.List;
+                var activatedViewGroup = activatedNode.List;
                 var activatedView = activatedNode.Value.InternalViewInstance;
 
                 if (GroupMappings.ContainsKey(activatedViewGroup))
@@ -68,14 +68,14 @@ namespace GasyTek.Lakana.Navigation.Adapters
             }
         }
 
-        protected override void OnPerformClose(LinkedListNode<View> activatedNode, ClosedNode closedNode)
+        protected override void OnPerformClose(ViewGroupNode activatedNode, ViewGroupNode closedNode)
         {
             if (closedNode != null)
             {
-                var closedViewGroup = closedNode.ViewGroup;
+                var closedViewGroup = closedNode.List;
                 var closedContainer = GroupMappings[closedViewGroup];
 
-                closedContainer.Children.Remove(closedNode.View.InternalViewInstance);
+                closedContainer.Children.Remove(closedNode.Value.InternalViewInstance);
 
                 if (closedContainer.Children.Count == 0)
                 {

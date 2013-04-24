@@ -16,7 +16,7 @@ namespace GasyTek.Lakana.Navigation.Services
         View NavigateTo(string navigationKey);
 
         /// <summary>
-        /// Navigates to.
+        /// Navigates to the specified navigation key.
         /// </summary>
         /// <param name="navigationKey">The navigation key. It must be of the form : [ parentViewKey [ # instanceID ] / ] viewKey [ # instanceID ] where fields between [..] are optionals.</param>
         /// <param name="viewModel">The view model.</param>
@@ -24,7 +24,7 @@ namespace GasyTek.Lakana.Navigation.Services
         View NavigateTo(string navigationKey, object viewModel);
 
         /// <summary>
-        /// Shows the modal.
+        /// Display the specified view as modal.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="navigationKey">The navigation key. It must be of the form : [ parentViewKey [ # instanceID ] / ] viewKey [ # instanceID ] where fields between [..] are optionals.</param>
@@ -32,7 +32,7 @@ namespace GasyTek.Lakana.Navigation.Services
         ModalResult<TResult> ShowModal<TResult>(string navigationKey);
 
         /// <summary>
-        /// Shows the modal.
+        /// Display the specified view as modal.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="navigationKey">The navigation key. It must be of the form : [ parentViewKey [ # instanceID ] / ] viewKey [ # instanceID ] where fields between [..] are optionals.</param>
@@ -41,7 +41,7 @@ namespace GasyTek.Lakana.Navigation.Services
         ModalResult<TResult> ShowModal<TResult>(string navigationKey, object viewModel);
 
         /// <summary>
-        /// Shows the message box.
+        /// Display a message box.
         /// </summary>
         /// <param name="ownerViewKey">The parent instance key : parentViewKey [ # instanceID ]</param>
         /// <param name="message">The message.</param>
@@ -53,7 +53,7 @@ namespace GasyTek.Lakana.Navigation.Services
                                               MessageBoxButton messageBoxButton = MessageBoxButton.OK);
 
         /// <summary>
-        /// Closes the specified view key.
+        /// Closes the specified view.
         /// </summary>
         /// <param name="viewKey">The view key.</param>
         /// <param name="modalResult">The modal result.</param>
@@ -63,7 +63,7 @@ namespace GasyTek.Lakana.Navigation.Services
         /// <summary>
         /// Closes the application.
         /// </summary>
-        /// <param name="forceClose">if set to <c>true</c> [force close].</param>
+        /// <param name="forceClose">if set to <c>true</c> force the application to close.</param>
         /// <returns></returns>
         bool CloseApplication(bool forceClose = false);
     }

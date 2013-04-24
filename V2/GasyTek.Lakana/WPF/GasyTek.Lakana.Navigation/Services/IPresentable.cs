@@ -7,6 +7,12 @@ namespace GasyTek.Lakana.Navigation.Services
     /// </summary>
     public interface IPresentable
     {
+        /// <summary>
+        /// Gets the presentation metadata.
+        /// </summary>
+        /// <value>
+        /// The presentation metadata.
+        /// </value>
         IUIMetadata UIMetadata { get; }
     }
 }

@@ -3,7 +3,7 @@ using System;
 namespace GasyTek.Lakana.Navigation.Attributes
 {
     /// <summary>
-    /// Attribute used to attach a unique key to a view.
+    /// Attribute taht can be used to attach a unique key to a view.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, Inherited = false, AllowMultiple = false)]
     public sealed class ViewKeyAttribute : Attribute

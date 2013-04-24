@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -38,7 +37,7 @@ namespace GasyTek.Lakana.Navigation.Services
             }
         }
 
-        internal LinkedListNode<View> ActiveNode
+        internal ViewGroupNode ActiveNode
         {
             get { return _viewGroupCollectionManager.GetActiveNode(); }
         }
@@ -114,9 +113,9 @@ namespace GasyTek.Lakana.Navigation.Services
 
             var closedNode = _viewGroupCollectionManager.RemoveViewNode(viewKey);
 
-            if (closedNode.View.IsModal)
+            if (closedNode.Value.IsModal)
             {
-                var modalHostControl = (ModalHostControl)closedNode.View.InternalViewInstance;
+                var modalHostControl = (ModalHostControl)closedNode.Value.InternalViewInstance;
                 modalHostControl.ResultCompletionSource.SetResult(modalResult);
             }
 
@@ -125,7 +124,7 @@ namespace GasyTek.Lakana.Navigation.Services
             var oldNode = closedNode;
             _workspaceAdapter.PerformClose(newNode, oldNode);
 
-            return closedNode.View;
+            return closedNode.Value;
         }
 
         public bool CloseApplication(bool forceClose = false)
@@ -167,7 +166,7 @@ namespace GasyTek.Lakana.Navigation.Services
             var hasParent = navigationKeyInstance.HasParent;
             var oldNode = _viewGroupCollectionManager.GetActiveNode();
 
-            LinkedListNode<View> newNode;
+            ViewGroupNode newNode;
 
             // if the navigation key refers to a parent e.g : "parentView/view"
 
@@ -188,7 +187,7 @@ namespace GasyTek.Lakana.Navigation.Services
                     newNode = CreateNewNodeFrom(viewInstanceKey, viewKey, viewModel, isModal, isMessageBox);
 
                     var parentNode = _viewGroupCollectionManager.FindViewNode(parentViewInstanceKey);
-                    _viewGroupCollectionManager.ActivateNewNode(newNode, (ViewGroup)parentNode.List);
+                    _viewGroupCollectionManager.ActivateNewNode(newNode, parentNode.List);
                 }
 
                 // perform update of the UI
@@ -202,7 +201,7 @@ namespace GasyTek.Lakana.Navigation.Services
             if (_viewGroupCollectionManager.TryFindViewNode(viewInstanceKey, out newNode))
             {
                 // activates an existing node
-                newNode = _viewGroupCollectionManager.IsTopMostView(viewInstanceKey) ? newNode : newNode.List.Last;
+                newNode = _viewGroupCollectionManager.IsTopMostView(viewInstanceKey) ? newNode : newNode.List.Peek();
                 _viewGroupCollectionManager.ActivateExistingNode(newNode);
             }
             else
@@ -249,7 +248,7 @@ namespace GasyTek.Lakana.Navigation.Services
 
         #region Private methods
 
-        private LinkedListNode<View> CreateNewNodeFrom(string viewInstanceKey, string viewKey, object viewModel, bool isModal, bool isMessageBox)
+        private ViewGroupNode CreateNewNodeFrom(string viewInstanceKey, string viewKey, object viewModel, bool isModal, bool isMessageBox)
         {
             FrameworkElement viewInstance;
 
@@ -280,7 +279,7 @@ namespace GasyTek.Lakana.Navigation.Services
                            IsMessageBox = isMessageBox
                        };
 
-            return new LinkedListNode<View>(viewInfo);
+            return new ViewGroupNode(null, viewInfo);
         }
 
         private IUIMetadata GetUIMetadata(object view, object viewModel)
@@ -302,7 +301,7 @@ namespace GasyTek.Lakana.Navigation.Services
             return uiMetadata;
         }
 
-        private void EnsuresViewHasParentAndMatch(LinkedListNode<View> node, string expectedParentViewInstanceKey)
+        private void EnsuresViewHasParentAndMatch(ViewGroupNode node, string expectedParentViewInstanceKey)
         {
             var expectedParentView = new View(expectedParentViewInstanceKey);
             if (node.Previous == null || (node.Previous != null && node.Previous.Value != expectedParentView))
@@ -342,7 +341,7 @@ namespace GasyTek.Lakana.Navigation.Services
 
         #endregion
 
-        #region Private class
+        #region Private class NavigationKey
 
         private class NavigationKey
         {
@@ -468,7 +467,5 @@ namespace GasyTek.Lakana.Navigation.Services
         }
 
         #endregion
-
-
     }
 }

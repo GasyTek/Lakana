@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using GasyTek.Lakana.Navigation.Services;
@@ -31,7 +30,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
             TransitionAnimationProvider = transitionAnimationProvider;
         }
 
-        public void PerformActivation(LinkedListNode<View> activatedNode, LinkedListNode<View> deactivatedNode)
+        public void PerformActivation(ViewGroupNode activatedNode, ViewGroupNode deactivatedNode)
         {
             OnPerformActivation(activatedNode, deactivatedNode);
             
@@ -42,10 +41,10 @@ namespace GasyTek.Lakana.Navigation.Adapters
                 if (transitionAnimation != null)
                 {
                     var activatedViewGroup = activatedNode != null
-                                                ? OnGetViewGroupMapping((ViewGroup)activatedNode.List)
+                                                ? OnGetViewGroupMapping(activatedNode.List)
                                                 : null;
                     var deactivatedViewGroup = deactivatedNode != null
-                                                   ? OnGetViewGroupMapping((ViewGroup)deactivatedNode.List)
+                                                   ? OnGetViewGroupMapping(deactivatedNode.List)
                                                    : null;
 
                     if (!Equals(activatedViewGroup, deactivatedViewGroup))
@@ -69,7 +68,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
             }
         }
 
-        public void PerformClose(LinkedListNode<View> activatedNode, ClosedNode closedNode)
+        public void PerformClose(ViewGroupNode activatedNode, ViewGroupNode closedNode)
         {
             if (TransitionAnimationProvider != null)
             {
@@ -79,8 +78,8 @@ namespace GasyTek.Lakana.Navigation.Adapters
             OnPerformClose(activatedNode, closedNode);
         }
 
-        protected abstract void OnPerformActivation(LinkedListNode<View> activatedNode, LinkedListNode<View> deactivatedNode);
-        protected abstract void OnPerformClose(LinkedListNode<View> activatedNode, ClosedNode closedNode);
+        protected abstract void OnPerformActivation(ViewGroupNode activatedNode, ViewGroupNode deactivatedNode);
+        protected abstract void OnPerformClose(ViewGroupNode activatedNode, ViewGroupNode closedNode);
 
         protected abstract FrameworkElement OnGetViewGroupMapping(ViewGroup viewGroup);
 
