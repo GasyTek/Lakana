@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace Samples.GasyTek.Lakana.Mvvm
+﻿namespace Samples.GasyTek.Lakana.Mvvm
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

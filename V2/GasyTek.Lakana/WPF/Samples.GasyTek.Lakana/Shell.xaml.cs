@@ -3,7 +3,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using GasyTek.Lakana.Mvvm.Commands;
 using GasyTek.Lakana.Navigation.Services;
-using GasyTek.Lakana.Navigation.Transitions;
 using Samples.GasyTek.Lakana.Screens;
 using Samples.GasyTek.Lakana.Utils;
 
