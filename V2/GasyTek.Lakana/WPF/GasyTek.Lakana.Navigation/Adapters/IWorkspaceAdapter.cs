@@ -1,10 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Controls;
 using GasyTek.Lakana.Navigation.Services;
 
 namespace GasyTek.Lakana.Navigation.Adapters
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public interface IWorkspaceAdapter
     {
         /// <summary>
@@ -27,13 +29,13 @@ namespace GasyTek.Lakana.Navigation.Adapters
         /// </summary>
         /// <param name="activatedNode">The activated node.</param>
         /// <param name="deactivatedNode">The deactivated node.</param>
-        void PerformActivation(LinkedListNode<View> activatedNode, LinkedListNode<View> deactivatedNode);
+        void PerformActivation(ViewGroupNode activatedNode, ViewGroupNode deactivatedNode);
 
         /// <summary>
         /// Performs the close.
         /// </summary>
         /// <param name="activatedNode">The activated node.</param>
         /// <param name="closedNode">The closed node.</param>
-        void PerformClose(LinkedListNode<View> activatedNode, ClosedNode closedNode);
+        void PerformClose(ViewGroupNode activatedNode, ViewGroupNode closedNode);
     }
 }

@@ -7,7 +7,7 @@ using GasyTek.Lakana.Navigation.Attributes;
 namespace GasyTek.Lakana.Navigation.Services
 {
     /// <summary>
-    /// Default implementation of <see cref="IViewLocator"/>
+    /// Default implementation of <see cref="IViewLocator"/>. It looks for all ViewKeyAttribute within the current Application Domain.
     /// </summary>
     internal class ViewLocator : IViewLocator
     {

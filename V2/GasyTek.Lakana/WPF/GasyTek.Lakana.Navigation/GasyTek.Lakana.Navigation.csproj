@@ -98,8 +98,11 @@
     <Compile Include="Services\NavigationManager.cs" />
     <Compile Include="Services\NavigationManagerImpl.cs" />
     <Compile Include="Services\TransitionAnimation.cs" />
+    <Compile Include="Services\ViewGroup.cs" />
+    <Compile Include="Services\ViewGroupCollection.cs" />
     <Compile Include="Services\ViewGroupCollectionManager.cs" />
     <Compile Include="Services\View.cs" />
+    <Compile Include="Services\ViewGroupNode.cs" />
     <Compile Include="Services\ViewLocator.cs" />
     <Compile Include="Transitions\FadeTransition.cs" />
     <Compile Include="Transitions\NoAnimation.cs" />

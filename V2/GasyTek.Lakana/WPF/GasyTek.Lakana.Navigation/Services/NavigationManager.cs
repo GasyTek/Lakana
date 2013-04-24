@@ -99,7 +99,7 @@ namespace GasyTek.Lakana.Navigation.Services
         }
 
         /// <summary>
-        /// Navigates to.
+        /// Navigates to the specified navigation key.
         /// </summary>
         /// <param name="navigationKey">The navigation key. It must be of the form : [ parentViewKey [ # instanceID ] / ] viewKey [ # instanceID ] where fields between [..] are optionals.</param>
         /// <param name="viewModel">The view model.</param>
@@ -110,7 +110,7 @@ namespace GasyTek.Lakana.Navigation.Services
         }
 
         /// <summary>
-        /// Shows the modal.
+        /// Display a view as modal.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="navigationKey">The navigation key. It must be of the form : [ parentViewKey [ # instanceID ] / ] viewKey [ # instanceID ] where fields between [..] are optionals.</param>
@@ -121,7 +121,7 @@ namespace GasyTek.Lakana.Navigation.Services
         }
 
         /// <summary>
-        /// Shows the modal.
+        /// Display a view as modal.
         /// </summary>
         /// <typeparam name="TResult">The type of the result.</typeparam>
         /// <param name="navigationKey">The navigation key. It must be of the form : [ parentViewKey [ # instanceID ] / ] viewKey [ # instanceID ] where fields between [..] are optionals.</param>
@@ -133,7 +133,7 @@ namespace GasyTek.Lakana.Navigation.Services
         }
 
         /// <summary>
-        /// Shows the message box.
+        /// Display a message box.
         /// </summary>
         /// <param name="ownerViewKey">The parent instance key : parentViewKey [ # instanceID ]</param>
         /// <param name="message">The message.</param>

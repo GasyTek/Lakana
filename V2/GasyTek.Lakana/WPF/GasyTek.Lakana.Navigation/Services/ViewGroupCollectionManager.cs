@@ -1,10 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Windows;
 
 namespace GasyTek.Lakana.Navigation.Services
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class ViewGroupCollectionManager
     {
         private readonly ViewGroupCollection _viewGroupCollection;
@@ -49,13 +51,13 @@ namespace GasyTek.Lakana.Navigation.Services
             return activeNode != null ? activeNode.Value : View.Null;
         }
 
-        public LinkedListNode<View> GetActiveNode()
+        public ViewGroupNode GetActiveNode()
         {
             var activeViewGroup = GetActiveViewGroup();
-            return activeViewGroup != null ? activeViewGroup.Last : null;
+            return activeViewGroup != null ? activeViewGroup.Peek() : null;
         }
 
-        public LinkedList<View> GetActiveViewGroup()
+        public ViewGroup GetActiveViewGroup()
         {
             if (!_viewGroupCollection.Any()) return null;
             if (!_viewGroupCollection.Last.Value.Any()) return null;
@@ -66,23 +68,23 @@ namespace GasyTek.Lakana.Navigation.Services
 
         #region Internal methods
 
-        internal void ActivateExistingNode(LinkedListNode<View> node)
+        internal void ActivateExistingNode(ViewGroupNode node)
         {
             if (GetActiveView() != node.Value)
             {
-                _viewGroupCollection.Remove((ViewGroup)node.List);
-                _viewGroupCollection.AddLast((ViewGroup)node.List);
+                _viewGroupCollection.Remove(node.List);
+                _viewGroupCollection.AddLast(node.List);
             }
         }
 
-        internal void ActivateNewNode(LinkedListNode<View> newNode, ViewGroup ownerGroup = null)
+        internal void ActivateNewNode(ViewGroupNode newNode, ViewGroup ownerGroup = null)
         {
             if (ownerGroup != null)
-                ownerGroup.AddLast(newNode);
+                ownerGroup.Push(newNode);
             else
             {
                 var newStack = new ViewGroup();
-                newStack.AddLast(newNode);
+                newStack.Push(newNode);
                 _viewGroupCollection.AddLast(newStack);
             }
 
@@ -90,9 +92,9 @@ namespace GasyTek.Lakana.Navigation.Services
                 _viewCollection.Add(newNode.Value);
         }
 
-        internal LinkedListNode<View> FindViewNode(string viewInstanceKey)
+        internal ViewGroupNode FindViewNode(string viewInstanceKey)
         {
-            LinkedListNode<View> node;
+            ViewGroupNode node;
             if (TryFindViewNode(viewInstanceKey, out node))
             {
                 return node;
@@ -102,35 +104,36 @@ namespace GasyTek.Lakana.Navigation.Services
 
         internal bool ContainsViewNode(string viewInstanceKey)
         {
-            LinkedListNode<View> node;
+            ViewGroupNode node;
             return TryFindViewNode(viewInstanceKey, out node);
         }
 
-        internal bool TryFindViewNode(string viewInstanceKey, out LinkedListNode<View> node)
+        internal bool TryFindViewNode(string viewInstanceKey, out ViewGroupNode node)
         {
             var viewInfo = new View(viewInstanceKey);
-            var q = (from stack in _viewGroupCollection
-                     from v in stack
-                     where v == viewInfo
-                     select stack.Find(v)).ToList();
+            var q = (from viewGroup in _viewGroupCollection
+                     from view in viewGroup
+                     where view == viewInfo
+                     select viewGroup.Find(view)).ToList();
             node = q.FirstOrDefault();
             return q.Any();
         }
 
-        internal ClosedNode RemoveViewNode(string viewInstanceKey)
+        internal ViewGroupNode RemoveViewNode(string viewInstanceKey)
         {
-            LinkedListNode<View> node;
+            ViewGroupNode node;
             if (TryFindViewNode(viewInstanceKey, out node))
             {
-                var viewGroup = (ViewGroup)node.List;
-                viewGroup.Remove(node);
+                var viewGroup = node.List;
+                var removedNode = viewGroup.Pop();
+                removedNode.List = viewGroup;
 
                 if (viewGroup.Count == 0)
                     _viewGroupCollection.Remove(viewGroup);
 
                 _viewCollection.Remove(node.Value);
 
-                return new ClosedNode { View = node.Value, ViewGroup = viewGroup };
+                return removedNode;
             }
 
             throw new ViewInstanceNotFoundException(viewInstanceKey);
@@ -138,10 +141,10 @@ namespace GasyTek.Lakana.Navigation.Services
 
         internal bool IsTopMostView(string viewInstanceKey)
         {
-            LinkedListNode<View> node;
+            ViewGroupNode node;
             if (TryFindViewNode(viewInstanceKey, out node))
             {
-                return node.List.Last.Value == node.Value;
+                return node.List.Peek() == node;
             }
             return false;
         }
@@ -149,17 +152,17 @@ namespace GasyTek.Lakana.Navigation.Services
         internal IEnumerable<View> GetNotCloseableViews()
         {
             // retrieve views that are parent of top most message box views
-            var q1 = (from vs in _viewGroupCollection
-                      let last = vs.Last
-                      let lastPrevious = vs.Last.Previous
+            var q1 = (from viewGroup in _viewGroupCollection
+                      let last = viewGroup.Peek()
+                      let lastPrevious = last.Previous
                       where last != null
                          && lastPrevious != null
                          && last.Value.IsMessageBox
                       select lastPrevious.Value).ToList();
 
             // retrieve top most views except message boxes
-            var q2 = (from vs in _viewGroupCollection
-                      let last = vs.Last
+            var q2 = (from viewGroup in _viewGroupCollection
+                      let last = viewGroup.Peek()
                       where last != null
                       select last.Value).Except(q1);
 
@@ -173,24 +176,5 @@ namespace GasyTek.Lakana.Navigation.Services
 
 
         #endregion
-    }
-
-    public class ViewGroup : LinkedList<View>
-    {
-        public Stack<FrameworkElement> ToStack()
-        {
-            return new Stack<FrameworkElement>(this.Select(vi => vi.InternalViewInstance));
-        }
-    }
-
-    public class ViewGroupCollection : LinkedList<ViewGroup>
-    {
-
-    }
-
-    public class ClosedNode
-    {
-        public View View { get; internal set; }
-        public ViewGroup ViewGroup { get; internal set; }
     }
 }

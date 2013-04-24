@@ -11,6 +11,7 @@ namespace GasyTek.Lakana.Navigation.Services
         /// Registers all instantiable views for the application.
         /// </summary>
         void RegisterApplicationViews();
+
         /// <summary>
         /// Gets the view instance according to the specified view key.
         /// </summary>

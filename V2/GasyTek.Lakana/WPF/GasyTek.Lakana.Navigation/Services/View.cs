@@ -4,6 +4,10 @@ using GasyTek.Lakana.Common.UI;
 
 namespace GasyTek.Lakana.Navigation.Services
 {
+    /// <summary>
+    /// Represents a view.
+    /// It contains all information attached to an actual view.
+    /// </summary>
     public struct View : IEquatable<View>
     {
         /// <summary>

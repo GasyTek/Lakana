@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Windows.Controls;
 using GasyTek.Lakana.Navigation.Adapters;
 using GasyTek.Lakana.Navigation.Services;
@@ -27,11 +26,11 @@ namespace GasyTek.Lakana.Navigation.Tests.Fakes
             
         }
 
-        public void PerformActivation(LinkedListNode<View> activatedNode, LinkedListNode<View> deactivatedNode)
+        public void PerformActivation(ViewGroupNode activatedNode, ViewGroupNode deactivatedNode)
         {
         }
 
-        public void PerformClose(LinkedListNode<View> activatedNode, ClosedNode closedNode)
+        public void PerformClose(ViewGroupNode activatedNode, ViewGroupNode closedNode)
         {
         }
     }
