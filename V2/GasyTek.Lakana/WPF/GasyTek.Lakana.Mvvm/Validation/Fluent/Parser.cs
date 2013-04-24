@@ -94,24 +94,28 @@ namespace GasyTek.Lakana.Mvvm.Validation.Fluent
                         }
                     }
                 }
-                else if (iToken is OperatorExpression)
-                {
-                    var inputOpToken = (OperatorExpression)iToken;
-
-                    while (stack.Count > 0)
-                    {
-                        var currentToken = stack.Peek() as OperatorExpression;
-                        if (currentToken != null && ShouldPopStack(inputOpToken, currentToken))
-                            outputTokens.Add(stack.Pop());
-                        else break;
-                    }
-
-                    stack.Push(inputOpToken);
-                }
                 else
                 {
-                    // the input token must be an EvaluableToken
-                    outputTokens.Add(iToken);
+                    var token = iToken as OperatorExpression;
+                    if (token != null)
+                    {
+                        var inputOpToken = token;
+
+                        while (stack.Count > 0)
+                        {
+                            var currentToken = stack.Peek() as OperatorExpression;
+                            if (currentToken != null && ShouldPopStack(inputOpToken, currentToken))
+                                outputTokens.Add(stack.Pop());
+                            else break;
+                        }
+
+                        stack.Push(inputOpToken);
+                    }
+                    else
+                    {
+                        // the input token must be an EvaluableToken
+                        outputTokens.Add(iToken);
+                    }
                 }
             }
 

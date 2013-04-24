@@ -1,6 +1,4 @@
-﻿using System.Windows;
-
-namespace Samples.GasyTek.Lakana
+﻿namespace Samples.GasyTek.Lakana
 {
     /// <summary>
     /// Interaction logic for App.xaml

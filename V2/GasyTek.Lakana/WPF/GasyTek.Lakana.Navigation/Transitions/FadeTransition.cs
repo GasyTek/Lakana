@@ -10,14 +10,14 @@ namespace GasyTek.Lakana.Navigation.Transitions
     /// </summary>
     public static class FadeTransition
     {
-        const double AnimationDuration = 180;
+        const double AnimationDuration = 300;
 
         public static TransitionAnimation Create()
         {
-            return new TransitionAnimation(ViewGroupAnimation, ViewAnimation);
+            return new TransitionAnimation(ViewGroupTransitionAnimation, ViewTransitionAnimation);
         }
 
-        private static Storyboard ViewGroupAnimation(FrameworkElement activatedGroup, FrameworkElement deactivatedGroup)
+        private static Storyboard ViewGroupTransitionAnimation(FrameworkElement activatedGroup, FrameworkElement deactivatedGroup)
         {
             var transitionAnimation = new Storyboard();
 
@@ -61,7 +61,7 @@ namespace GasyTek.Lakana.Navigation.Transitions
             return transitionAnimation;
         }
 
-        private static Storyboard ViewAnimation(FrameworkElement activatedView, FrameworkElement deactivatedView)
+        private static Storyboard ViewTransitionAnimation(FrameworkElement activatedView, FrameworkElement deactivatedView)
         {
             var transitionAnimation = new Storyboard();
 

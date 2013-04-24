@@ -60,9 +60,10 @@ namespace GasyTek.Lakana.Mvvm.Tests.Fakes
         {
             if (ValidationEngineProvider == null) return null;
             var validationEngine = ValidationEngineProvider();
-            if (validationEngine is FakeFluentValidationEngine)
+            var engine = validationEngine as FakeFluentValidationEngine;
+            if (engine != null)
             {
-                ((FakeFluentValidationEngine)validationEngine).ValidationTerminated += (sender, args) => SyncObject.Signal();
+                engine.ValidationTerminated += (sender, args) => SyncObject.Signal();
             }
             else
             {
