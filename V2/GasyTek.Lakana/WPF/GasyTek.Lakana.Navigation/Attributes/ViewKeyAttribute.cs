@@ -15,11 +15,15 @@ namespace GasyTek.Lakana.Navigation.Attributes
             _uniqueKey = uniqueKey;
         }
 
+        /// <summary>
+        /// Gets a unique value that identifies the view.
+        /// </summary>
+        /// <value>
+        /// The unique view key.
+        /// </value>
         public string UniqueKey
         {
             get { return _uniqueKey; }
         }
-
-        public bool AllowMultipleInstances { get; set; }
     }
 }
