@@ -60,6 +60,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base\NotifyPropertyChangedBase.cs" />
+    <Compile Include="Communication\Message.cs" />
+    <Compile Include="Communication\MessageObserver.cs" />
+    <Compile Include="Communication\MessageBus.cs" />
     <Compile Include="Extensions\DateTimeExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="Extensions\NotifyPropertyChangedExtensions.cs" />
