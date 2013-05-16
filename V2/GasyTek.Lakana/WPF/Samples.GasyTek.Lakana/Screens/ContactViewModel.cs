@@ -6,6 +6,7 @@ using GasyTek.Lakana.Mvvm.ViewModelProperties;
 using GasyTek.Lakana.Mvvm.ViewModels;
 using GasyTek.Lakana.Navigation.Services;
 using Samples.GasyTek.Lakana.Model;
+using Samples.GasyTek.Lakana.Resources;
 
 namespace Samples.GasyTek.Lakana.Screens
 {
@@ -22,7 +23,7 @@ namespace Samples.GasyTek.Lakana.Screens
 
         public ContactViewModel()
         {
-            UIMetadata = new UIMetadata {LabelProvider = () => "Modify Contact Informations"};
+            UIMetadata = new UIMetadata { LabelProvider = () => Texts.ModifyContactInformations };
         }
 
         protected override void OnCreateViewModelProperties()
@@ -48,10 +49,10 @@ namespace Samples.GasyTek.Lakana.Screens
 
         protected override void OnCancel()
         {
-            if(CanClose() == false)
+            if (CanClose() == false)
             {
                 var questionResult = NavigationManager.ShowMessageBox(ViewInstanceKey
-                    , "Do you want to cancel and loose your current modifications ?"
+                    , Texts.CancellationQuestion
                     , MessageBoxImage.Question
                     , MessageBoxButton.YesNo);
                 questionResult.ContinueWith(result =>

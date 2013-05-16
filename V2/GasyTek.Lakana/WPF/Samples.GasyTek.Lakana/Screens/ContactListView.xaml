@@ -3,43 +3,47 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
+    xmlns:lakana="http://schemas.gasytek.com/wpf/lakana"
+    xmlns:text="clr-namespace:Samples.GasyTek.Lakana.Resources"
 	x:Class="Samples.GasyTek.Lakana.Screens.ContactListView"	
 	d:DesignWidth="640" 
 	d:DesignHeight="480"
 	Background="{DynamicResource WorkspaceBackgroundBrush}"
 	Style="{StaticResource ScreenStyle}">
-	<UserControl.Resources>
+    <UserControl.Resources>
 
-	  <DataTemplate x:Key="ItemTemplate">
-			<StackPanel>
-				<TextBlock FontFamily="Segoe UI Light" 
+        <DataTemplate x:Key="ItemTemplate">
+            <StackPanel>
+                <TextBlock FontFamily="Segoe UI Light" 
 						   FontSize="21.333"                          
                            Margin="15,2,5,0">
 					<Run Text="{Binding FirstName}" /> <Run Text="{Binding LastName}" />
-				</TextBlock>
-				<TextBlock FontFamily="Segoe UI Light" 
+                </TextBlock>
+                <TextBlock FontFamily="Segoe UI Light" 
                            FontSize="16" 
                            Margin="15,2,5,0">
 					<Run Text="{Binding DateOfBirth, StringFormat=d}" /> - <Run Text="{Binding DateOfDeath, StringFormat=d}" />
-				</TextBlock>
-				<TextBlock Text="{Binding Email}"                           
+                </TextBlock>
+                <TextBlock Text="{Binding Email}"                           
                            FontSize="16" 
                            FontFamily="Segoe UI Light" 
                            Margin="15,2,5,0"/>
-			</StackPanel>
-		</DataTemplate>
-		
-	</UserControl.Resources>
+            </StackPanel>
+        </DataTemplate>
 
-	<DockPanel x:Name="LayoutRoot">
-		<TextBlock DockPanel.Dock="Top" Text="Contact List" Style="{DynamicResource ScreenTitleStyle}" />
-		<Border DockPanel.Dock="Top">
-			<Button  Content="Modify Contact Informations" 
+    </UserControl.Resources>
+
+    <DockPanel x:Name="LayoutRoot">
+        <TextBlock DockPanel.Dock="Top" 
+                   Text="{lakana:TextResource text:Texts.ContactList}" 
+                   Style="{DynamicResource ScreenTitleStyle}" />
+        <Border DockPanel.Dock="Top">
+            <Button  Content="{lakana:TextResource text:Texts.ModifyContactInformations}" 
 					HorizontalAlignment="Right" 
 					Margin="0,0,0,10" 
 					Style="{DynamicResource ActionButtonStyle}"
                     Command="{Binding EditContactCommand}" />
-		</Border>
+        </Border>
 
         <ListBox ItemsSource="{Binding Contacts}"				
 				SelectedItem="{Binding SelectedContact, Mode=TwoWay}"
@@ -47,5 +51,5 @@
 				ItemContainerStyle="{DynamicResource SimpleListBoxItem}" 
 				ItemTemplate="{DynamicResource ItemTemplate}" 
                 />
-	</DockPanel>
+    </DockPanel>
 </UserControl>

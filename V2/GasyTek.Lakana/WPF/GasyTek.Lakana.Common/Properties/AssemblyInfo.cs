@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Markup;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -51,3 +52,6 @@ using System.Windows;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("2.0.0.0")]
 [assembly: AssemblyFileVersion("2.0.0.0")]
+
+[assembly: XmlnsPrefix("http://schemas.gasytek.com/wpf/lakana", "lakana")]
+[assembly: XmlnsDefinition("http://schemas.gasytek.com/wpf/lakana", "GasyTek.Lakana.Common.UI")]

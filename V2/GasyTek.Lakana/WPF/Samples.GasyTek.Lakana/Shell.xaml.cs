@@ -5,6 +5,8 @@ using GasyTek.Lakana.Mvvm.Commands;
 using GasyTek.Lakana.Navigation.Services;
 using Samples.GasyTek.Lakana.Screens;
 using Samples.GasyTek.Lakana.Utils;
+using GasyTek.Lakana.Common.UI;
+using System.Globalization;
 
 namespace Samples.GasyTek.Lakana
 {
@@ -41,6 +43,9 @@ namespace Samples.GasyTek.Lakana
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
+            // Set the invariant culture as the default one
+            LocalizationManager.ChangeCulture(CultureInfo.InvariantCulture);
+
             // Navigate to "Home" screen first
             NavigationManager.NavigateTo(ScreenId.Home);
         }

@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace GasyTek.Lakana.Common.Communication
 {
@@ -11,7 +9,7 @@ namespace GasyTek.Lakana.Common.Communication
     /// </summary>
     public static class MessageBus
     {
-        private static MessageBusImpl _messageBusImpl;
+        private static readonly MessageBusImpl _messageBusImpl;
 
         static MessageBus()
         {
@@ -36,7 +34,8 @@ namespace GasyTek.Lakana.Common.Communication
         /// <returns></returns>
         public static IDisposable Subscribe<TMessage>(Action<TMessage> onMessageReceived) where TMessage : Message
         {
-            return _messageBusImpl.Subscribe(typeof(TMessage), (Action<Message>)onMessageReceived);
+            // TODO : use weak references to avoid memory leak
+            return _messageBusImpl.Subscribe(typeof(TMessage), message => onMessageReceived((TMessage)message));
         }
 
         #region Private class MessageBusImpl
@@ -46,7 +45,7 @@ namespace GasyTek.Lakana.Common.Communication
         /// </summary>
         private class MessageBusImpl
         {
-            private IDictionary<Type, List<MessageObserver>> _observers;
+            private readonly IDictionary<Type, List<MessageObserver>> _observers;
 
             internal MessageBusImpl()
             {
@@ -72,7 +71,7 @@ namespace GasyTek.Lakana.Common.Communication
                 {
                     _observers.Add(messageType, messageObservers);
                 }
-                else 
+                else
                 {
                     messageObservers = _observers[messageType];
                 }

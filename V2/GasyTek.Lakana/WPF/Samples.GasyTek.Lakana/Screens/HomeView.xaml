@@ -3,16 +3,26 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lakana="http://schemas.gasytek.com/wpf/lakana"
+    xmlns:text="clr-namespace:Samples.GasyTek.Lakana.Resources"
 	mc:Ignorable="d"
 	x:Class="Samples.GasyTek.Lakana.Screens.HomeView"
 	x:Name="UserControl"
 	d:DesignWidth="640" d:DesignHeight="480" 
-	Style="{StaticResource ScreenStyle}" Background="{DynamicResource WorkspaceBackgroundBrush}">
+	Style="{StaticResource ScreenStyle}" 
+    Background="{DynamicResource WorkspaceBackgroundBrush}">
 
 	<DockPanel x:Name="LayoutRoot">
 		<TextBlock DockPanel.Dock="Top" 
-					Text="Home"
-					Foreground="{DynamicResource WindowBackgorundBrush}" Style="{DynamicResource ScreenTitleStyle}" />
-			
+				Text="{lakana:TextResource text:Texts.Home}"
+				Foreground="{DynamicResource WindowBackgorundBrush}" 
+                Style="{DynamicResource ScreenTitleStyle}" />
+		
+        <Grid>
+            <TextBlock HorizontalAlignment="Center" 
+                       VerticalAlignment="Center" 
+                       Text="{lakana:TextResource text:Texts.HomePage}" />
+        </Grid>
+        
 	</DockPanel>
 </UserControl>

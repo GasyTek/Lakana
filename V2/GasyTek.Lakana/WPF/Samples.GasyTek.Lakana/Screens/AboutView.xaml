@@ -3,6 +3,8 @@
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:lakana="http://schemas.gasytek.com/wpf/lakana"
+    xmlns:text="clr-namespace:Samples.GasyTek.Lakana.Resources"
 	mc:Ignorable="d"
 	x:Class="Samples.GasyTek.Lakana.Screens.AboutView"
 	d:DesignWidth="640" 
@@ -10,10 +12,32 @@
 	Style="{StaticResource ScreenStyle}" 
 	Background="{DynamicResource WorkspaceBackgroundBrush}">
 
-	<DockPanel x:Name="LayoutRoot">
-		<TextBlock DockPanel.Dock="Top" 
-					Text="About"
-					Foreground="{DynamicResource WindowBackgorundBrush}" Style="{DynamicResource ScreenTitleStyle}" />
-			
-	</DockPanel>
+    <DockPanel x:Name="LayoutRoot">
+        <TextBlock DockPanel.Dock="Top" 
+					Text="{lakana:TextResource text:Texts.About}"
+					Foreground="{DynamicResource WindowBackgorundBrush}" 
+                   Style="{DynamicResource ScreenTitleStyle}" />
+        <Grid>
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Center" >
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="20" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Style="{DynamicResource FieldTitleStyle}"
+                           Text="{lakana:TextResource text:Texts.Languages}"></TextBlock>
+
+                <ComboBox x:Name="CmbLanguages" 
+                          Grid.Column="2" 
+                          Width="150"
+                          SelectedIndex="0"
+                          SelectionChanged="CmbLanguages_SelectionChanged">
+                    <ComboBoxItem Content="{lakana:TextResource text:Texts.English}" />
+                    <ComboBoxItem Content="{lakana:TextResource text:Texts.French}" />
+                </ComboBox>
+            </Grid>
+        </Grid>
+
+    </DockPanel>
 </UserControl>

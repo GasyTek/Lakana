@@ -82,6 +82,8 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="UI\IUIMetadata.cs" />
+    <Compile Include="UI\TextResourceExtension.cs" />
+    <Compile Include="UI\LocalizationManager.cs" />
     <Compile Include="UI\UIMetadata.cs" />
     <Compile Include="Utils\GlobalConstants.cs" />
     <Compile Include="Utils\ResourceUtil.cs" />
