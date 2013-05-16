@@ -1,6 +1,7 @@
 using System;
 using GasyTek.Lakana.Mvvm.Validation.Fluent;
 using Samples.GasyTek.Lakana.Model;
+using Samples.GasyTek.Lakana.Resources;
 
 namespace Samples.GasyTek.Lakana.Screens
 {
@@ -14,23 +15,23 @@ namespace Samples.GasyTek.Lakana.Screens
         protected override void OnDefineRules()
         {
             Property<string>(vm => vm.FirstName).Is.Required()
-                .Otherwise("First name is required.");
+                .Otherwise(Texts.ValidationFirstNameRequired);
 
             Property<string>(vm => vm.LastName).Is.Required()
-                .Otherwise("Last name is required.");
+                .Otherwise(Texts.ValidationLastNameRequired);
 
             Property<DateTime>(vm => vm.DateOfBirth).Is.LessThan(vm => vm.DateOfDeath)
-                .Otherwise("Date of birth should be before the date of death.");
+                .Otherwise(Texts.ValidationDateOfBirthBeforeDateOfDeath);
 
             Property<string>(vm => vm.Email).Is.ValidEmail()
-                .Otherwise("Email should have the form xxx@yyy.zzz .");
+                .Otherwise(Texts.ValidationEmailFormat);
 
             Property<string>(vm => vm.PhoneNumber).Is.Required()
-                .Otherwise("Phone number is required.");
+                .Otherwise(Texts.ValidationPhoneRequired);
             Property<string>(vm => vm.PhoneNumber).Has.MaxLength(4)
-                .Otherwise("Phone number should not exceed 4 characters.");
+                .Otherwise(Texts.ValidationPhoneLength);
             Property<string>(vm => vm.PhoneNumber).Is.Valid((phoneNumber, token) => WebService.IsPhoneUnique(phoneNumber))
-                .Otherwise("Phone number already exist.");
+                .Otherwise(Texts.ValidationPhoneExists);
             
         }
     }

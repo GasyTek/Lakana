@@ -2,6 +2,7 @@
 using GasyTek.Lakana.Navigation.Attributes;
 using GasyTek.Lakana.Navigation.Services;
 using Samples.GasyTek.Lakana.Utils;
+using Samples.GasyTek.Lakana.Resources;
 
 namespace Samples.GasyTek.Lakana.Screens
 {
@@ -17,7 +18,7 @@ namespace Samples.GasyTek.Lakana.Screens
         {
             InitializeComponent();
 
-            _uiMetadata = new UIMetadata { LabelProvider = () => "Home" };
+            _uiMetadata = new UIMetadata { LabelProvider = () => Texts.Home };
         }
 
         public IUIMetadata UIMetadata

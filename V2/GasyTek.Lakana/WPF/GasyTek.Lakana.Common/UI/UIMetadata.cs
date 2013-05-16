@@ -3,6 +3,7 @@ using System.Windows.Media;
 using GasyTek.Lakana.Common.Base;
 using GasyTek.Lakana.Common.Extensions;
 using GasyTek.Lakana.Common.Utils;
+using GasyTek.Lakana.Common.Communication;
 
 namespace GasyTek.Lakana.Common.UI
 {
@@ -60,6 +61,27 @@ namespace GasyTek.Lakana.Common.UI
                 _iconProvider = value;
                 this.NotifyPropertyChanged(o => o.Icon);
             }
+        }
+
+        #endregion
+
+        #region Constructor
+
+        public UIMetadata()
+        {
+            // Subscribes to the culture settings changed event
+            MessageBus.Subscribe<CultureSettingsChangedEvent>(OnCultureSettingsChanged);
+        }
+
+        #endregion
+
+        #region Private methods
+
+        private void OnCultureSettingsChanged(Message message)
+        {
+            this.NotifyPropertyChanged(o => o.Label);
+            this.NotifyPropertyChanged(o => o.Description);
+            this.NotifyPropertyChanged(o => o.Icon);
         }
 
         #endregion
