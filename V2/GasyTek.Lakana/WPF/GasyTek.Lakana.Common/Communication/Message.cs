@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace GasyTek.Lakana.Common.Communication
 {
     /// <summary>
     /// Base class for all messages that will be exchanged through the application.
     /// </summary>
-    public abstract class Message
+    public abstract class Message : EventArgs
     {
         /// <summary>
         /// Gets the original sender of the message.

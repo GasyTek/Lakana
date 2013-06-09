@@ -7,12 +7,12 @@ namespace GasyTek.Lakana.Mvvm.Utils
     /// This binding is exactly the same as = "{Binding Path=..., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}".\r\n
     /// You can still override the binding properties if not needed.
     /// </summary>
-    public class Binding : System.Windows.Data.Binding
+    public class PropertyBinding : Binding
     {
         /// <summary>
-        /// Initializes the pre-configured binding instance<see cref="Binding"/> class.
+        /// Initializes the pre-configured binding instance<see cref="PropertyBinding"/> class.
         /// </summary>
-        public Binding ()
+        public PropertyBinding ()
         {
             ValidatesOnDataErrors = true;
             UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
@@ -20,9 +20,9 @@ namespace GasyTek.Lakana.Mvvm.Utils
         }
 
         /// <summary>
-        /// Initializes the pre-configured binding instance<see cref="Binding"/> class.
+        /// Initializes the pre-configured binding instance<see cref="PropertyBinding"/> class.
         /// </summary>
-        public Binding(string path)
+        public PropertyBinding(string path)
             : base(path)
         {
             ValidatesOnDataErrors = true;

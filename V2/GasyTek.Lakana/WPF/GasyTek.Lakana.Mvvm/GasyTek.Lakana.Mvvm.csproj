@@ -77,7 +77,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Utils\Binding.cs" />
+    <Compile Include="Utils\PropertyBinding.cs" />
     <Compile Include="Validation\DataAnnotationValidationEngine.cs" />
     <Compile Include="Validation\ErrorsChangedEventHandler.cs" />
     <Compile Include="Validation\Fluent\Delegates.cs" />

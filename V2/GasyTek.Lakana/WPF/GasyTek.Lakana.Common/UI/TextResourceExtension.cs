@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Windows.Markup;
-using System.Windows;
 using System.Reflection;
 using GasyTek.Lakana.Common.Communication;
+using GasyTek.Lakana.Common.Base;
+using GasyTek.Lakana.Common.Extensions;
+using System.Windows.Data;
 
 namespace GasyTek.Lakana.Common.UI
 {
@@ -16,8 +18,6 @@ namespace GasyTek.Lakana.Common.UI
 
         private string _member;
         private Type _memberType;
-        private object _targetObject;
-        private object _targetProperty;
 
         #endregion
 
@@ -59,7 +59,7 @@ namespace GasyTek.Lakana.Common.UI
         /// </summary>
         public TextResourceExtension()
         {
-            SubscribeToCultureChangedEvent();
+
         }
 
         /// <summary>
@@ -79,14 +79,6 @@ namespace GasyTek.Lakana.Common.UI
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
             if (Member == null) { throw new InvalidOperationException("The Member property must be non null."); }
-
-            // Save the target object and the target property
-            var service = serviceProvider.GetService(typeof(IProvideValueTarget)) as IProvideValueTarget;
-            if (service != null)
-            {
-                _targetObject = service.TargetObject;
-                _targetProperty = service.TargetProperty;
-            }
 
             // Initialize membertype member
             if (MemberType == null)
@@ -129,68 +121,88 @@ namespace GasyTek.Lakana.Common.UI
                 }
             }
 
-            return GetCurrentValue();
+            var binding = new Binding("Value") { Source = new TextResourceValue(MemberType, Member, FieldName) };
+            return binding.ProvideValue(serviceProvider);
         }
 
         #endregion
 
-        #region Private methods
 
-        private void SubscribeToCultureChangedEvent()
+        #region Private class TextResourceValue
+
+        private class TextResourceValue : NotifyPropertyChangedBase, IMessageListener
         {
-            MessageBus.Subscribe<CultureSettingsChangedEvent>(c => UpdateValue(GetCurrentValue()));
-        }
+            private object _value;
+            private readonly Type _memberType;
+            private readonly string _member;
+            private readonly string _fieldName;
 
-        private object GetCurrentValue()
-        {
-            // if the static member is an enum
-            if (MemberType.IsEnum) { return Enum.Parse(MemberType, FieldName); }
-
-            // if the static member is a field
-            var fieldInfo = MemberType.GetField(FieldName, BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.Static);
-            if (fieldInfo != null)
+            /// <summary>
+            /// Gets or sets the value.
+            /// </summary>
+            /// <value>
+            /// The value.
+            /// </value>
+            public object Value
             {
-                return fieldInfo.GetValue(null);
+                get { return _value; }
+                set { this.SetPropertyValueAndNotify(ref _value, value, trv => trv.Value); }
             }
 
-            // if the static member is a property
-            var propertyInfo = MemberType.GetProperty(FieldName, BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.Static);
-            if (propertyInfo != null)
+            public TextResourceValue(Type memberType, string member, string fieldName)
             {
-                return propertyInfo.GetValue(null, null);
+                _memberType = memberType;
+                _member = member;
+                _fieldName = fieldName;
+                _value = GetCurrentValue(_memberType, _member, _fieldName);
+                SubscribeToCultureChangedEvent();
             }
 
-            throw new ArgumentException(
-                String.Format(
-                    "'{0}' TextResourceExtension value cannot be resolved to an enumeration, static field, or static property.",
-                    MemberType.FullName + "." + Member));
-        }
-
-        private void UpdateValue(object value)
-        {
-            if (_targetObject == null) return;
-
-            if (_targetProperty is DependencyProperty)
+            private void SubscribeToCultureChangedEvent()
             {
-                var obj = _targetObject as DependencyObject;
-                var prop = _targetProperty as DependencyProperty;
+                MessageBus.Subscribe<CultureSettingsChangedEvent>(this);
+            }
 
-                if (obj != null)
+            #region IMessageListener members
+
+            public IDisposable SubscriptionHandle { get; set; }
+
+            public void OnMessageReceived(Message message)
+            {
+                Value = GetCurrentValue(_memberType, _member, _fieldName);
+            }
+
+            #endregion
+
+            private object GetCurrentValue(Type memberType, string member, string fieldName)
+            {
+                // if the static member is an enum
+                if (memberType.IsEnum)
                 {
-                    Action updateAction = () => obj.SetValue(prop, value);
-
-                    // Check whether the target object can be accessed from the
-                    // current thread, and use Dispatcher.Invoke if it can't
-                    if (obj.CheckAccess()) updateAction();
-                    else obj.Dispatcher.Invoke(updateAction);
+                    return Enum.Parse(memberType, fieldName);
                 }
+
+                // if the static member is a field
+                var fieldInfo = memberType.GetField(fieldName, BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.Static);
+                if (fieldInfo != null)
+                {
+                    return fieldInfo.GetValue(null);
+                }
+
+                // if the static member is a property
+                var propertyInfo = memberType.GetProperty(fieldName, BindingFlags.FlattenHierarchy | BindingFlags.Public | BindingFlags.Static);
+                if (propertyInfo != null)
+                {
+                    return propertyInfo.GetValue(null, null);
+                }
+
+                throw new ArgumentException(
+                    String.Format(
+                        "'{0}' TextResourceExtension value cannot be resolved to an enumeration, static field, or static property.",
+                        memberType.FullName + "." + member));
             }
-            else
-            {
-                // _targetProperty is PropertyInfo
-                var prop = _targetProperty as PropertyInfo;
-                if (prop != null) prop.SetValue(_targetObject, value, null);
-            }
+
+
         }
 
         #endregion
