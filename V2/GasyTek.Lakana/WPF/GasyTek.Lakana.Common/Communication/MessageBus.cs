@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace GasyTek.Lakana.Common.Communication
 {
@@ -9,11 +10,11 @@ namespace GasyTek.Lakana.Common.Communication
     /// </summary>
     public static class MessageBus
     {
-        private static readonly MessageBusImpl _messageBusImpl;
+        private static readonly MessageBusImpl MessageBusInstance;
 
         static MessageBus()
         {
-            _messageBusImpl = new MessageBusImpl();
+            MessageBusInstance = new MessageBusImpl();
         }
 
         /// <summary>
@@ -23,19 +24,18 @@ namespace GasyTek.Lakana.Common.Communication
         /// <param name="message">The message.</param>
         public static void Publish<TMessage>(TMessage message) where TMessage : Message
         {
-            _messageBusImpl.Publish(typeof(TMessage), message);
+            MessageBusInstance.Publish(typeof(TMessage), message);
         }
 
         /// <summary>
         /// Subscribes to the specified message.
         /// </summary>
         /// <typeparam name="TMessage">The type of the message.</typeparam>
-        /// <param name="onMessageReceived">The callback to use to process the message.</param>
+        /// <param name="messageListener"></param>
         /// <returns></returns>
-        public static IDisposable Subscribe<TMessage>(Action<TMessage> onMessageReceived) where TMessage : Message
+        public static void Subscribe<TMessage>(IMessageListener messageListener) where TMessage : Message
         {
-            // TODO : use weak references to avoid memory leak
-            return _messageBusImpl.Subscribe(typeof(TMessage), message => onMessageReceived((TMessage)message));
+            MessageBusInstance.Subscribe(typeof(TMessage), messageListener);
         }
 
         #region Private class MessageBusImpl
@@ -43,53 +43,39 @@ namespace GasyTek.Lakana.Common.Communication
         /// <summary>
         /// Default implementation.
         /// </summary>
-        private class MessageBusImpl
+        internal class MessageBusImpl
         {
-            private readonly IDictionary<Type, List<MessageObserver>> _observers;
+            public event MessagePublishedEventHandler MessagePublished;
+
+            private List<WeakReference> _observers;
 
             internal MessageBusImpl()
             {
-                _observers = new Dictionary<Type, List<MessageObserver>>();
+                _observers = new List<WeakReference>();
             }
 
             internal void Publish(Type messageType, Message message)
             {
-                if (_observers.ContainsKey(messageType))
-                {
-                    foreach (var observer in _observers[messageType])
-                    {
-                        observer.OnNext(message);
-                    }
-                }
+                var purgedObservers = _observers.Where(o => o.IsAlive).ToList();
+                _observers = purgedObservers;
+
+                OnMessagePublished(message);
             }
 
-            internal IDisposable Subscribe(Type messageType, Action<Message> onMessageReceived)
+            internal IDisposable Subscribe(Type messageType, IMessageListener messageListener)
             {
-                var messageObservers = new List<MessageObserver>();
+                var observer = new MessagePublishedWeakEventListener(this, messageType, messageListener);
+                _observers.Add(new WeakReference(observer));
 
-                if (!_observers.ContainsKey(messageType))
-                {
-                    _observers.Add(messageType, messageObservers);
-                }
-                else
-                {
-                    messageObservers = _observers[messageType];
-                }
+                MessagePublishedEventManager.AddListener(this, observer);
 
-                var observer = new MessageObserver(_observers[messageType], onMessageReceived);
-                messageObservers.Add(observer);
                 return observer;
             }
 
-            internal void UnsubscribeAll(Type messageType)
+            protected virtual void OnMessagePublished(Message message)
             {
-                if (_observers.ContainsKey(messageType))
-                {
-                    foreach (var observer in _observers[messageType])
-                    {
-                        observer.Dispose();
-                    }
-                }
+                var handler = MessagePublished;
+                if (handler != null) handler(this, message);
             }
         }
 

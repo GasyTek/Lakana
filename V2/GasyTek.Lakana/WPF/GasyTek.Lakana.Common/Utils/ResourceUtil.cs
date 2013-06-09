@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Text;
 using System.Resources;
 using System.Reflection;
 using System.Globalization;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.IO;
 
 namespace GasyTek.Lakana.Common.Utils
 {
@@ -80,19 +78,5 @@ namespace GasyTek.Lakana.Common.Utils
             var uri = new Uri(imageAbsoluteUri);
             return GetImageSourceFrom (uri);
         }
-
-        /// <summary>
-        /// Retrieve an image source that points to the relative Uri (relative to the caller assembly)
-        /// </summary>
-        /// <param name="imageRelativeUri">A relative uri according to assembly GasyTek.Tantana.Common</param>
-        public static ImageSource GetImageSourceFromRelative(string imageRelativeUri)
-        {
-            var absoluteUri = new StringBuilder();
-            absoluteUri.Append ("pack://application:,,,");
-            absoluteUri.Append("/GasyTek.Tantana.Infrastructure.Presentation;");
-            absoluteUri.Append("component" + Path.Combine ("/", imageRelativeUri));
-            return GetImageSourceFromAbsolute(absoluteUri.ToString());
-        }
-
     }
 }

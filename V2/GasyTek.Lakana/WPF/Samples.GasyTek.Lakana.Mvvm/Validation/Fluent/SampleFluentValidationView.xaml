@@ -90,7 +90,7 @@
                            DataContext="{Binding Code}"
                            Style="{StaticResource FieldTitleStyle}" />
                 <TextBox Grid.Column="2"
-                         Text="{lakana:Binding Code.Value, UpdateSourceTrigger=PropertyChanged}"
+                         Text="{lakana:PropertyBinding Code.Value, UpdateSourceTrigger=PropertyChanged}"
                          Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
                 <StackPanel Grid.Column="4"
                             Orientation="Horizontal">
@@ -115,7 +115,7 @@
                            Style="{StaticResource FieldTitleStyle}" />
                 <xctk:IntegerUpDown Grid.Row="2"
                                     Grid.Column="2"
-                                    Value="{lakana:Binding Age.Value}"
+                                    Value="{lakana:PropertyBinding Age.Value}"
                                     AllowSpin="True"
                                     Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
                 <Image Grid.Row="2"
@@ -134,7 +134,7 @@
                 <ComboBox Grid.Row="4"
                           Grid.Column="2"
                           ItemsSource="{Binding Country.ItemsSource}"
-                          SelectedItem="{lakana:Binding Country.SelectedValue}"
+                          SelectedItem="{lakana:PropertyBinding Country.SelectedValue}"
                           DisplayMemberPath="Name"
                           Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
                 <Image Grid.Row="4"
@@ -153,7 +153,7 @@
                 <ComboBox Grid.Row="6"
                           Grid.Column="2"
                           ItemsSource="{Binding Rank.ItemsSource}"
-                          SelectedValue="{lakana:Binding Rank.SelectedValue}"
+                          SelectedValue="{lakana:PropertyBinding Rank.SelectedValue}"
                           SelectedValuePath="Value"
                           DisplayMemberPath="Label"
                           Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
@@ -172,7 +172,7 @@
                            Style="{StaticResource FieldTitleStyle}" />
                 <xctk:DateTimeUpDown Grid.Row="8"
                                      Grid.Column="2"
-                                     Value="{lakana:Binding DateOfBirth.Value}"
+                                     Value="{lakana:PropertyBinding DateOfBirth.Value}"
                                      Format="ShortDate"
                                      Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
                 <Image Grid.Row="8"
@@ -190,7 +190,7 @@
                            Style="{StaticResource FieldTitleStyle}" />
                 <xctk:DateTimeUpDown Grid.Row="10"
                                      Grid.Column="2"
-                                     Value="{lakana:Binding DateOfHire.Value}"
+                                     Value="{lakana:PropertyBinding DateOfHire.Value}"
                                      Format="ShortDate"
                                      Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
                 <Image Grid.Row="10"
@@ -208,7 +208,7 @@
                            Style="{StaticResource FieldTitleStyle}" />
                 <xctk:DateTimeUpDown Grid.Row="12"
                                      Grid.Column="2"
-                                     Value="{lakana:Binding DateOfDeath.Value}"
+                                     Value="{lakana:PropertyBinding DateOfDeath.Value}"
                                      Format="ShortDate"
                                      Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
                 <Image Grid.Row="12"

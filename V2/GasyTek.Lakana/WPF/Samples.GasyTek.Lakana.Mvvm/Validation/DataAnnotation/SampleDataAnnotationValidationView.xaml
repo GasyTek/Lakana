@@ -81,7 +81,7 @@
                            DataContext="{Binding Code}"
                            Style="{StaticResource FieldTitleStyle}" />
                 <TextBox Grid.Column="2"
-                         Text="{lakana:Binding Code.Value}"
+                         Text="{lakana:PropertyBinding Code.Value}"
                          Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
                 <Image Grid.Column="4"
                        RenderOptions.BitmapScalingMode="HighQuality"
@@ -95,7 +95,7 @@
                            Style="{StaticResource FieldTitleStyle}" />
                 <xctk:IntegerUpDown Grid.Row="2"
                                     Grid.Column="2"
-                                    Value="{lakana:Binding Age.Value}"
+                                    Value="{lakana:PropertyBinding Age.Value}"
                                     AllowSpin="True"
                                     Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
                 <Image Grid.Row="2"
@@ -112,7 +112,7 @@
                 <ComboBox Grid.Row="4"
                           Grid.Column="2"
                           ItemsSource="{Binding Country.ItemsSource}"
-                          SelectedItem="{lakana:Binding Country.SelectedValue}"
+                          SelectedItem="{lakana:PropertyBinding Country.SelectedValue}"
                           DisplayMemberPath="Name"
                           Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />
                 <Image Grid.Row="4"
@@ -129,7 +129,7 @@
                 <ComboBox Grid.Row="6"
                           Grid.Column="2"
                           ItemsSource="{Binding Rank.ItemsSource}"
-                          SelectedValue="{lakana:Binding Rank.SelectedValue}"
+                          SelectedValue="{lakana:PropertyBinding Rank.SelectedValue}"
                           SelectedValuePath="Value"
                           DisplayMemberPath="Label"
                           Validation.ErrorTemplate="{StaticResource ErrorTemplate}" />

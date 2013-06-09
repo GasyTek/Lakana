@@ -28,12 +28,23 @@ namespace GasyTek.Lakana.Common.UI
     /// </summary>
     public class CultureSettingsChangedEvent : Message
     {
+        /// <summary>
+        /// Gets the new culture.
+        /// </summary>
+        /// <value>
+        /// The new culture.
+        /// </value>
         public CultureInfo NewCulture
         {
             get; 
             private set;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CultureSettingsChangedEvent" /> class.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="newCulture">The new culture.</param>
         public CultureSettingsChangedEvent(object sender, CultureInfo newCulture)
             : base(sender)
         {

@@ -2,7 +2,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-             xmlns:lakana="http://schemas.gasytek.com/wpf/lakana" 
+             xmlns:lakana="http://schemas.gasytek.com/wpf/lakana"
+             xmlns:text="clr-namespace:Samples.GasyTek.Lakana.Resources"
              mc:Ignorable="d"
              x:Class="Samples.GasyTek.Lakana.Screens.ContactView"
              Width="600"
@@ -46,7 +47,7 @@
 
             <!-- FirstName -->
             <TextBlock Grid.Row="1"
-                       Text="Firstname"
+                       Text="{lakana:TextResource text:Texts.FirstName}"
                        Style="{DynamicResource FieldTitleStyle}"
                        Grid.Column="1" />
             <TextBlock Grid.Row="1"
@@ -58,12 +59,12 @@
                        HorizontalAlignment="Center" />
             <TextBox Grid.Row="1"
                      Grid.Column="3"
-                     Text="{lakana:Binding FirstName.Value}"
+                     Text="{lakana:PropertyBinding FirstName.Value}"
                      Style="{DynamicResource TextBoxStyle}" />
 
             <!-- LastName -->
             <TextBlock Grid.Row="3"
-                       Text="Lastname"
+                       Text="{lakana:TextResource text:Texts.LastName}"
                        Style="{DynamicResource FieldTitleStyle}"
                        Grid.Column="1" />
             <TextBlock Grid.Row="3"
@@ -75,12 +76,12 @@
                        HorizontalAlignment="Center" />
             <TextBox Grid.Row="3"
                      Grid.Column="3"
-                     Text="{lakana:Binding LastName.Value}"
+                     Text="{lakana:PropertyBinding LastName.Value}"
                      Style="{DynamicResource TextBoxStyle}" />
 
             <!-- Phone -->
             <TextBlock Grid.Row="5"
-                       Text="Phone"
+                       Text="{lakana:TextResource text:Texts.Phone}"
                        Style="{DynamicResource FieldTitleStyle}"
                        Grid.Column="1" />
             <TextBlock Grid.Row="5"
@@ -91,7 +92,7 @@
                        HorizontalAlignment="Center" />
             <TextBox Grid.Row="5"
                      Grid.Column="3"
-                     Text="{lakana:Binding PhoneNumber.Value}"
+                     Text="{lakana:PropertyBinding PhoneNumber.Value}"
                      Style="{DynamicResource TextBoxStyle}" />
             <Border Grid.Row="5"
                     Grid.Column="4"
@@ -106,48 +107,48 @@
 
             <!-- Email -->
             <TextBlock Grid.Row="7"
-                       Text="Email"
+                       Text="{lakana:TextResource text:Texts.Email}"
                        Style="{DynamicResource FieldTitleStyle}"
                        Grid.Column="1" />
             <TextBox Grid.Column="3"
                      Grid.Row="7"
-                     Text="{lakana:Binding Email.Value}"
+                     Text="{lakana:PropertyBinding Email.Value}"
                      Style="{DynamicResource TextBoxStyle}" />
 
             <!-- Date of birth -->
-           <TextBlock Grid.Row="9"
-                       Text="Date of Birth"
+            <TextBlock Grid.Row="9"
+                       Text="{lakana:TextResource text:Texts.DateOfBirth}"
                        Style="{DynamicResource FieldTitleStyle}"
                        Grid.Column="1" />
             <DatePicker Grid.Row="9"
                         Grid.Column="3"
                         Style="{DynamicResource DatePickerStyle}" 
-                        DisplayDate="{lakana:Binding DateOfBirth.Value}"
-                        SelectedDate="{lakana:Binding DateOfBirth.Value}" />
+                        DisplayDate="{lakana:PropertyBinding DateOfBirth.Value}"
+                        SelectedDate="{lakana:PropertyBinding DateOfBirth.Value}" />
 
             <!-- Date of death -->
             <TextBlock Grid.Row="11"
-                       Text="Date of Death"
+                       Text="{lakana:TextResource text:Texts.DateOfDeath}"
                        Style="{DynamicResource FieldTitleStyle}"
                        Grid.Column="1" />
             <DatePicker Grid.Column="3"
                         Grid.Row="11"
                         Style="{DynamicResource DatePickerStyle}"
-                        DisplayDate="{lakana:Binding DateOfDeath.Value}"
-                        SelectedDate="{lakana:Binding DateOfDeath.Value}" />
+                        DisplayDate="{lakana:PropertyBinding DateOfDeath.Value}"
+                        SelectedDate="{lakana:PropertyBinding DateOfDeath.Value}" />
 
             <StackPanel Grid.Row="12"
                         Orientation="Horizontal"
                         Grid.ColumnSpan="6"
                         HorizontalAlignment="Center">
-                <Button Content="Save"
+                <Button Content="{lakana:TextResource text:Texts.Save}"
                         Style="{DynamicResource ActionButtonStyle}"
                         HorizontalAlignment="Center"
                         VerticalAlignment="Center"
                         MinWidth="120"
                         Margin="0,0,10,0" 
                         Command="{Binding SaveCommand}" />
-                <Button Content="Cancel"
+                <Button Content="{lakana:TextResource text:Texts.Cancel}"
                         Style="{DynamicResource ActionButtonStyle}"
                         VerticalAlignment="Center"
                         MinWidth="120"
