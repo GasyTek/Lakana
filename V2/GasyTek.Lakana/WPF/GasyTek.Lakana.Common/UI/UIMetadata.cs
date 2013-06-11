@@ -10,7 +10,7 @@ namespace GasyTek.Lakana.Common.UI
     /// <summary>
     /// <see cref="IUIMetadata"/>
     /// </summary>
-    public class UIMetadata : NotifyPropertyChangedBase, IUIMetadata, IMessageListener
+    public class UIMetadata : NotifyPropertyChangedBase, IUIMetadata, IMessageListener<CultureSettingsChangedEvent>
     {
         private Func<string> _labelProvider;
         private Func<string> _descriptionProvider;
@@ -73,16 +73,16 @@ namespace GasyTek.Lakana.Common.UI
         public UIMetadata()
         {
             // Subscribes to the culture settings changed event
-            MessageBus.Subscribe<CultureSettingsChangedEvent>(this);
+            MessageBus.Subscribe(this);
         }
 
         #endregion
 
         #region IMessageListener
 
-        public IDisposable SubscriptionHandle { get; set; }
+        public ISubscriptionToken<CultureSettingsChangedEvent> SubscriptionToken { get; set; }
 
-        public void OnMessageReceived(Message message)
+        public void OnMessageReceived(CultureSettingsChangedEvent message)
         {
             this.NotifyPropertyChanged(o => o.Label);
             this.NotifyPropertyChanged(o => o.Description);
@@ -90,5 +90,6 @@ namespace GasyTek.Lakana.Common.UI
         }
 
         #endregion
+
     }
 }

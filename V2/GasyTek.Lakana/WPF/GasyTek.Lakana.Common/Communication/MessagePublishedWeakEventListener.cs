@@ -6,20 +6,20 @@ namespace GasyTek.Lakana.Common.Communication
     /// <summary>
     /// 
     /// </summary>
-    internal class MessagePublishedWeakEventListener : IWeakEventListener, IDisposable
+    internal class MessagePublishedWeakEventListener<TMessage> : IWeakEventListener, ISubscriptionToken<TMessage>, IDisposable where TMessage : Message
     {
         private bool _disposed;
         private readonly object _source;
-        private readonly Type _messageType;
-        private readonly IMessageListener _messageListener;
+        private readonly IMessageListener<TMessage> _messageListener;
 
-        public MessagePublishedWeakEventListener(MessageBus.MessageBusImpl source, Type messageType, IMessageListener messageListener)
+        #region Constructor / Destructor
+
+        public MessagePublishedWeakEventListener(MessageBus.MessageBusImpl<TMessage> source, IMessageListener<TMessage> messageListener)
         {
             _source = source;
-            _messageType = messageType;
             _messageListener = messageListener;
 
-            _messageListener.SubscriptionHandle = this;
+            _messageListener.SubscriptionToken = this;  // TODO : review !
         }
 
         ~MessagePublishedWeakEventListener()
@@ -27,21 +27,32 @@ namespace GasyTek.Lakana.Common.Communication
             Dispose(false);
         }
 
+        #endregion
+
         #region IWeakEventListener members
 
         public bool ReceiveWeakEvent(Type managerType, object sender, EventArgs e)
         {
-            if (managerType == typeof(MessagePublishedEventManager) && _messageType == e.GetType())
+            if (managerType == typeof(MessagePublishedEventManager) && typeof(TMessage) == e.GetType())
             {
-                OnMessagePublised(e as Message);
+                OnMessagePublised(e as TMessage);
                 return true;
             }
             return false;
         }
 
-        private void OnMessagePublised(Message message)
+        private void OnMessagePublised(TMessage message)
         {
             _messageListener.OnMessageReceived(message);
+        }
+
+        #endregion
+
+        #region ISubscriptionToken members
+
+        public void Unsubscribe()
+        {
+            Dispose();
         }
 
         #endregion
