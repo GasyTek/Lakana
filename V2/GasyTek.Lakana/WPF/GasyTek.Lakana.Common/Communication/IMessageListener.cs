@@ -1,21 +1,19 @@
-﻿using System;
-
-namespace GasyTek.Lakana.Common.Communication
+﻿namespace GasyTek.Lakana.Common.Communication
 {
     /// <summary>
     /// 
     /// </summary>
-    public interface IMessageListener
+    public interface IMessageListener<TMessage> where TMessage : Message
     {
         /// <summary>
-        /// For infrastructure use only.
+        /// Token that can be used to unsusbscribe to the message bus.
         /// </summary>
-        IDisposable SubscriptionHandle { get; set; }
+        ISubscriptionToken<TMessage> SubscriptionToken { get; set; }
 
         /// <summary>
         /// Called when message is received.
         /// </summary>
         /// <param name="message">The message.</param>
-        void OnMessageReceived(Message message);
+        void OnMessageReceived(TMessage message);
     }
 }

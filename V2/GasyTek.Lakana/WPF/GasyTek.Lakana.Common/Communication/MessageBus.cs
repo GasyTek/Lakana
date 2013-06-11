@@ -10,11 +10,11 @@ namespace GasyTek.Lakana.Common.Communication
     /// </summary>
     public static class MessageBus
     {
-        private static readonly MessageBusImpl MessageBusInstance;
+        private static readonly Dictionary<Type, object> MessageBusInstances;
 
         static MessageBus()
         {
-            MessageBusInstance = new MessageBusImpl();
+            MessageBusInstances = new Dictionary<Type, object>();
         }
 
         /// <summary>
@@ -24,7 +24,11 @@ namespace GasyTek.Lakana.Common.Communication
         /// <param name="message">The message.</param>
         public static void Publish<TMessage>(TMessage message) where TMessage : Message
         {
-            MessageBusInstance.Publish(typeof(TMessage), message);
+            var messageType = typeof (TMessage);
+            if (MessageBusInstances.ContainsKey(messageType))
+            {
+                ((MessageBusImpl<TMessage>)MessageBusInstances[messageType]).Publish(message);
+            }
         }
 
         /// <summary>
@@ -33,17 +37,28 @@ namespace GasyTek.Lakana.Common.Communication
         /// <typeparam name="TMessage">The type of the message.</typeparam>
         /// <param name="messageListener"></param>
         /// <returns></returns>
-        public static void Subscribe<TMessage>(IMessageListener messageListener) where TMessage : Message
+        public static IDisposable Subscribe<TMessage>(IMessageListener<TMessage> messageListener) where TMessage : Message
         {
-            MessageBusInstance.Subscribe(typeof(TMessage), messageListener);
+            var messageType = typeof(TMessage);
+            if (!MessageBusInstances.ContainsKey(messageType))
+            {
+                MessageBusInstances.Add(messageType, new MessageBusImpl<TMessage>());
+            }
+
+            return ((MessageBusImpl<TMessage>)MessageBusInstances[messageType]).Subscribe(messageListener);
         }
 
-        #region Private class MessageBusImpl
+        #region Internal class MessageBusImpl
+
+        internal interface IMessageBusImpl
+        {
+            event MessagePublishedEventHandler MessagePublished;
+        } 
 
         /// <summary>
         /// Default implementation.
         /// </summary>
-        internal class MessageBusImpl
+        internal class MessageBusImpl<TMessage> : IMessageBusImpl where TMessage : Message
         {
             public event MessagePublishedEventHandler MessagePublished;
 
@@ -54,17 +69,16 @@ namespace GasyTek.Lakana.Common.Communication
                 _observers = new List<WeakReference>();
             }
 
-            internal void Publish(Type messageType, Message message)
+            internal void Publish(TMessage message)
             {
-                var purgedObservers = _observers.Where(o => o.IsAlive).ToList();
-                _observers = purgedObservers;
+                _observers = _observers.Where(o => o.IsAlive).ToList();
 
                 OnMessagePublished(message);
             }
 
-            internal IDisposable Subscribe(Type messageType, IMessageListener messageListener)
+            internal IDisposable Subscribe(IMessageListener<TMessage> messageListener)
             {
-                var observer = new MessagePublishedWeakEventListener(this, messageType, messageListener);
+                var observer = new MessagePublishedWeakEventListener<TMessage>(this, messageListener);
                 _observers.Add(new WeakReference(observer));
 
                 MessagePublishedEventManager.AddListener(this, observer);
@@ -72,7 +86,7 @@ namespace GasyTek.Lakana.Common.Communication
                 return observer;
             }
 
-            protected virtual void OnMessagePublished(Message message)
+            protected virtual void OnMessagePublished(TMessage message)
             {
                 var handler = MessagePublished;
                 if (handler != null) handler(this, message);

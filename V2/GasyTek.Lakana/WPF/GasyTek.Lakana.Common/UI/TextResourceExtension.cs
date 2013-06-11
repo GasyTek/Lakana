@@ -130,7 +130,7 @@ namespace GasyTek.Lakana.Common.UI
 
         #region Private class TextResourceValue
 
-        private class TextResourceValue : NotifyPropertyChangedBase, IMessageListener
+        private class TextResourceValue : NotifyPropertyChangedBase, IMessageListener<CultureSettingsChangedEvent>
         {
             private object _value;
             private readonly Type _memberType;
@@ -160,14 +160,14 @@ namespace GasyTek.Lakana.Common.UI
 
             private void SubscribeToCultureChangedEvent()
             {
-                MessageBus.Subscribe<CultureSettingsChangedEvent>(this);
+                MessageBus.Subscribe(this);
             }
 
             #region IMessageListener members
 
-            public IDisposable SubscriptionHandle { get; set; }
+            public ISubscriptionToken<CultureSettingsChangedEvent> SubscriptionToken { get; set; }
 
-            public void OnMessageReceived(Message message)
+            public void OnMessageReceived(CultureSettingsChangedEvent message)
             {
                 Value = GetCurrentValue(_memberType, _member, _fieldName);
             }

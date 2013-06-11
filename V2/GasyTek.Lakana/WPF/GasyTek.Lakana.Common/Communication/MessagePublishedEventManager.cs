@@ -51,13 +51,13 @@ namespace GasyTek.Lakana.Common.Communication
 
         protected override void StartListening(object source)
         {
-            var manager = (MessageBus.MessageBusImpl)source;
+            var manager = (MessageBus.IMessageBusImpl)source;
             manager.MessagePublished += OnMessagePublished;
         }
 
         protected override void StopListening(object source)
         {
-            var manager = (MessageBus.MessageBusImpl)source;
+            var manager = (MessageBus.IMessageBusImpl)source;
             manager.MessagePublished -= OnMessagePublished;
         }
 
