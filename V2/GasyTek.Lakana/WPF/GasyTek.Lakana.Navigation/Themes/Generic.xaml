@@ -3,6 +3,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="pack://application:,,,/GasyTek.Lakana.Navigation;component/Themes/MessageBoxControlStyles.xaml" />
         <ResourceDictionary Source="pack://application:,,,/GasyTek.Lakana.Navigation;component/Themes/ModalHostControlStyles.xaml" />
-        <ResourceDictionary Source="pack://application:,,,/GasyTek.Lakana.Navigation;component/Themes/ShutdownApplicationWindowStyles.xaml" />        
+        <ResourceDictionary Source="pack://application:,,,/GasyTek.Lakana.Navigation;component/Themes/ShutdownApplicationWindowStyles.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/GasyTek.Lakana.Navigation;component/Themes/WindowControlStyles.xaml" />        
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

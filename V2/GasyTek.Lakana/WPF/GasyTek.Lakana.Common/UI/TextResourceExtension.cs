@@ -76,6 +76,15 @@ namespace GasyTek.Lakana.Common.UI
 
         #region Overriden methods
 
+        /// <summary>
+        /// When implemented in a derived class, returns an object that is set as the value of the target property for this markup extension.
+        /// </summary>
+        /// <param name="serviceProvider">Object that can provide services for the markup extension.</param>
+        /// <returns>
+        /// The object value to set on the property where the extension is applied.
+        /// </returns>
+        /// <exception cref="System.InvalidOperationException">The Member property must be non null.</exception>
+        /// <exception cref="System.ArgumentException"></exception>
         public override object ProvideValue(IServiceProvider serviceProvider)
         {
             if (Member == null) { throw new InvalidOperationException("The Member property must be non null."); }
