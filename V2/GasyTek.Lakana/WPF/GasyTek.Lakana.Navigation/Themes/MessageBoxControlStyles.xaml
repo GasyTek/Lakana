@@ -88,8 +88,8 @@
                             Padding="10"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            Width="400"
-                            Height="180">
+                            Width="{TemplateBinding Width}"
+                            Height="{TemplateBinding Height}">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition />

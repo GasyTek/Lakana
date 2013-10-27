@@ -48,7 +48,7 @@ namespace GasyTek.Lakana.Navigation.Services
         {
             if ((bool)e.NewValue)
             {
-                var mainWorkspace = (Panel) owner;
+                var mainWorkspace = (Panel)owner;
 
                 // the workspace is a Grid control
                 if (mainWorkspace is Grid)
@@ -62,7 +62,7 @@ namespace GasyTek.Lakana.Navigation.Services
         }
 
         #endregion
-        
+
         #region Public api
 
         public static View ActiveView
@@ -135,25 +135,25 @@ namespace GasyTek.Lakana.Navigation.Services
         /// <summary>
         /// Display a message box.
         /// </summary>
-        /// <param name="ownerViewKey">The parent instance key : parentViewKey [ # instanceID ]</param>
+        /// <param name="ownerViewInstanceKey">The parent instance key : parentViewKey [ # instanceID ]</param>
         /// <param name="message">The message.</param>
         /// <param name="messageBoxImage">The message box image.</param>
         /// <param name="messageBoxButton">The message box button.</param>
         /// <returns></returns>
-        public static Task<MessageBoxResult> ShowMessageBox(string ownerViewKey, string message = "", MessageBoxImage messageBoxImage = MessageBoxImage.Asterisk, MessageBoxButton messageBoxButton = MessageBoxButton.OK)
+        public static Task<MessageBoxResult> ShowMessageBox(string ownerViewInstanceKey, string message = "", MessageBoxImage messageBoxImage = MessageBoxImage.Asterisk, MessageBoxButton messageBoxButton = MessageBoxButton.OK)
         {
-            return NavigationManagerImpl.ShowMessageBox(ownerViewKey, message, messageBoxImage, messageBoxButton);
+            return NavigationManagerImpl.ShowMessageBox(ownerViewInstanceKey, message, messageBoxImage, messageBoxButton);
         }
 
         /// <summary>
         /// Closes the specified view key.
         /// </summary>
-        /// <param name="viewKey">The view key.</param>
+        /// <param name="viewInstanceKey">The view key.</param>
         /// <param name="modalResult">The modal result.</param>
         /// <returns></returns>
-        public static View Close(string viewKey, object modalResult = null)
+        public static View Close(string viewInstanceKey, object modalResult = null)
         {
-            return NavigationManagerImpl.Close(viewKey, modalResult);
+            return NavigationManagerImpl.Close(viewInstanceKey, modalResult);
         }
 
         /// <summary>

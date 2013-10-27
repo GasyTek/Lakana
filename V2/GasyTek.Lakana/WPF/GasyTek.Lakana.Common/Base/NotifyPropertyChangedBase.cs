@@ -12,6 +12,10 @@ namespace GasyTek.Lakana.Common.Base
         /// </summary>
         public virtual event PropertyChangedEventHandler PropertyChanged;
 
+        /// <summary>
+        /// Raises the property changed event.
+        /// </summary>
+        /// <param name="propertyName">Name of the property.</param>
         protected internal virtual void RaisePropertyChanged(string propertyName)
         {
             var handler = PropertyChanged;

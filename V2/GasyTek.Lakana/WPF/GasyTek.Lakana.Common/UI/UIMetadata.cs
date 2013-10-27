@@ -18,11 +18,20 @@ namespace GasyTek.Lakana.Common.UI
 
         #region Properties
 
+        /// <summary>
+        /// Gets the label.
+        /// </summary>
         public string Label
         {
             get { return (_labelProvider != null) ? _labelProvider() : GlobalConstants.LocalizationNoText; }
         }
 
+        /// <summary>
+        /// Gets or sets the label provider.
+        /// </summary>
+        /// <value>
+        /// The label provider.
+        /// </value>
         public Func<string> LabelProvider
         {
             get { return _labelProvider; }
@@ -33,11 +42,20 @@ namespace GasyTek.Lakana.Common.UI
             }
         }
 
+        /// <summary>
+        /// Gets the description.
+        /// </summary>
         public string Description
         {
             get { return (_descriptionProvider != null) ? _descriptionProvider() : GlobalConstants.LocalizationNoText; }
         }
 
+        /// <summary>
+        /// Gets or sets the description provider.
+        /// </summary>
+        /// <value>
+        /// The description provider.
+        /// </value>
         public Func<string> DescriptionProvider
         {
             get { return _descriptionProvider; }
@@ -48,11 +66,20 @@ namespace GasyTek.Lakana.Common.UI
             }
         }
 
+        /// <summary>
+        /// Gets the icon.
+        /// </summary>
         public ImageSource Icon
         {
             get { return (_iconProvider != null) ? _iconProvider() : null; }
         }
 
+        /// <summary>
+        /// Gets or sets the icon provider.
+        /// </summary>
+        /// <value>
+        /// The icon provider.
+        /// </value>
         public Func<ImageSource> IconProvider
         {
             get { return _iconProvider; }
@@ -80,8 +107,18 @@ namespace GasyTek.Lakana.Common.UI
 
         #region IMessageListener
 
+        /// <summary>
+        /// Gets or sets the subscription token.
+        /// </summary>
+        /// <value>
+        /// The subscription token.
+        /// </value>
         public ISubscriptionToken<CultureSettingsChangedEvent> SubscriptionToken { get; set; }
 
+        /// <summary>
+        /// Called when [message received].
+        /// </summary>
+        /// <param name="message">The message.</param>
         public void OnMessageReceived(CultureSettingsChangedEvent message)
         {
             this.NotifyPropertyChanged(o => o.Label);
