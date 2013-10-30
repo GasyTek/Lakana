@@ -30,6 +30,8 @@
                 Value="2" />
         <Setter Property="Background"
                 Value="White" />
+        <Setter Property="Width" Value="800"></Setter>
+        <Setter Property="Height" Value="600"></Setter>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type lakana:WindowControl}">

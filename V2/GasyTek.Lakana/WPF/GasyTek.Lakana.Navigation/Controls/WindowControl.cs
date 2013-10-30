@@ -63,13 +63,6 @@ namespace GasyTek.Lakana.Navigation.Controls
             DefaultStyleKeyProperty.OverrideMetadata(typeof(WindowControl), new FrameworkPropertyMetadata(typeof(WindowControl)));
         }
 
-        public WindowControl()
-        {
-            // default size
-            Width = 800;
-            Height = 600;
-        }
-
         #endregion
 
         #region Overriden methods

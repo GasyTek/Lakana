@@ -74,13 +74,6 @@ namespace GasyTek.Lakana.Navigation.Controls
             DefaultStyleKeyProperty.OverrideMetadata(typeof(MessageBoxControl), new FrameworkPropertyMetadata(typeof(MessageBoxControl)));
         }
 
-        public MessageBoxControl()
-        {
-            // default size
-            Width = 400;
-            Height = 180;
-        }
-
         #endregion
 
         #region Overriden methods
