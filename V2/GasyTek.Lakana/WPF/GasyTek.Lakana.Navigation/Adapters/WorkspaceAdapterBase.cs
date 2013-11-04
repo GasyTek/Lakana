@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 using GasyTek.Lakana.Navigation.Services;
+using GasyTek.Lakana.Navigation.Transitions;
 
 namespace GasyTek.Lakana.Navigation.Adapters
 {
