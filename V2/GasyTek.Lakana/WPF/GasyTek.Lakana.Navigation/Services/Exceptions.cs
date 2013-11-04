@@ -109,4 +109,16 @@ namespace GasyTek.Lakana.Navigation.Services
         {
         }
     }
+
+    /// <summary>
+    /// Thrown when attempting to add a view instance which type is not supported by the underlying workspace adapter.
+    /// </summary>
+    public class ViewTypeNotSupportedByWorkspaceAdapterException : ApplicationException
+    {
+        public ViewTypeNotSupportedByWorkspaceAdapterException(Type viewType)
+            : base("View of type '" + viewType.FullName + "' is not supported by this workspace adapter.")
+        {
+            
+        }
+    }
 }
