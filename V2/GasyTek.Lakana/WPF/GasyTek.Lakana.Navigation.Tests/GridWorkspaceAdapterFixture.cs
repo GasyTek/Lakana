@@ -201,6 +201,21 @@ namespace GasyTek.Lakana.Navigation.Tests
                 // Verify
                 Assert.IsTrue(_workspace.Children[0].Visibility == Visibility.Visible);  // first child corresponds to viewGroup1
             }
+                        
+            [TestMethod]
+            [ExpectedException(typeof(ViewTypeNotSupportedByWorkspaceAdapterException))]
+            public void ActivatingWindowThrowsException()
+            {
+                // Prepare
+                var view = new Window();
+                var viewGroup = new ViewGroup();
+                viewGroup.Push(new View("view1") { InternalViewInstance = view });
+
+                // Act
+                _workspaceAdapter.PerformActivation(viewGroup.Peek(), null);
+
+                // Verify
+            }
         }
 
         [TestClass]

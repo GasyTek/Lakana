@@ -37,6 +37,9 @@ namespace GasyTek.Lakana.Navigation.Adapters
                 var activatedViewGroup = activatedNode.List;
                 var activatedView = activatedNode.Value.InternalViewInstance;
 
+                if(activatedView is Window)
+                    throw new ViewTypeNotSupportedByWorkspaceAdapterException(activatedView.GetType());
+
                 if (GroupMappings.ContainsKey(activatedViewGroup))
                 {
                     activatedContainer = GroupMappings[activatedViewGroup];
