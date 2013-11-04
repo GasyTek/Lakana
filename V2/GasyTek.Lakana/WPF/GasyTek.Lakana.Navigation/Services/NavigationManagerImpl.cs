@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using GasyTek.Lakana.Common.UI;
 using GasyTek.Lakana.Navigation.Adapters;
 using GasyTek.Lakana.Navigation.Controls;
+using GasyTek.Lakana.Navigation.Transitions;
 
 namespace GasyTek.Lakana.Navigation.Services
 {

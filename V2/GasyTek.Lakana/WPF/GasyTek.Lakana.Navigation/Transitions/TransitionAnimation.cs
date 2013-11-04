@@ -1,7 +1,7 @@
 using System.Windows;
 using System.Windows.Media.Animation;
 
-namespace GasyTek.Lakana.Navigation.Services
+namespace GasyTek.Lakana.Navigation.Transitions
 {
     /// <summary>
     /// Delegate that provides a storyboard to animate the transition between two view groups.
