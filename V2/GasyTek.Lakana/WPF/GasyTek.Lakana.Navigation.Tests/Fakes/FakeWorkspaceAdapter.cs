@@ -1,4 +1,5 @@
 using System;
+using System.Windows;
 using System.Windows.Controls;
 using GasyTek.Lakana.Navigation.Adapters;
 using GasyTek.Lakana.Navigation.Services;
@@ -13,7 +14,7 @@ namespace GasyTek.Lakana.Navigation.Tests.Fakes
             get { return null; }
         }
 
-        public void SetMainWorkspace(Panel workspace)
+        public void SetMainWorkspace(FrameworkElement workspace)
         {
             
         }
