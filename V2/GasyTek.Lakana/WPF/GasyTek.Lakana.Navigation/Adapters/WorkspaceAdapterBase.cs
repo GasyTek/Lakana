@@ -15,25 +15,25 @@ namespace GasyTek.Lakana.Navigation.Adapters
         public ViewGroupCollection ViewGroupCollection { get; private set; }
         public Func<TransitionAnimation> TransitionAnimationProvider { get; private set; }
 
-        public void SetMainWorkspace(FrameworkElement workspace)
+        protected internal void SetMainWorkspace(FrameworkElement workspace)
         {
             Workspace = (TWorkspace)workspace;
         }
 
-        public void SetViewGroupCollection(ViewGroupCollection viewGroupCollection)
+        protected internal void SetViewGroupCollection(ViewGroupCollection viewGroupCollection)
         {
             ViewGroupCollection = viewGroupCollection;
         }
 
-        public void SetTransitionAnimationProvider(Func<TransitionAnimation> transitionAnimationProvider)
+        protected internal void SetTransitionAnimationProvider(Func<TransitionAnimation> transitionAnimationProvider)
         {
             TransitionAnimationProvider = transitionAnimationProvider;
         }
 
-        public void PerformActivation(ViewGroupNode activatedNode, ViewGroupNode deactivatedNode)
+        protected internal void PerformActivation(ViewGroupNode activatedNode, ViewGroupNode deactivatedNode)
         {
             OnPerformActivation(activatedNode, deactivatedNode);
-            
+
             // animates the transition
             if (TransitionAnimationProvider != null)
             {
@@ -68,7 +68,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
             }
         }
 
-        public void PerformClose(ViewGroupNode activatedNode, ViewGroupNode closedNode)
+        protected internal void PerformClose(ViewGroupNode activatedNode, ViewGroupNode closedNode)
         {
             if (TransitionAnimationProvider != null)
             {
@@ -78,10 +78,59 @@ namespace GasyTek.Lakana.Navigation.Adapters
             OnPerformClose(activatedNode, closedNode);
         }
 
+        #region Overridable methods
+
+        /// <summary>
+        /// Perform the actual activation of a view.
+        /// </summary>
+        /// <param name="activatedNode"></param>
+        /// <param name="deactivatedNode"></param>
         protected abstract void OnPerformActivation(ViewGroupNode activatedNode, ViewGroupNode deactivatedNode);
+
+        /// <summary>
+        /// Perform the actual closing of a view.
+        /// </summary>
+        /// <param name="activatedNode">The new activated view.</param>
+        /// <param name="closedNode">The closed view.</param>
         protected abstract void OnPerformClose(ViewGroupNode activatedNode, ViewGroupNode closedNode);
 
+        /// <summary>
+        /// Retrieves the visual element that is mapped to the given view group.
+        /// </summary>
+        /// <param name="viewGroup">The view group.</param>
+        /// <returns></returns>
         protected abstract FrameworkElement OnGetViewGroupMapping(ViewGroup viewGroup);
+
+        #endregion
+
+        #region IWorkspaceAdapter members
+
+        void IWorkspaceAdapter.SetMainWorkspace(FrameworkElement workspace)
+        {
+            SetMainWorkspace(workspace);
+        }
+
+        void IWorkspaceAdapter.SetViewGroupCollection(ViewGroupCollection viewGroupCollection)
+        {
+            SetViewGroupCollection(viewGroupCollection);
+        }
+
+        void IWorkspaceAdapter.SetTransitionAnimationProvider(Func<TransitionAnimation> transitionAnimationProvider)
+        {
+            SetTransitionAnimationProvider(transitionAnimationProvider);
+        }
+
+        void IWorkspaceAdapter.PerformActivation(ViewGroupNode activatedNode, ViewGroupNode deactivatedNode)
+        {
+            PerformActivation(activatedNode, deactivatedNode);
+        }
+
+        void IWorkspaceAdapter.PerformClose(ViewGroupNode activatedNode, ViewGroupNode closedNode)
+        {
+            PerformClose(activatedNode, closedNode);
+        }
+
+        #endregion
 
         #region IActiveAware support
 
