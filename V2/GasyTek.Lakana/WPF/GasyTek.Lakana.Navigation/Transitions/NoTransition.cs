@@ -1,11 +1,9 @@
-﻿using GasyTek.Lakana.Navigation.Services;
-
-namespace GasyTek.Lakana.Navigation.Transitions
+﻿namespace GasyTek.Lakana.Navigation.Transitions
 {
     /// <summary>
-    /// 
+    /// Do not animate transition.
     /// </summary>
-    public static class NoAnimation
+    public static class NoTransition
     {
         public static TransitionAnimation Create()
         {

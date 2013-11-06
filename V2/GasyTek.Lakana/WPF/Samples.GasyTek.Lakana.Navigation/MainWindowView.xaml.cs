@@ -54,7 +54,7 @@ namespace Samples.GasyTek.Lakana.Navigation
                 case "MenuNoAnimation":
                     MenuNoAnimation.IsChecked = true;
                     MenuFadeAnimation.IsChecked = false;
-                    NavigationManager.ChangeTransitionAnimation(NoAnimation.Create());
+                    NavigationManager.ChangeTransitionAnimation(NoTransition.Create());
                     break;
                 case "MenuFadeAnimation":
                     MenuNoAnimation.IsChecked = false;

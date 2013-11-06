@@ -106,7 +106,7 @@
     <Compile Include="Services\ViewGroupNode.cs" />
     <Compile Include="Services\ViewLocator.cs" />
     <Compile Include="Transitions\FadeTransition.cs" />
-    <Compile Include="Transitions\NoAnimation.cs" />
+    <Compile Include="Transitions\NoTransition.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
