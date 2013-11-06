@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using GasyTek.Lakana.Common.UI;
 using GasyTek.Lakana.Navigation.Adapters;
 using GasyTek.Lakana.Navigation.Controls;
@@ -222,7 +221,7 @@ namespace GasyTek.Lakana.Navigation.Services
 
         #region Internal methods
 
-        internal void SetMainWorkspace(Panel mainWorkspace, IWorkspaceAdapter workspaceAdapter, Func<TransitionAnimation> transitionAnimationsProvider = null)
+        internal void SetMainWorkspace(FrameworkElement mainWorkspace, IWorkspaceAdapter workspaceAdapter, Func<TransitionAnimation> transitionAnimationsProvider = null)
         {
             if (workspaceAdapter == null)
                 throw new ArgumentNullException("workspaceAdapter");
