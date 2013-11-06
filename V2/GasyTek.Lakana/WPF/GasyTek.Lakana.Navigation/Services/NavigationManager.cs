@@ -49,11 +49,10 @@ namespace GasyTek.Lakana.Navigation.Services
         {
             if ((bool)e.NewValue)
             {
-                var mainWorkspace = (Panel)owner;
-
                 // the workspace is a Grid control
-                if (mainWorkspace is Grid)
+                if (owner is Grid)
                 {
+                    var mainWorkspace = (Grid)owner;
                     var workspaceAdapter = new GridWorkspaceAdapter();
                     NavigationManagerImpl.SetMainWorkspace(mainWorkspace, workspaceAdapter, () => _transitionAnimation);
                 }
