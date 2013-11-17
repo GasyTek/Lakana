@@ -66,6 +66,8 @@
     <Compile Include="Controls\ShutdownApplicationItemsControl.cs" />
     <Compile Include="Controls\ShutdownApplicationItem.cs" />
     <Compile Include="Controls\ShutdownApplicationWindow.cs" />
+    <Compile Include="Controls\ViewGroupHostControl.cs" />
+    <Compile Include="Controls\ViewHostControl.cs" />
     <Compile Include="Controls\WindowControl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
@@ -98,6 +100,11 @@
     <Compile Include="Services\ModalResult.cs" />
     <Compile Include="Services\NavigationManager.cs" />
     <Compile Include="Services\NavigationManagerImpl.cs" />
+    <Compile Include="Transitions\2D\FadeTransition.cs" />
+    <Compile Include="Transitions\2D\SlideTransition.cs" />
+    <Compile Include="Transitions\3D\Cube3DTransition.cs" />
+    <Compile Include="Transitions\3D\Transition3D.cs" />
+    <Compile Include="Transitions\Transition.cs" />
     <Compile Include="Transitions\TransitionAnimation.cs" />
     <Compile Include="Services\ViewGroup.cs" />
     <Compile Include="Services\ViewGroupCollection.cs" />
