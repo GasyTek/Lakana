@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using GasyTek.Lakana.Navigation.Services;
 using GasyTek.Lakana.Navigation.Transitions;
 
@@ -9,15 +10,15 @@ namespace GasyTek.Lakana.Navigation.Adapters
     /// Base class for workspace adapters
     /// </summary>
     /// <typeparam name="TWorkspace">The type of the panel.</typeparam>
-    public abstract class WorkspaceAdapterBase<TWorkspace> : IWorkspaceAdapter where TWorkspace : FrameworkElement
+    public abstract class WorkspaceAdapterBase<TWorkspace> : IWorkspaceAdapter where TWorkspace : Panel
     {
         public TWorkspace Workspace { get; private set; }
         public ViewGroupCollection ViewGroupCollection { get; private set; }
         public Func<TransitionAnimation> TransitionAnimationProvider { get; private set; }
 
-        protected internal void SetMainWorkspace(FrameworkElement workspace)
+        protected internal void SetMainWorkspace(TWorkspace workspace)
         {
-            Workspace = (TWorkspace)workspace;
+            Workspace = workspace;
         }
 
         protected internal void SetViewGroupCollection(ViewGroupCollection viewGroupCollection)
@@ -105,9 +106,9 @@ namespace GasyTek.Lakana.Navigation.Adapters
 
         #region IWorkspaceAdapter members
 
-        void IWorkspaceAdapter.SetMainWorkspace(FrameworkElement workspace)
+        void IWorkspaceAdapter.SetMainWorkspace(Panel workspace)
         {
-            SetMainWorkspace(workspace);
+            SetMainWorkspace((TWorkspace)workspace);
         }
 
         void IWorkspaceAdapter.SetViewGroupCollection(ViewGroupCollection viewGroupCollection)

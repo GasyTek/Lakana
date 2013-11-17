@@ -14,7 +14,7 @@ namespace GasyTek.Lakana.Navigation.Tests.Fakes
             get { return null; }
         }
 
-        public void SetMainWorkspace(FrameworkElement workspace)
+        public void SetMainWorkspace(Panel workspace)
         {
             
         }
