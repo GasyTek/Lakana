@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using GasyTek.Lakana.Navigation.Services;
 using GasyTek.Lakana.Navigation.Transitions;
 
@@ -14,7 +15,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
         /// Sets the main workspace.
         /// </summary>
         /// <param name="workspace">The workspace.</param>
-        void SetMainWorkspace(FrameworkElement workspace);
+        void SetMainWorkspace(Panel workspace);
         /// <summary>
         /// Sets the view stack collection.
         /// </summary>
