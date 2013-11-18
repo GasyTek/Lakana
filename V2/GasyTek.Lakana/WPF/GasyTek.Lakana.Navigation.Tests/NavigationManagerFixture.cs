@@ -354,7 +354,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                 Assert.IsTrue(expectedResult.View.IsModal);
                 Assert.AreSame(expectedResult.View.ViewInstance, _navigationManagerImpl.ActiveView.ViewInstance);
                 Assert.IsInstanceOfType(_navigationManagerImpl.ActiveView.ViewInstance, expectedResult.View.ViewInstance.GetType());
-                Assert.IsInstanceOfType(_navigationManagerImpl.ActiveView.InternalViewInstance, typeof(ModalHostControl));
+                Assert.IsInstanceOfType(_navigationManagerImpl.ActiveView.InternalViewInstance.View, typeof(ModalHostControl));
                 Assert.IsNotNull(_navigationManagerImpl.ActiveNode.Previous);
                 Assert.AreSame(_navigationManagerImpl.ActiveNode.Previous.Value.ViewInstance, parentViewInfo.ViewInstance);
             }
@@ -402,7 +402,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                 Assert.IsTrue(_navigationManagerImpl.ActiveView.IsModal);
                 Assert.IsTrue(_navigationManagerImpl.ActiveView.IsMessageBox);
                 Assert.IsInstanceOfType(_navigationManagerImpl.ActiveView.ViewInstance, typeof(MessageBoxControl));
-                Assert.IsInstanceOfType(_navigationManagerImpl.ActiveView.InternalViewInstance, typeof(ModalHostControl));
+                Assert.IsInstanceOfType(_navigationManagerImpl.ActiveView.InternalViewInstance.View, typeof(ModalHostControl));
                 Assert.IsNotNull(_navigationManagerImpl.ActiveNode.Previous);
                 Assert.AreSame(_navigationManagerImpl.ActiveNode.Previous.Value.ViewInstance, parentViewInfo.ViewInstance);
             }

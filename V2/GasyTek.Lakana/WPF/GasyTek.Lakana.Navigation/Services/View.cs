@@ -1,6 +1,7 @@
 using System;
 using System.Windows;
 using GasyTek.Lakana.Common.UI;
+using GasyTek.Lakana.Navigation.Controls;
 
 namespace GasyTek.Lakana.Navigation.Services
 {
@@ -30,7 +31,7 @@ namespace GasyTek.Lakana.Navigation.Services
         /// Used by the infrastructure. 
         /// It can contain either the actual or the container view (for modal views for example). 
         /// </summary>
-        internal FrameworkElement InternalViewInstance { get; set; }
+        internal ViewHostControl InternalViewInstance { get; set; }
 
         /// <summary>
         /// Gets the view model.
