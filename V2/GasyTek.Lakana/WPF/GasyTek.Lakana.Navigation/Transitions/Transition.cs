@@ -23,7 +23,10 @@ namespace GasyTek.Lakana.Navigation.Transitions
 
         public Duration Duration { get; set; }
 
-        public bool IsRunning { get; private set; }
+        /// <summary>
+        /// Indicates if at least one transition is running.
+        /// </summary>
+        public static bool IsRunning { get; private set; }
 
         #endregion
 
@@ -37,6 +40,10 @@ namespace GasyTek.Lakana.Navigation.Transitions
             if (IsRunning) return;
 
             IsRunning = true;
+
+            // set items visibility
+            oldItem.Visibility = Visibility.Visible;
+            newItem.Visibility = Visibility.Visible;
 
             // Creates a namescope that will be associated to the scene panel
             var sceneNameScope = NameScope.GetNameScope(scene);
@@ -63,6 +70,10 @@ namespace GasyTek.Lakana.Navigation.Transitions
                                         {
                                             OnRunTransitionCompleted(transitionInfo);
                                             RaiseTransitionCompleded();
+
+                                            // set items visibility
+                                            oldItem.Visibility = Visibility.Visible;
+                                            newItem.Visibility = Visibility.Hidden;
 
                                             IsRunning = false;
                                         };
