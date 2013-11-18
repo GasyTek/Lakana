@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
+using GasyTek.Lakana.Navigation.Controls;
 using GasyTek.Lakana.Navigation.Services;
 
 namespace GasyTek.Lakana.Navigation.Adapters
@@ -8,16 +9,16 @@ namespace GasyTek.Lakana.Navigation.Adapters
     internal class GridWorkspaceAdapter : WorkspaceAdapterBase<Grid>
     {
         // Maps view groups to their actual framework element equivalent
-        private readonly Dictionary<ViewGroup, Grid> _groupMappings;
+        private readonly Dictionary<ViewGroup, ViewGroupHostControl> _groupMappings;
 
-        public Dictionary<ViewGroup, Grid> GroupMappings
+        public Dictionary<ViewGroup, ViewGroupHostControl> GroupMappings
         {
             get { return _groupMappings; }
         }
 
         public GridWorkspaceAdapter()
         {
-            _groupMappings = new Dictionary<ViewGroup, Grid>();
+            _groupMappings = new Dictionary<ViewGroup, ViewGroupHostControl>();
         }
 
         protected override void OnPerformActivation(ViewGroupNode activatedNode, ViewGroupNode deactivatedNode)
@@ -33,7 +34,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
             if (activatedNode != null)
             {
                 var zIndex = 1;
-                var activatedContainer = new Grid();
+                var activatedContainer = new ViewGroupHostControl();
                 var activatedViewGroup = activatedNode.List;
                 var activatedView = activatedNode.Value.InternalViewInstance;
 
