@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using GasyTek.Lakana.Navigation.Services;
 
 namespace GasyTek.Lakana.Navigation.Controls
 {
@@ -9,9 +10,26 @@ namespace GasyTek.Lakana.Navigation.Controls
     /// </summary>
     public class ViewHostControl : FrameworkElement
     {
+        #region Fields
+
+        private UIElement _view;
+
+        #endregion
+
         #region Properties
 
-        public UIElement View { get; set; }
+        public UIElement View
+        {
+            get { return _view; }
+            set
+            {
+                if (value is Window)
+                    throw new ViewTypeNotSupportedByWorkspaceAdapterException(value.GetType());
+
+                _view = value;
+                AddVisualChild(_view);
+            }
+        }
 
         #endregion
 

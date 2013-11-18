@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 using GasyTek.Lakana.Navigation.Adapters;
+using GasyTek.Lakana.Navigation.Controls;
 using GasyTek.Lakana.Navigation.Services;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -28,7 +29,7 @@ namespace GasyTek.Lakana.Navigation.Tests
             public void ActivatedViewIsAddedInNewGroup()
             {
                 // Prepare
-                var view = new UserControl();
+                var view = new ViewHostControl { View = new UserControl() };
                 var viewGroup = new ViewGroup();
                 viewGroup.Push(new View("view1") { InternalViewInstance = view });
 
@@ -45,8 +46,8 @@ namespace GasyTek.Lakana.Navigation.Tests
             public void ActivatedViewIsAddedInExistingGroup()
             {
                 // Prepare
-                var view1 = new UserControl();
-                var view2 = new UserControl();
+                var view1 = new ViewHostControl { View = new UserControl() };
+                var view2 = new ViewHostControl { View = new UserControl() };
                 var viewGroup = new ViewGroup();
                 var view1Node = viewGroup.Push(new View("view1") { InternalViewInstance = view1 });
                 var view2Node = viewGroup.Push(new View("view2") { InternalViewInstance = view2 });
@@ -65,7 +66,7 @@ namespace GasyTek.Lakana.Navigation.Tests
             public void CanActivateViewMoreThanOnce()
             {
                 // Prepare
-                var view = new UserControl();
+                var view = new ViewHostControl { View = new UserControl() };
                 var viewGroup = new ViewGroup();
                 viewGroup.Push(new View("view1") { InternalViewInstance = view });
                 _workspaceAdapter.PerformActivation(viewGroup.Peek(), null);
@@ -81,7 +82,7 @@ namespace GasyTek.Lakana.Navigation.Tests
             public void ActivatedViewHasPositiveZIndexInItsGroup()
             {
                 // Prepare
-                var view = new UserControl();
+                var view = new ViewHostControl { View = new UserControl() };
                 var viewGroup = new ViewGroup();
                 viewGroup.Push(new View("view1") { InternalViewInstance = view });
 
@@ -96,9 +97,9 @@ namespace GasyTek.Lakana.Navigation.Tests
             public void ActivatedViewHasHigherZIndexInItsGroup()
             {
                 // Prepare
-                var view1 = new UserControl();
-                var view2 = new UserControl();
-                var view3 = new UserControl();
+                var view1 = new ViewHostControl { View = new UserControl() };
+                var view2 = new ViewHostControl { View = new UserControl() };
+                var view3 = new ViewHostControl { View = new UserControl() };
                 var viewGroup = new ViewGroup();
                 var view1Node = viewGroup.Push(new View("view1") { InternalViewInstance = view1 });
                 var view2Node = viewGroup.Push(new View("view2") { InternalViewInstance = view2 });
@@ -119,9 +120,9 @@ namespace GasyTek.Lakana.Navigation.Tests
             public void ActivatedModalAncestorsHaveAscendingSortedZIndex()
             {
                 // Prepare
-                var view1 = new UserControl();
-                var view2 = new UserControl();
-                var modalView = new UserControl();
+                var view1 = new ViewHostControl { View = new UserControl() };
+                var view2 = new ViewHostControl { View = new UserControl() };
+                var modalView = new ViewHostControl { View = new UserControl() };
                 var viewGroup = new ViewGroup();
                 var view1Node = viewGroup.Push(new View("view1") { InternalViewInstance = view1 });
                 var view2Node = viewGroup.Push(new View("view2") { InternalViewInstance = view2 });
@@ -141,9 +142,9 @@ namespace GasyTek.Lakana.Navigation.Tests
             public void ActivatedModalAncestorsAreVisibleAndDisabled()
             {
                 // Prepare
-                var view1 = new UserControl();
-                var view2 = new UserControl();
-                var modalView = new UserControl();
+                var view1 = new ViewHostControl { View = new UserControl() };
+                var view2 = new ViewHostControl { View = new UserControl() };
+                var modalView = new ViewHostControl { View = new UserControl() };
                 var viewGroup = new ViewGroup();
                 var view1Node = viewGroup.Push(new View("view1") { InternalViewInstance = view1 });
                 var view2Node = viewGroup.Push(new View("view2") { InternalViewInstance = view2 });
@@ -167,8 +168,8 @@ namespace GasyTek.Lakana.Navigation.Tests
             public void DeactivatedViewGroupIsNotVisible()
             {
                 // Prepare
-                var view1 = new UserControl();
-                var view2 = new UserControl();
+                var view1 = new ViewHostControl { View = new UserControl() };
+                var view2 = new ViewHostControl { View = new UserControl() };
                 var viewGroup1 = new ViewGroup();
                 var viewGroup2 = new ViewGroup();
                 viewGroup1.Push(new View("view1") { InternalViewInstance = view1 });
@@ -186,8 +187,8 @@ namespace GasyTek.Lakana.Navigation.Tests
             public void ReactivatedViewGroupIsVisible()
             {
                 // Prepare
-                var view1 = new UserControl();
-                var view2 = new UserControl();
+                var view1 = new ViewHostControl { View = new UserControl() };
+                var view2 = new ViewHostControl { View = new UserControl() };
                 var viewGroup1 = new ViewGroup();
                 var viewGroup2 = new ViewGroup();
                 viewGroup1.Push(new View("view1") { InternalViewInstance = view1 });
@@ -201,13 +202,13 @@ namespace GasyTek.Lakana.Navigation.Tests
                 // Verify
                 Assert.IsTrue(_workspace.Children[0].Visibility == Visibility.Visible);  // first child corresponds to viewGroup1
             }
-                        
+
             [TestMethod]
             [ExpectedException(typeof(ViewTypeNotSupportedByWorkspaceAdapterException))]
             public void ActivatingWindowThrowsException()
             {
                 // Prepare
-                var view = new Window();
+                var view = new ViewHostControl { View = new Window() };
                 var viewGroup = new ViewGroup();
                 viewGroup.Push(new View("view1") { InternalViewInstance = view });
 
@@ -225,8 +226,8 @@ namespace GasyTek.Lakana.Navigation.Tests
             public void ClosedViewIsRemoved()
             {
                 // Prepare
-                var view1 = new UserControl();
-                var view2 = new UserControl();
+                var view1 = new ViewHostControl { View = new UserControl() };
+                var view2 = new ViewHostControl { View = new UserControl() };
                 var viewGroup = new ViewGroup();
                 var view1Node = viewGroup.Push(new View("view1") { InternalViewInstance = view1 });
                 var view2Node = viewGroup.Push(new View("view2") { InternalViewInstance = view2 });
@@ -244,7 +245,7 @@ namespace GasyTek.Lakana.Navigation.Tests
             public void ClosedViewGroupIsRemovedIfEmpty()
             {
                 // Prepare
-                var view1 = new UserControl();
+                var view1 = new ViewHostControl { View = new UserControl() };
                 var viewGroup = new ViewGroup();
                 var view1Node = viewGroup.Push(new View("view1") { InternalViewInstance = view1 });
                 _workspaceAdapter.PerformActivation(view1Node, null);
@@ -260,8 +261,8 @@ namespace GasyTek.Lakana.Navigation.Tests
             public void ClosedModalViewParentIsReEnabled()
             {
                 // Prepare
-                var view1 = new UserControl();
-                var view2 = new UserControl();
+                var view1 = new ViewHostControl { View = new UserControl() };
+                var view2 = new ViewHostControl { View = new UserControl() };
                 var viewGroup = new ViewGroup();
                 var view1Node = viewGroup.Push(new View("view1") { InternalViewInstance = view1 });
                 var view2Node = viewGroup.Push(new View("view2") { InternalViewInstance = view2, IsModal = true });

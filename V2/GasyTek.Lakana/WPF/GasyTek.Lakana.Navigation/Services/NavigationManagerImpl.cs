@@ -77,7 +77,7 @@ namespace GasyTek.Lakana.Navigation.Services
             NavigationKey.EnsuresNavigationKeyHasParent(navigationKey);
 
             var viewInfo = NavigateToInternal(navigationKey, viewModel, true, false);
-            var modalHostControl = (ModalHostControl)viewInfo.InternalViewInstance;
+            var modalHostControl = (ModalHostControl)viewInfo.InternalViewInstance.View;
 
             return new ModalResult<TResult>(modalHostControl.ResultCompletionSource.Task) { View = viewInfo };
         }
@@ -101,7 +101,7 @@ namespace GasyTek.Lakana.Navigation.Services
             messageBoxControl.MessageBoxImage = messageBoxImage;
             messageBoxControl.MessageBoxButton = messageBoxButton;
 
-            var modalHostControl = (ModalHostControl)viewInfo.InternalViewInstance;
+            var modalHostControl = (ModalHostControl)viewInfo.InternalViewInstance.View;
             var modalResult = new ModalResult<MessageBoxResult>(modalHostControl.ResultCompletionSource.Task);
 
             return modalResult.AsyncResult;
@@ -116,7 +116,7 @@ namespace GasyTek.Lakana.Navigation.Services
 
             if (closedNode.Value.IsModal)
             {
-                var modalHostControl = (ModalHostControl)closedNode.Value.InternalViewInstance;
+                var modalHostControl = (ModalHostControl)closedNode.Value.InternalViewInstance.View;
                 modalHostControl.ResultCompletionSource.SetResult(modalResult);
             }
 
@@ -269,11 +269,11 @@ namespace GasyTek.Lakana.Navigation.Services
                 var modalHost = new ModalHostControl { ModalContent = viewInstance };
                 internalViewInstance = modalHost;
             }
-           
+
             var viewInfo = new View(viewInstanceKey)
                        {
                            UIMetadata = GetUIMetadata(viewInstance, viewModel),
-                           InternalViewInstance = internalViewInstance,
+                           InternalViewInstance = new ViewHostControl { View = internalViewInstance },
                            ViewInstance = viewInstance,
                            ViewModelInstance = viewModel,
                            IsModal = isModal,
