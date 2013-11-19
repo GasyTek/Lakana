@@ -38,7 +38,7 @@ namespace GasyTek.Lakana.Navigation.Services
         static NavigationManager()
         {
             NavigationManagerImpl = new NavigationManagerImpl(new ViewLocator());
-            _transitionAnimation = new TransitionAnimation();
+            _transitionAnimation = TransitionAnimation.Create();
         }
 
         #endregion

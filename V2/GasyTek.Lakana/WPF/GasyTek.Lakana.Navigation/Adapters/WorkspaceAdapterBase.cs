@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using GasyTek.Lakana.Navigation.Controls;
 using GasyTek.Lakana.Navigation.Services;
 using GasyTek.Lakana.Navigation.Transitions;
 
@@ -51,8 +52,9 @@ namespace GasyTek.Lakana.Navigation.Adapters
                     if (!Equals(activatedViewGroup, deactivatedViewGroup))
                     {
                         // if transition from one view group to another
-                        var storyboard = transitionAnimation.TransitionViewGroupAnimation(activatedViewGroup, deactivatedViewGroup);
-                        storyboard.Begin();
+                        //var transition = transitionAnimation.TransitionViewGroupAnimation(activatedViewGroup, deactivatedViewGroup);
+                        //transition.Run(Workspace);
+                        //storyboard.Begin();
                     }
                     else
                     {
@@ -61,10 +63,11 @@ namespace GasyTek.Lakana.Navigation.Adapters
                         var deactivatedView = deactivatedNode != null ? deactivatedNode.Value.InternalViewInstance : null;
 
                         // if transition from view to another view from the same group
-                        var storyboard = transitionAnimation.TransitionViewAnimation(activatedView, deactivatedView);
-                        storyboard.Begin();
+                        if( transitionAnimation.TransitionViewAnimation != null)
+                        {
+                            transitionAnimation.TransitionViewAnimation.Run(Workspace, deactivatedView, activatedView);
+                        }
                     }
-
                 }
             }
         }
@@ -100,7 +103,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
         /// </summary>
         /// <param name="viewGroup">The view group.</param>
         /// <returns></returns>
-        protected abstract FrameworkElement OnGetViewGroupMapping(ViewGroup viewGroup);
+        protected abstract ViewGroupHostControl OnGetViewGroupMapping(ViewGroup viewGroup);
 
         #endregion
 

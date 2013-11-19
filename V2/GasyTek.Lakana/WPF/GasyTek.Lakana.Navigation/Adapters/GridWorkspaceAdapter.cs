@@ -91,7 +91,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
             }
         }
 
-        protected override FrameworkElement OnGetViewGroupMapping(ViewGroup viewGroup)
+        protected override ViewGroupHostControl OnGetViewGroupMapping(ViewGroup viewGroup)
         {
             return GroupMappings.ContainsKey(viewGroup) ? GroupMappings[viewGroup] : null;
         }
