@@ -22,10 +22,10 @@
                           Command="{Binding OpenProductListCommand}" />
             </MenuItem>
             <MenuItem Header="Select Transition" MenuItem.Click="MenuItemClick">
-                <MenuItem x:Name="MenuNoAnimation"
+                <MenuItem x:Name="MenuNoTransition"
                           Header="No animation" 
                           IsCheckable="True" />
-                <MenuItem x:Name="MenuFadeAnimation"
+                <MenuItem x:Name="MenuTransition1"
                           Header="Fade"
                           IsCheckable="True" 
                           IsChecked="True" />
