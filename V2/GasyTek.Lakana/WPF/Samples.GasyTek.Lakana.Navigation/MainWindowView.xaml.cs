@@ -18,7 +18,7 @@ namespace Samples.GasyTek.Lakana.Navigation
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
             // set animation transition
-            NavigationManager.ChangeTransitionAnimation(TransitionsFactory.Transition1());
+            NavigationManager.ChangeTransitionAnimation(TransitionsFactory.SlideTransition());
 
             // set HomeView as the first view
             NavigationManager.NavigateTo(ViewId.Home);
@@ -55,10 +55,11 @@ namespace Samples.GasyTek.Lakana.Navigation
                     MenuTransition1.IsChecked = false;
                     NavigationManager.ChangeTransitionAnimation(TransitionsFactory.NoTransition());
                     break;
+
                 case "MenuTransition1":
                     MenuNoTransition.IsChecked = false;
                     MenuTransition1.IsChecked = true;
-                    NavigationManager.ChangeTransitionAnimation(TransitionsFactory.Transition1());
+                    NavigationManager.ChangeTransitionAnimation(TransitionsFactory.SlideTransition());
                     break;
             }
         }

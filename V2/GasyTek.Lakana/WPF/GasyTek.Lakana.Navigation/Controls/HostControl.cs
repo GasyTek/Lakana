@@ -40,7 +40,7 @@ namespace GasyTek.Lakana.Navigation.Controls
             return new ImageBrush(bmp);
         }
 
-        public void ClearProperties()
+        public void Reset()
         {
             // cf. http://msdn.microsoft.com/en-us/library/ms749010(v=vs.90).aspx
             var locallySetProperties = GetLocalValueEnumerator();

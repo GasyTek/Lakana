@@ -1,11 +1,15 @@
-﻿using System.Windows;
+﻿using System;
+using System.Diagnostics;
+using System.Windows;
 using System.Windows.Media;
+using GasyTek.Lakana.Navigation.Services;
 
 namespace GasyTek.Lakana.Navigation.Controls
 {
     /// <summary>
     /// Host a view to support animation during transition.
     /// </summary>
+    [DebuggerDisplay("View = {View}")]
     public class ViewHostControl : HostControl
     {
         #region Fields
@@ -21,6 +25,12 @@ namespace GasyTek.Lakana.Navigation.Controls
             get { return _view; }
             set
             {
+                if(value == null)
+                    throw new InvalidOperationException("View can't be set to null");
+
+                if(value.GetType() == typeof(Window))
+                    throw new ViewTypeNotSupportedByWorkspaceAdapterException(value.GetType());
+
                 _view = value;
                 AddLogicalChild(value);
                 AddVisualChild(value);
