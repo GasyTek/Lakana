@@ -23,14 +23,11 @@ namespace GasyTek.Lakana.Navigation.Transitions
 
         public Duration Duration { get; set; }
 
-        /// <summary>
-        /// Indicates if at least one transition is running.
-        /// </summary>
         public static bool IsRunning { get; private set; }
 
         #endregion
 
-        public void Run(Panel scene, ViewHostControl oldItem, ViewHostControl newItem)
+        public void Run(Panel scene, HostControl backView, HostControl frontView, AnimationType animationType)
         {
             //
             // To work around the Wpf bug when using Storyboard.SetTarget, use a namescope + Storyboard.SetTargetName instead
@@ -41,10 +38,6 @@ namespace GasyTek.Lakana.Navigation.Transitions
 
             IsRunning = true;
 
-            // set items visibility
-            oldItem.Visibility = Visibility.Visible;
-            newItem.Visibility = Visibility.Visible;
-
             // Creates a namescope that will be associated to the scene panel
             var sceneNameScope = NameScope.GetNameScope(scene);
             if (sceneNameScope == null)
@@ -54,12 +47,13 @@ namespace GasyTek.Lakana.Navigation.Transitions
             }
 
             var transitionInfo = new TransitionInfo
-                                     {
-                                         Scene = scene,
-                                         SceneNameScope = sceneNameScope,
-                                         OldItem = oldItem,
-                                         NewItem = newItem
-                                     };
+            {
+                Scene = scene,
+                SceneNameScope = sceneNameScope,
+                BackView = backView,
+                FrontView = frontView,
+                AnimationType = animationType
+            };
 
             RaiseTransitionStarted();
             OnRunTransitionStarted(transitionInfo);
@@ -67,16 +61,12 @@ namespace GasyTek.Lakana.Navigation.Transitions
             var storyboard = CreateAnimation(transitionInfo);
             storyboard.FillBehavior = FillBehavior.Stop;
             storyboard.Completed += (sender, args) =>
-                                        {
-                                            OnRunTransitionCompleted(transitionInfo);
-                                            RaiseTransitionCompleded();
+            {
+                OnRunTransitionCompleted(transitionInfo);
+                RaiseTransitionCompleded();
 
-                                            // set items visibility
-                                            oldItem.Visibility = Visibility.Visible;
-                                            newItem.Visibility = Visibility.Hidden;
-
-                                            IsRunning = false;
-                                        };
+                IsRunning = false;
+            };
             storyboard.Begin(scene);
         }
 
@@ -118,12 +108,29 @@ namespace GasyTek.Lakana.Navigation.Transitions
     {
         public Panel Scene { get; set; }
         public INameScope SceneNameScope { get; set; }
-        public ViewHostControl OldItem { get; set; }
-        public ViewHostControl NewItem { get; set; }
+        public HostControl BackView { get; set; }
+        public HostControl FrontView { get; set; }
+        public AnimationType AnimationType { get; set; }
 
         public double SceneWidth
         {
             get { return Scene != null ? Scene.ActualWidth : 0; }
         }
+    }
+
+    /// <summary>
+    /// Type of animation to execute. 
+    /// </summary>
+    public enum AnimationType
+    {
+        /// <summary>
+        /// Show the front view and animate this process. 
+        /// </summary>
+        ShowFrontView,
+
+        /// <summary>
+        /// Hide the front view and animate this process.
+        /// </summary>
+        HideFrontView
     }
 }

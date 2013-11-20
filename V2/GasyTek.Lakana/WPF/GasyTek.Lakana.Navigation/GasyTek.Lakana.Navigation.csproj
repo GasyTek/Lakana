@@ -61,6 +61,7 @@
     <Compile Include="Adapters\IWorkspaceAdapter.cs" />
     <Compile Include="Adapters\GridWorkspaceAdapter.cs" />
     <Compile Include="Adapters\WorkspaceAdapterBase.cs" />
+    <Compile Include="Controls\HostControl.cs" />
     <Compile Include="Controls\MessageBoxControl.cs" />
     <Compile Include="Controls\ModalHostControl.cs" />
     <Compile Include="Controls\ShutdownApplicationItemsControl.cs" />

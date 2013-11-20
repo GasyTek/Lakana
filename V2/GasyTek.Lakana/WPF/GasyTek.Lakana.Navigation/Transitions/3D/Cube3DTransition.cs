@@ -9,6 +9,9 @@ using GasyTek.Lakana.Navigation.Controls;
 
 namespace GasyTek.Lakana.Navigation.Transitions.Anim3D
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Cube3DTransition : Transition3D
     {
         private const string AnimatedObjectName = "AF50FE302444D8A7EF51E944534D41";
@@ -16,7 +19,7 @@ namespace GasyTek.Lakana.Navigation.Transitions.Anim3D
         public IEasingFunction EasingFunction { get; set; }
 
         #region Constructor
-        
+
         public Cube3DTransition()
         {
             Duration = new Duration(TimeSpan.FromSeconds(2));
@@ -30,7 +33,7 @@ namespace GasyTek.Lakana.Navigation.Transitions.Anim3D
         protected override Storyboard CreateAnimation(TransitionInfo transitionInfo)
         {
             var storyboard = new Storyboard();
-            
+
             var cameraRotationAnimation = new DoubleAnimation(0, 90, Duration) { EasingFunction = EasingFunction };
 
             Storyboard.SetTargetName(cameraRotationAnimation, AnimatedObjectName);
@@ -46,12 +49,12 @@ namespace GasyTek.Lakana.Navigation.Transitions.Anim3D
             var axisAngle = new AxisAngleRotation3D(new Vector3D(0, 1, 0), 0);
 
             transitionInfo.SceneNameScope.RegisterName(AnimatedObjectName, axisAngle);
-            
+
             var camera = new PerspectiveCamera
-                          {
-                              LookDirection = new Vector3D(0, 0, -1),
-                              Transform = new RotateTransform3D(axisAngle)
-                          };
+            {
+                LookDirection = new Vector3D(0, 0, -1),
+                Transform = new RotateTransform3D(axisAngle)
+            };
 
             // Compute camera position
             const double fieldOfView = 30d;
@@ -69,22 +72,30 @@ namespace GasyTek.Lakana.Navigation.Transitions.Anim3D
 
         protected override List<ModelVisual3D> Create3DObjects(TransitionInfo transitionInfo)
         {
+            var initiallyVisibleView = transitionInfo.AnimationType == AnimationType.ShowFrontView
+                                           ? transitionInfo.BackView
+                                           : transitionInfo.FrontView;
+
+            var initiallyInvisibleView = transitionInfo.AnimationType == AnimationType.ShowFrontView
+                                           ? transitionInfo.FrontView
+                                           : transitionInfo.BackView;
+
             return new List<ModelVisual3D>
                        {
                            new ModelVisual3D
                                {
                                    Content = new GeometryModel3D
                                                  {
-                                                     Material = CreateOldItemFaceMaterial(transitionInfo.OldItem),
-                                                     Geometry = CreateOldItemFaceMesh(transitionInfo.OldItem)
+                                                     Material = CreateInitiallyVisibleFaceMaterial(initiallyVisibleView),
+                                                     Geometry = CreateInitiallyVisibleFaceMesh(initiallyVisibleView)
                                                  }
                                },
                            new ModelVisual3D
                                {
                                    Content = new GeometryModel3D
                                                  {
-                                                     Material = CreateNewItemFaceMaterial(transitionInfo.NewItem),
-                                                     Geometry = CreateNewItemFaceMesh(transitionInfo.NewItem)
+                                                     Material = CreateInitiallyInvisibleFaceMaterial(initiallyInvisibleView),
+                                                     Geometry = CreateInitiallyInvisibleFaceMesh(initiallyInvisibleView)
                                                  }
                                }
                        };
@@ -99,80 +110,80 @@ namespace GasyTek.Lakana.Navigation.Transitions.Anim3D
 
         #region Private methods
 
-        private MeshGeometry3D CreateOldItemFaceMesh(ViewHostControl oldItem)
+        private MeshGeometry3D CreateInitiallyVisibleFaceMesh(HostControl view)
         {
             var geometry = new MeshGeometry3D
-                               {
-                                   Positions = new Point3DCollection(
-                                       new[]
+            {
+                Positions = new Point3DCollection(
+                    new[]
                                            {
                                                new Point3D(-1, -1, 1),
                                                new Point3D(1, -1, 1),
                                                new Point3D(-1, 1, 1),
                                                new Point3D(1, 1, 1)
                                            }),
-                                   TextureCoordinates = new PointCollection(
-                                       new[]
+                TextureCoordinates = new PointCollection(
+                    new[]
                                            {
                                                new Point(0, 1),
                                                new Point(1, 1),
                                                new Point(0, 0),
                                                new Point(1, 0)
                                            }),
-                                   TriangleIndices = new Int32Collection(new[] { 0, 1, 2, 1, 3, 2 })
-                               };
+                TriangleIndices = new Int32Collection(new[] { 0, 1, 2, 1, 3, 2 })
+            };
 
             geometry.Positions =
                 new Point3DCollection(
                     geometry.Positions.Select(
                         p =>
-                        new Point3D(p.X * (oldItem.ActualWidth / 2d), p.Y * (oldItem.ActualHeight / 2d),
-                                    p.Z * (oldItem.ActualWidth / 2d))));
+                        new Point3D(p.X * (view.ActualWidth / 2d), p.Y * (view.ActualHeight / 2d),
+                                    p.Z * (view.ActualWidth / 2d))));
 
             return geometry;
         }
 
-        private Material CreateOldItemFaceMaterial(ViewHostControl oldItem)
+        private Material CreateInitiallyVisibleFaceMaterial(HostControl view)
         {
-            return new DiffuseMaterial(oldItem.TakeSnapshot());
+            return new DiffuseMaterial(view.TakeSnapshot());
         }
 
-        private MeshGeometry3D CreateNewItemFaceMesh(ViewHostControl newItem)
+        private MeshGeometry3D CreateInitiallyInvisibleFaceMesh(HostControl view)
         {
             var geometry = new MeshGeometry3D
-                               {
-                                   Positions = new Point3DCollection(
-                                       new[]
+            {
+                Positions = new Point3DCollection(
+                    new[]
                                            {
                                                new Point3D(1, -1, 1),
                                                new Point3D(1, -1, -1),
                                                new Point3D(1, 1, 1),
                                                new Point3D(1, 1, -1)
                                            }),
-                                   TextureCoordinates = new PointCollection(
-                                       new[]
+                TextureCoordinates = new PointCollection(
+                    new[]
                                            {
                                                new Point(0, 1),
                                                new Point(1, 1),
                                                new Point(0, 0),
                                                new Point(1, 0)
                                            }),
-                                   TriangleIndices = new Int32Collection(new[] { 0, 1, 2, 1, 3, 2 })
-                               };
+                TriangleIndices = new Int32Collection(new[] { 0, 1, 2, 1, 3, 2 })
+            };
 
             geometry.Positions =
                 new Point3DCollection(
                     geometry.Positions.Select(
                         p =>
-                        new Point3D(p.X * (newItem.ActualWidth / 2d), p.Y * (newItem.ActualHeight / 2d),
-                                    p.Z * (newItem.ActualWidth / 2d))));
+                        new Point3D(p.X * (view.ActualWidth / 2d), p.Y * (view.ActualHeight / 2d),
+                                    p.Z * (view.ActualWidth / 2d))));
 
             return geometry;
         }
 
-        private Material CreateNewItemFaceMaterial(ViewHostControl newItem)
+        private Material CreateInitiallyInvisibleFaceMaterial(HostControl view)
         {
-            return new DiffuseMaterial(newItem.TakeSnapshot());
+            return new DiffuseMaterial(view.TakeSnapshot());
         }
 
         #endregion

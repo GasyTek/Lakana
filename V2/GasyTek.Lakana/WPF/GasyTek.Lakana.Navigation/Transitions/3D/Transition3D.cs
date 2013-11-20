@@ -6,6 +6,9 @@ using System.Windows.Media.Media3D;
 
 namespace GasyTek.Lakana.Navigation.Transitions.Anim3D
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class Transition3D : Transition
     {
         private Viewport3D Viewport3D { get; set; }
@@ -13,17 +16,24 @@ namespace GasyTek.Lakana.Navigation.Transitions.Anim3D
         protected Camera Camera { get; private set; }
         protected ModelVisual3D Light { get; private set; }
 
+        protected Visibility OriginalBackViewVisibility { get; private set; }
+        protected Visibility OriginalFrontViewVisibility { get; private set; }
+
         protected sealed override void OnRunTransitionStarted(TransitionInfo transitionInfo)
         {
+            // save original visibility states
+            OriginalBackViewVisibility = transitionInfo.BackView.Visibility;
+            OriginalFrontViewVisibility = transitionInfo.FrontView.Visibility;
+
             OnRunTransitionStartExt(transitionInfo);
             Setup3DScene(transitionInfo);
         }
 
         protected sealed override void OnRunTransitionCompleted(TransitionInfo transitionInfo)
         {
-            // Configure visibility
-            transitionInfo.OldItem.Visibility = Visibility.Hidden;
-            transitionInfo.NewItem.Visibility = Visibility.Visible;
+            // restores original visibility states
+            transitionInfo.BackView.Visibility = OriginalBackViewVisibility;
+            transitionInfo.FrontView.Visibility = OriginalFrontViewVisibility;
 
             // removes the 3D scene
             transitionInfo.Scene.Children.Remove(Viewport3D);
@@ -51,8 +61,8 @@ namespace GasyTek.Lakana.Navigation.Transitions.Anim3D
             transitionInfo.Scene.Children.Add(Viewport3D);
 
             // Hides views
-            transitionInfo.OldItem.Visibility = Visibility.Hidden;
-            transitionInfo.NewItem.Visibility = Visibility.Hidden;
+            transitionInfo.BackView.Visibility = Visibility.Hidden;
+            transitionInfo.FrontView.Visibility = Visibility.Hidden;
         }
 
         protected virtual Camera CreateCamera(TransitionInfo transitionInfo)
