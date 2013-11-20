@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media.Animation;
+using System.Windows.Threading;
 using GasyTek.Lakana.Navigation.Controls;
 
 namespace GasyTek.Lakana.Navigation.Transitions
@@ -58,16 +59,27 @@ namespace GasyTek.Lakana.Navigation.Transitions
             RaiseTransitionStarted();
             OnRunTransitionStarted(transitionInfo);
 
-            var storyboard = CreateAnimation(transitionInfo);
-            storyboard.FillBehavior = FillBehavior.Stop;
-            storyboard.Completed += (sender, args) =>
-            {
-                OnRunTransitionCompleted(transitionInfo);
-                RaiseTransitionCompleded();
+            // Execute this code asynchronously in the dispatcher with the priority specified
+            // so that we can be sure, it will be executed after the view was rendered
+            Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() =>
+                    {
+                        var storyboard = CreateAnimation(transitionInfo);
+                        storyboard.FillBehavior = FillBehavior.Stop;
+                        storyboard.Completed += (sender, args) =>
+                        {
+                            // Reset views
+                            if (backView != null) backView.Reset();
+                            if (frontView != null) frontView.Reset();
 
-                IsRunning = false;
-            };
-            storyboard.Begin(scene);
+                            // Notify world
+                            OnRunTransitionCompleted(transitionInfo);
+                            RaiseTransitionCompleded();
+
+                            IsRunning = false;
+                        };
+
+                        storyboard.Begin(scene);
+                    }), DispatcherPriority.Loaded);
         }
 
         #region Protected methods

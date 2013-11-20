@@ -13,7 +13,7 @@ namespace Samples.GasyTek.Lakana.Navigation
             return TransitionAnimation.Create();
         }
 
-        public static TransitionAnimation Transition1()
+        public static TransitionAnimation SlideTransition()
         {
             return TransitionAnimation.CreateViewTransition(new SlideTransition());
         }

@@ -38,8 +38,8 @@ namespace GasyTek.Lakana.Navigation.Tests
 
                 // Verify
                 Assert.IsTrue(_workspace.Children.Count == 1);
-                Assert.IsInstanceOfType(_workspace.Children[0], typeof(Grid));
-                Assert.IsTrue(((Grid)_workspace.Children[0]).Children.Count == 1);
+                Assert.IsInstanceOfType(_workspace.Children[0], typeof(ViewGroupHostControl));
+                Assert.IsTrue(((ViewGroupHostControl)_workspace.Children[0]).Views.Count == 1);
             }
 
             [TestMethod]
@@ -58,8 +58,8 @@ namespace GasyTek.Lakana.Navigation.Tests
 
                 // Verify
                 Assert.IsTrue(_workspace.Children.Count == 1);
-                Assert.IsInstanceOfType(_workspace.Children[0], typeof(Grid));
-                Assert.IsTrue(((Grid)_workspace.Children[0]).Children.Count == 2);
+                Assert.IsInstanceOfType(_workspace.Children[0], typeof(ViewGroupHostControl));
+                Assert.IsTrue(((ViewGroupHostControl)_workspace.Children[0]).Views.Count == 2);
             }
 
             [TestMethod]
@@ -75,7 +75,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                 _workspaceAdapter.PerformActivation(viewGroup.Peek(), null);
 
                 // Verify
-                Assert.IsTrue(((Grid)_workspace.Children[0]).Children.Count == 1);
+                Assert.IsTrue(((ViewGroupHostControl)_workspace.Children[0]).Views.Count == 1);
             }
 
             [TestMethod]
@@ -238,7 +238,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                 _workspaceAdapter.PerformClose(null, new ViewGroupNode(viewGroup, view2Node.Value));
 
                 // Verify
-                Assert.IsTrue(((Grid)_workspace.Children[0]).Children.Count == 1);
+                Assert.IsTrue(((ViewGroupHostControl)_workspace.Children[0]).Views.Count == 1);
             }
 
             [TestMethod]

@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
+using System.Windows.Threading;
 using GasyTek.Lakana.Navigation.Controls;
 using GasyTek.Lakana.Navigation.Services;
 using GasyTek.Lakana.Navigation.Transitions;
@@ -52,9 +55,10 @@ namespace GasyTek.Lakana.Navigation.Adapters
                     if (!Equals(activatedViewGroup, deactivatedViewGroup))
                     {
                         // if transition from one view group to another
-                        //var transition = transitionAnimation.TransitionViewGroupAnimation(activatedViewGroup, deactivatedViewGroup);
-                        //transition.Run(Workspace);
-                        //storyboard.Begin();
+                        if (transitionAnimation.TransitionViewAnimation != null)
+                        {
+                            transitionAnimation.TransitionViewAnimation.Run(Workspace, deactivatedViewGroup, activatedViewGroup, AnimationType.ShowFrontView);
+                        }
                     }
                     else
                     {
@@ -63,9 +67,9 @@ namespace GasyTek.Lakana.Navigation.Adapters
                         var deactivatedView = deactivatedNode != null ? deactivatedNode.Value.InternalViewInstance : null;
 
                         // if transition from view to another view from the same group
-                        if( transitionAnimation.TransitionViewAnimation != null)
+                        if (transitionAnimation.TransitionViewAnimation != null)
                         {
-                            //transitionAnimation.TransitionViewAnimation.Run(Workspace, deactivatedView, activatedView);
+                            transitionAnimation.TransitionViewAnimation.Run(Workspace, deactivatedView, activatedView, AnimationType.ShowFrontView);
                         }
                     }
                 }
