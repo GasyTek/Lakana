@@ -1,55 +1,58 @@
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Markup;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace GasyTek.Lakana.Navigation.Controls
 {
     /// <summary>
     /// Host a group of view to support animation during transition.
     /// </summary>
-    public class ViewGroupHostControl : Grid
+    [ContentProperty("Views")]
+    public class ViewGroupHostControl : HostControl
     {
-        #region Public methods
+        public UIElementCollection Views { get; private set; }
 
-        /// <summary>
-        /// Takes a snapshot of the appearance of the control.
-        /// </summary>
-        /// <returns></returns>
-        public Brush TakeSnapshot()
+        public ViewGroupHostControl()
         {
-            // Ensures the visual is visible
-            var previousVisibility = Visibility;
-            Visibility = Visibility.Visible;
-
-            // Create the bitmap that will contain the snapshot
-            var bmp = new RenderTargetBitmap((int)ActualWidth, (int)ActualHeight, 96, 96, PixelFormats.Pbgra32);
-
-            // Creates then fill the drawing to render as bitmap
-            var drawingVisual = new DrawingVisual();
-            using (var dc = drawingVisual.RenderOpen())
-            {
-                var vb = new VisualBrush(this);
-                dc.DrawRectangle(vb, null, new Rect(new Point(), RenderSize));
-            }
-
-            // Renders the wpf visual to bitmap
-            bmp.Render(drawingVisual);
-
-            Visibility = previousVisibility;
-
-            return new ImageBrush(bmp);
+            Views = new UIElementCollection(this, this);
         }
 
-        public void ClearProperties()
+        #region Overriden methods
+
+        protected override Visual GetVisualChild(int index)
         {
-            // cf. http://msdn.microsoft.com/en-us/library/ms749010(v=vs.90).aspx
-            var locallySetProperties = GetLocalValueEnumerator();
-            while (locallySetProperties.MoveNext())
+            return Views[index];
+        }
+
+        protected override int VisualChildrenCount
+        {
+            get { return Views.Count; }
+        }
+
+        protected override Size MeasureOverride(Size availableSize)
+        {
+            double width = 0d, height = 0d;
+
+            foreach (UIElement view in Views)
             {
-                var propertyToClear = locallySetProperties.Current.Property;
-                if (!propertyToClear.ReadOnly) { ClearValue(propertyToClear); }
+                view.Measure(availableSize);
+
+                if (view.DesiredSize.Width > width) width = view.DesiredSize.Width;
+                if (view.DesiredSize.Height > height) height = view.DesiredSize.Height;
             }
+
+            return new Size(width, height);
+        }
+
+        protected override Size ArrangeOverride(Size finalSize)
+        {
+            foreach (UIElement view in Views)
+            {
+                view.Arrange(new Rect(finalSize));
+            }
+
+            return finalSize;
         }
 
         #endregion

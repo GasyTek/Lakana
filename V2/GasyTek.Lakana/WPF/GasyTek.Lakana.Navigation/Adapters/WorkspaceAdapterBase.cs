@@ -65,7 +65,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
                         // if transition from view to another view from the same group
                         if( transitionAnimation.TransitionViewAnimation != null)
                         {
-                            transitionAnimation.TransitionViewAnimation.Run(Workspace, deactivatedView, activatedView);
+                            //transitionAnimation.TransitionViewAnimation.Run(Workspace, deactivatedView, activatedView);
                         }
                     }
                 }

@@ -49,8 +49,8 @@ namespace GasyTek.Lakana.Navigation.Adapters
                     GroupMappings.Add(activatedViewGroup, activatedContainer);
                 }
 
-                if (!activatedContainer.Children.Contains(activatedView))
-                    activatedContainer.Children.Add(activatedView);
+                if (!activatedContainer.Views.Contains(activatedView))
+                    activatedContainer.Views.Add(activatedView);
 
                 foreach (var view in activatedViewGroup)
                 {
@@ -76,9 +76,9 @@ namespace GasyTek.Lakana.Navigation.Adapters
                 var closedViewGroup = closedNode.List;
                 var closedContainer = GroupMappings[closedViewGroup];
 
-                closedContainer.Children.Remove(closedNode.Value.InternalViewInstance);
+                closedContainer.Views.Remove(closedNode.Value.InternalViewInstance);
 
-                if (closedContainer.Children.Count == 0)
+                if (closedContainer.Views.Count == 0)
                 {
                     GroupMappings.Remove(closedViewGroup);
                     Workspace.Children.Remove(closedContainer);
