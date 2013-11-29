@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
@@ -13,13 +14,6 @@ namespace GasyTek.Lakana.Navigation.Transitions
     /// </summary>
     public abstract class Transition
     {
-        #region Events
-
-        public event EventHandler TransitionStarted;
-        public event EventHandler TransitionCompleded;
-
-        #endregion
-
         #region Properties
 
         public Duration Duration { get; set; }
@@ -28,18 +22,24 @@ namespace GasyTek.Lakana.Navigation.Transitions
 
         #endregion
 
-        public void Run(Panel scene, HostControl backView, HostControl frontView, AnimationType animationType)
+        public Task Run(Panel scene, HostControl backView, HostControl frontView, AnimationType animationType)
         {
-            //
-            // To work around the Wpf bug when using Storyboard.SetTarget, use a namescope + Storyboard.SetTargetName instead
-            // cf. http://connect.microsoft.com/VisualStudio/feedback/details/723701/storyboard-settarget-only-works-on-uielements-but-throws-no-exception
-            //
+            var tcs = new TaskCompletionSource<bool>();
 
-            if (IsRunning) return;
+            if (IsRunning)
+            {
+                tcs.SetCanceled();
+                return tcs.Task;
+            }
 
             IsRunning = true;
 
+            //
             // Creates a namescope that will be associated to the scene panel
+            // to work around the Wpf bug when using Storyboard.SetTarget, use a namescope + Storyboard.SetTargetName instead
+            // cf. http://connect.microsoft.com/VisualStudio/feedback/details/723701/storyboard-settarget-only-works-on-uielements-but-throws-no-exception
+            //
+
             var sceneNameScope = NameScope.GetNameScope(scene);
             if (sceneNameScope == null)
             {
@@ -56,47 +56,53 @@ namespace GasyTek.Lakana.Navigation.Transitions
                 AnimationType = animationType
             };
 
-            RaiseTransitionStarted();
             OnRunTransitionStarted(transitionInfo);
+
+            // Storyboard completed handler
+            var localBackView = backView;
+            var localFrontView = frontView;
+            var localTransitionInfo = transitionInfo;
+            var storyboardCompletedAction = new Action(() =>
+                                                {
+                                                    // Reset views
+                                                    if (localBackView != null) localBackView.Reset();
+                                                    if (localFrontView != null) localFrontView.Reset();
+
+                                                    // Notify world
+                                                    OnRunTransitionCompleted(localTransitionInfo);
+
+                                                    IsRunning = false;
+
+                                                    tcs.SetResult(true);
+                                                });
 
             // Execute this code asynchronously in the dispatcher with the priority specified
             // so that we can be sure, it will be executed after the view was rendered
             Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() =>
                     {
                         var storyboard = CreateAnimation(transitionInfo);
-                        storyboard.FillBehavior = FillBehavior.Stop;
-                        storyboard.Completed += (sender, args) =>
+
+                        // if the storyboard is empty then trigger storyboard completion manually
+                        if (storyboard.Children.Count == 0) { storyboardCompletedAction(); }
+                        else
                         {
-                            // Reset views
-                            if (backView != null) backView.Reset();
-                            if (frontView != null) frontView.Reset();
+                            EnsuresViewsAreVisible(backView, frontView);
 
-                            // Notify world
-                            OnRunTransitionCompleted(transitionInfo);
-                            RaiseTransitionCompleded();
+                            storyboard.FillBehavior = FillBehavior.Stop;
+                            storyboard.Completed += (sender, args) => storyboardCompletedAction();
+                            storyboard.Begin(scene);
+                        }
 
-                            IsRunning = false;
-                        };
-
-                        storyboard.Begin(scene);
                     }), DispatcherPriority.Loaded);
+
+            return tcs.Task;
         }
 
-        #region Protected methods
-
-        protected void RaiseTransitionStarted()
+        private void EnsuresViewsAreVisible(HostControl backView, HostControl frontView)
         {
-            var handler = TransitionStarted;
-            if (handler != null) handler(this, new EventArgs());
+            if (backView != null) backView.Visibility = Visibility.Visible;
+            if (frontView != null) frontView.Visibility = Visibility.Visible; ;
         }
-
-        protected void RaiseTransitionCompleded()
-        {
-            var handler = TransitionCompleded;
-            if (handler != null) handler(this, new EventArgs());
-        }
-
-        #endregion
 
         #region Overridable methods
 

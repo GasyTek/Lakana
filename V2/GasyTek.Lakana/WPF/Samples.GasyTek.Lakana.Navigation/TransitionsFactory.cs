@@ -1,5 +1,6 @@
 using GasyTek.Lakana.Navigation.Transitions;
 using GasyTek.Lakana.Navigation.Transitions.Anim2D;
+using GasyTek.Lakana.Navigation.Transitions.Anim3D;
 
 namespace Samples.GasyTek.Lakana.Navigation
 {
@@ -16,6 +17,16 @@ namespace Samples.GasyTek.Lakana.Navigation
         public static TransitionAnimation SlideTransition()
         {
             return TransitionAnimation.CreateViewTransition(new SlideTransition());
+        }
+
+        public static TransitionAnimation FadeTransition()
+        {
+            return TransitionAnimation.CreateViewTransition(new FadeTransition());
+        }
+
+        public static  TransitionAnimation Cube3DAnimation()
+        {
+            return TransitionAnimation.CreateViewGroupTransition(new Cube3DTransition());
         }
     }
 }

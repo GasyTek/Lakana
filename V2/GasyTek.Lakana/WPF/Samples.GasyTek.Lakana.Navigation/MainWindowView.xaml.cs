@@ -53,13 +53,22 @@ namespace Samples.GasyTek.Lakana.Navigation
                 case "MenuNoTransition":
                     MenuNoTransition.IsChecked = true;
                     MenuTransition1.IsChecked = false;
+                    MenuTransition2.IsChecked = false;
                     NavigationManager.ChangeTransitionAnimation(TransitionsFactory.NoTransition());
                     break;
 
                 case "MenuTransition1":
                     MenuNoTransition.IsChecked = false;
                     MenuTransition1.IsChecked = true;
+                    MenuTransition2.IsChecked = false;
                     NavigationManager.ChangeTransitionAnimation(TransitionsFactory.SlideTransition());
+                    break;
+
+                case "MenuTransition2":
+                    MenuNoTransition.IsChecked = false;
+                    MenuTransition1.IsChecked = false;
+                    MenuTransition2.IsChecked = true;
+                    NavigationManager.ChangeTransitionAnimation(TransitionsFactory.FadeTransition());
                     break;
             }
         }

@@ -29,6 +29,10 @@
                           Header="Slide"
                           IsCheckable="True" 
                           IsChecked="True" />
+                <MenuItem x:Name="MenuTransition2"
+                          Header="Fade"
+                          IsCheckable="True" 
+                          IsChecked="False" />
             </MenuItem>
             <MenuItem Header="Current Views"
                       ItemsSource="{Binding Views}" 

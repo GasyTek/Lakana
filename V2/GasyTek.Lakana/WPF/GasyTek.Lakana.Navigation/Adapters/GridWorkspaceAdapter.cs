@@ -21,36 +21,51 @@ namespace GasyTek.Lakana.Navigation.Adapters
             _groupMappings = new Dictionary<ViewGroup, ViewGroupHostControl>();
         }
 
-        protected override void OnPerformActivation(ViewGroupNode activatedNode, ViewGroupNode deactivatedNode)
+        protected override void OnBeforePerformTransition(ViewGroupNode activatedNode, ViewGroupNode deactivatedNode)
         {
-            if (deactivatedNode != null)
-            {
-                // deactivating a view means deactivate its view group
-                var deactivatedViewGroup = deactivatedNode.List;
-                var deactivatedContainer = GroupMappings[deactivatedViewGroup];
-                deactivatedContainer.Visibility = Visibility.Hidden;
-            }
-
             if (activatedNode != null)
             {
-                var zIndex = 1;
-                var activatedContainer = new ViewGroupHostControl();
+                var activatedViewGroupHost = new ViewGroupHostControl();
                 var activatedViewGroup = activatedNode.List;
                 var activatedView = activatedNode.Value.InternalViewInstance;
 
                 if (GroupMappings.ContainsKey(activatedViewGroup))
                 {
-                    activatedContainer = GroupMappings[activatedViewGroup];
-                    activatedContainer.Visibility = Visibility.Visible;
+                    activatedViewGroupHost = GroupMappings[activatedViewGroup];
+                    activatedViewGroupHost.Visibility = Visibility.Visible;
                 }
                 else
                 {
-                    Workspace.Children.Add(activatedContainer);
-                    GroupMappings.Add(activatedViewGroup, activatedContainer);
+                    Workspace.Children.Add(activatedViewGroupHost);
+                    GroupMappings.Add(activatedViewGroup, activatedViewGroupHost);
                 }
 
-                if (!activatedContainer.Views.Contains(activatedView))
-                    activatedContainer.Views.Add(activatedView);
+                if (!activatedViewGroupHost.Views.Contains(activatedView))
+                    activatedViewGroupHost.Views.Add(activatedView);
+            }
+        }
+
+        protected override void OnAfterPerformTransition(ViewGroupNode activatedNode, ViewGroupNode deactivatedNode)
+        {
+            if (deactivatedNode != null)
+            {
+                // deactivating a view (different of closing a view) means deactivate its view group
+                var deactivatedViewGroup = deactivatedNode.List;
+                var deactivatedViewGroupHost = GroupMappings[deactivatedViewGroup];
+                deactivatedViewGroupHost.Visibility = Visibility.Hidden;
+            }
+
+            if (activatedNode != null)
+            {
+                var zIndex = 1;
+                var activatedViewGroup = activatedNode.List;
+                var activatedViewGroupHost = GroupMappings[activatedViewGroup];
+                var activatedView = activatedNode.Value.InternalViewInstance;
+
+                // updates visibility and z-index
+
+                activatedView.Visibility = Visibility.Visible;
+                activatedViewGroupHost.Visibility = Visibility.Visible;
 
                 foreach (var view in activatedViewGroup)
                 {
@@ -65,7 +80,6 @@ namespace GasyTek.Lakana.Navigation.Adapters
 
                     zIndex++;
                 }
-
             }
         }
 
