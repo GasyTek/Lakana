@@ -9,7 +9,6 @@ namespace GasyTek.Lakana.Navigation.Controls
     /// <summary>
     /// Host a view to support animation during transition.
     /// </summary>
-    [DebuggerDisplay("View = {View}")]
     public class ViewHostControl : HostControl
     {
         #region Fields

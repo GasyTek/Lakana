@@ -18,7 +18,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
         public ViewGroupCollection ViewGroupCollection { get; private set; }
         public Func<TransitionAnimation> TransitionAnimationProvider { get; private set; }
 
-        private bool IsPerformingActivation { get; set; }
+        protected bool IsPerformingActivation { get; set; }
 
         protected internal void SetMainWorkspace(TWorkspace workspace)
         {
@@ -35,31 +35,47 @@ namespace GasyTek.Lakana.Navigation.Adapters
             TransitionAnimationProvider = transitionAnimationProvider;
         }
 
-        protected internal Task PerformActivation(ViewGroupNode activatedNode, ViewGroupNode deactivatedNode)
+        protected internal Task PerformActivation(ViewGroupNode nodeToDeactivate, ViewGroupNode nodeToActivate)
         {
+            // if an activation is already running
+            if (IsPerformingActivation)
+            {
+                var tcs = new TaskCompletionSource<bool>();
+                tcs.SetCanceled();
+                return tcs.Task;
+            }
+
+            // set that an activation is running
+            IsPerformingActivation = true;
+
             // deactivates all inputs and event listeners
             Workspace.IsHitTestVisible = false;
 
-            OnBeforePerformTransition(activatedNode, deactivatedNode);
-            var task = PerformTransitionAnimation(activatedNode, deactivatedNode);
+
+            OnBeforePerformTransition(nodeToActivate, nodeToDeactivate);
+
+            var task = PerformTransitionAnimation(nodeToActivate, nodeToDeactivate);
             return task.ContinueWith(r =>
                 {
-                    OnAfterPerformTransition(activatedNode, deactivatedNode);
+                    OnAfterPerformTransition(nodeToActivate, nodeToDeactivate);
 
                     // activates all inputs and event listeners
                     Workspace.IsHitTestVisible = true;
 
+                    // set that an activation no longer runs
+                    IsPerformingActivation = false;
+
                 }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
-        protected internal void PerformClose(ViewGroupNode activatedNode, ViewGroupNode closedNode)
+        protected internal Task PerformClose(ViewGroupNode nodeToClose, ViewGroupNode nodeToActivate)
         {
             if (TransitionAnimationProvider != null)
             {
 
             }
 
-            OnPerformClose(activatedNode, closedNode);
+            return OnPerformClose(nodeToClose, nodeToActivate);
         }
 
         private Task PerformTransitionAnimation(ViewGroupNode activatedNode, ViewGroupNode deactivatedNode)
@@ -84,9 +100,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
                         // case 1 : if transition from one view group to another
                         if (transitionAnimation.TransitionViewAnimation != null)
                         {
-                            var task = transitionAnimation.TransitionViewGroupAnimation.Run(Workspace, deactivatedViewGroupHost, activatedViewGroupHost, AnimationType.ShowFrontView);
-                            task.ContinueWith(r => tcs.SetResult(true));
-                            return tcs.Task;
+                            return transitionAnimation.TransitionViewGroupAnimation.Run(Workspace, deactivatedViewGroupHost, activatedViewGroupHost, AnimationType.ShowFrontView);
                         }
                     }
                     else
@@ -98,9 +112,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
                         // if transition from view to another view from the same group
                         if (transitionAnimation.TransitionViewAnimation != null)
                         {
-                            var task = transitionAnimation.TransitionViewAnimation.Run(Workspace, deactivatedView, activatedView, AnimationType.ShowFrontView);
-                            task.ContinueWith(r => tcs.SetResult(true));
-                            return tcs.Task;
+                            return transitionAnimation.TransitionViewAnimation.Run(Workspace, deactivatedView, activatedView, AnimationType.ShowFrontView);
                         }
                     }
                 }
@@ -109,7 +121,6 @@ namespace GasyTek.Lakana.Navigation.Adapters
             tcs.SetCanceled();
             return tcs.Task;
         }
-
 
         #region Overridable methods
 
@@ -130,9 +141,9 @@ namespace GasyTek.Lakana.Navigation.Adapters
         /// <summary>
         /// Perform the actual closing of a view.
         /// </summary>
-        /// <param name="activatedNode">The new activated view.</param>
-        /// <param name="closedNode">The closed view.</param>
-        protected abstract void OnPerformClose(ViewGroupNode activatedNode, ViewGroupNode closedNode);
+        /// <param name="nodeToClose">The closed view.</param>
+        /// <param name="nodeToActivate">The new activated view.</param>
+        protected abstract Task OnPerformClose(ViewGroupNode nodeToClose, ViewGroupNode nodeToActivate);
 
         /// <summary>
         /// Retrieves the visual element that is mapped to the given view group.
@@ -160,14 +171,14 @@ namespace GasyTek.Lakana.Navigation.Adapters
             SetTransitionAnimationProvider(transitionAnimationProvider);
         }
 
-        void IWorkspaceAdapter.PerformActivation(ViewGroupNode activatedNode, ViewGroupNode deactivatedNode)
+        Task IWorkspaceAdapter.PerformActivation(ViewGroupNode nodeToDeactivate, ViewGroupNode nodeToActivate)
         {
-            PerformActivation(activatedNode, deactivatedNode);
+            return PerformActivation(nodeToDeactivate, nodeToActivate);
         }
 
-        void IWorkspaceAdapter.PerformClose(ViewGroupNode activatedNode, ViewGroupNode closedNode)
+        Task IWorkspaceAdapter.PerformClose(ViewGroupNode nodeToClose, ViewGroupNode nodeToActivate)
         {
-            PerformClose(activatedNode, closedNode);
+            return PerformClose(nodeToClose, nodeToActivate);
         }
 
         #endregion

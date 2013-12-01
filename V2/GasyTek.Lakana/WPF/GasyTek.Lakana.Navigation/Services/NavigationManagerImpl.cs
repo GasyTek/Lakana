@@ -123,7 +123,7 @@ namespace GasyTek.Lakana.Navigation.Services
             // perform update of the UI
             var newNode = _viewGroupCollectionManager.GetActiveNode();
             var oldNode = closedNode;
-            _workspaceAdapter.PerformClose(newNode, oldNode);
+            _workspaceAdapter.PerformClose(oldNode, newNode);
 
             return closedNode.Value;
         }
@@ -192,7 +192,7 @@ namespace GasyTek.Lakana.Navigation.Services
                 }
 
                 // perform update of the UI
-                _workspaceAdapter.PerformActivation(newNode, oldNode);
+                _workspaceAdapter.PerformActivation(oldNode, newNode);
 
                 return newNode.Value;
             }
@@ -213,7 +213,7 @@ namespace GasyTek.Lakana.Navigation.Services
             }
 
             // perform update of the UI
-            _workspaceAdapter.PerformActivation(newNode, oldNode);
+            _workspaceAdapter.PerformActivation(oldNode, newNode);
 
             return newNode.Value;
         }
