@@ -90,8 +90,8 @@ namespace GasyTek.Lakana.Navigation.Transitions
 
                             storyboard.FillBehavior = FillBehavior.Stop;
                             storyboard.Completed += (sender, args) => storyboardCompletedAction();
-                            storyboard.Begin(scene);
-                        }
+                        storyboard.Begin(scene);
+        }
 
                     }), DispatcherPriority.Loaded);
 
@@ -101,7 +101,7 @@ namespace GasyTek.Lakana.Navigation.Transitions
         private void EnsuresViewsAreVisible(HostControl backView, HostControl frontView)
         {
             if (backView != null) backView.Visibility = Visibility.Visible;
-            if (frontView != null) frontView.Visibility = Visibility.Visible; ;
+            if (frontView != null) frontView.Visibility = Visibility.Visible;
         }
 
         #region Overridable methods

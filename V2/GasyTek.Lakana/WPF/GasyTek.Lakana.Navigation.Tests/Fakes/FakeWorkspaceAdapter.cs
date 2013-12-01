@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using GasyTek.Lakana.Navigation.Adapters;
@@ -28,12 +29,18 @@ namespace GasyTek.Lakana.Navigation.Tests.Fakes
             
         }
 
-        public void PerformActivation(ViewGroupNode activatedNode, ViewGroupNode deactivatedNode)
+        public Task PerformActivation(ViewGroupNode nodeToDeactivate, ViewGroupNode nodeToActivate)
         {
+            var tcs = new TaskCompletionSource<bool>();
+            tcs.SetResult(true);
+            return tcs.Task;
         }
 
-        public void PerformClose(ViewGroupNode activatedNode, ViewGroupNode closedNode)
+        public Task PerformClose(ViewGroupNode nodeToClose, ViewGroupNode nodeToActivate)
         {
+            var tcs = new TaskCompletionSource<bool>();
+            tcs.SetResult(true);
+            return tcs.Task;
         }
     }
 }

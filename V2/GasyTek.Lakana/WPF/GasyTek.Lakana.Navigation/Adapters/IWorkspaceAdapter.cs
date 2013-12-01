@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Windows;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using GasyTek.Lakana.Navigation.Services;
 using GasyTek.Lakana.Navigation.Transitions;
@@ -26,18 +26,19 @@ namespace GasyTek.Lakana.Navigation.Adapters
         /// </summary>
         /// <param name="transitionAnimationProvider">The transition animation provider.</param>
         void SetTransitionAnimationProvider(Func<TransitionAnimation> transitionAnimationProvider);
+
         /// <summary>
         /// Performs activation and deactivation of the new and old views.
         /// </summary>
-        /// <param name="activatedNode">The activated node.</param>
-        /// <param name="deactivatedNode">The deactivated node.</param>
-        void PerformActivation(ViewGroupNode activatedNode, ViewGroupNode deactivatedNode);
+        /// <param name="nodeToDeactivate">The node being deactivated.</param>
+        /// <param name="nodeToActivate">The node being activated.</param>
+        Task PerformActivation(ViewGroupNode nodeToDeactivate, ViewGroupNode nodeToActivate);
 
         /// <summary>
         /// Performs the close.
         /// </summary>
-        /// <param name="activatedNode">The activated node.</param>
-        /// <param name="closedNode">The closed node.</param>
-        void PerformClose(ViewGroupNode activatedNode, ViewGroupNode closedNode);
+        /// <param name="nodeToClose">The closed node.</param>
+        /// <param name="nodeToActivate">The activated node.</param>
+        Task PerformClose(ViewGroupNode nodeToClose, ViewGroupNode nodeToActivate);
     }
 }

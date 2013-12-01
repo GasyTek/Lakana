@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using GasyTek.Lakana.Navigation.Controls;
@@ -83,14 +84,16 @@ namespace GasyTek.Lakana.Navigation.Adapters
             }
         }
 
-        protected override void OnPerformClose(ViewGroupNode activatedNode, ViewGroupNode closedNode)
+        protected override Task OnPerformClose(ViewGroupNode nodeToClose, ViewGroupNode nodeToActivate)
         {
-            if (closedNode != null)
+            var tcs = new TaskCompletionSource<bool>();
+
+            if (nodeToClose != null)
             {
-                var closedViewGroup = closedNode.List;
+                var closedViewGroup = nodeToClose.List;
                 var closedContainer = GroupMappings[closedViewGroup];
 
-                closedContainer.Views.Remove(closedNode.Value.InternalViewInstance);
+                closedContainer.Views.Remove(nodeToClose.Value.InternalViewInstance);
 
                 if (closedContainer.Views.Count == 0)
                 {
@@ -99,10 +102,13 @@ namespace GasyTek.Lakana.Navigation.Adapters
                 }
             }
 
-            if (activatedNode != null)
+            if (nodeToActivate != null)
             {
-                PerformActivation(activatedNode, null);
+                return PerformActivation(null, nodeToActivate);
             }
+
+            tcs.SetResult(true);
+            return tcs.Task;
         }
 
         protected override ViewGroupHostControl OnGetViewGroupMapping(ViewGroup viewGroup)
