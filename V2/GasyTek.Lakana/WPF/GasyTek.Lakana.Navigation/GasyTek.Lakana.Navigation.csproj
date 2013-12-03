@@ -106,6 +106,7 @@
     <Compile Include="Transitions\2D\SlideTransition.cs" />
     <Compile Include="Transitions\3D\Cube3DTransition.cs" />
     <Compile Include="Transitions\3D\Transition3D.cs" />
+    <Compile Include="Transitions\AnimationType.cs" />
     <Compile Include="Transitions\Transition.cs" />
     <Compile Include="Transitions\TransitionAnimation.cs" />
     <Compile Include="Services\ViewGroup.cs" />
@@ -114,6 +115,7 @@
     <Compile Include="Services\View.cs" />
     <Compile Include="Services\ViewGroupNode.cs" />
     <Compile Include="Services\ViewLocator.cs" />
+    <Compile Include="Transitions\TransitionInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

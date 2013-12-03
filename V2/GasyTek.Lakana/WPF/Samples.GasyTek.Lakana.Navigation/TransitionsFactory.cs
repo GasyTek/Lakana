@@ -9,24 +9,24 @@ namespace Samples.GasyTek.Lakana.Navigation
     /// </summary>
     public static class TransitionsFactory
     {
-        public static  TransitionAnimation NoTransition()
+        public static TransitionAnimation NoTransition()
         {
             return TransitionAnimation.Create();
         }
 
         public static TransitionAnimation SlideTransition()
         {
-            return TransitionAnimation.CreateViewTransition(new SlideTransition());
+            return TransitionAnimation.Create(new SlideTransition(), new SlideTransition());
         }
 
         public static TransitionAnimation FadeTransition()
         {
-            return TransitionAnimation.CreateViewTransition(new FadeTransition());
+            return TransitionAnimation.Create(new Cube3DTransition(), new FadeTransition());
         }
 
-        public static  TransitionAnimation Cube3DAnimation()
+        public static TransitionAnimation Cube3DAnimation()
         {
-            return TransitionAnimation.CreateViewGroupTransition(new Cube3DTransition());
+            return TransitionAnimation.Create(new Cube3DTransition(), new FadeTransition());
         }
     }
 }

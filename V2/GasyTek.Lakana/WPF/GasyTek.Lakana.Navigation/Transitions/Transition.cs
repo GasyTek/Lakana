@@ -2,10 +2,10 @@
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Markup;
 using System.Windows.Media.Animation;
 using System.Windows.Threading;
 using GasyTek.Lakana.Navigation.Controls;
+using GasyTek.Lakana.Navigation.Transitions.Anim3D;
 
 namespace GasyTek.Lakana.Navigation.Transitions
 {
@@ -56,8 +56,6 @@ namespace GasyTek.Lakana.Navigation.Transitions
                 AnimationType = animationType
             };
 
-            OnRunTransitionStarted(transitionInfo);
-
             // Storyboard completed handler
             var localBackView = backView;
             var localFrontView = frontView;
@@ -68,7 +66,7 @@ namespace GasyTek.Lakana.Navigation.Transitions
                                                     if (localBackView != null) localBackView.Reset();
                                                     if (localFrontView != null) localFrontView.Reset();
 
-                                                    // Notify world
+                                                    // Clean
                                                     OnRunTransitionCompleted(localTransitionInfo);
 
                                                     IsRunning = false;
@@ -80,18 +78,22 @@ namespace GasyTek.Lakana.Navigation.Transitions
             // so that we can be sure, it will be executed after the view was rendered
             Dispatcher.CurrentDispatcher.BeginInvoke(new Action(() =>
                     {
+                        OnRunTransitionStarted(transitionInfo);
+
                         var storyboard = CreateAnimation(transitionInfo);
 
                         // if the storyboard is empty then trigger storyboard completion manually
                         if (storyboard.Children.Count == 0) { storyboardCompletedAction(); }
                         else
                         {
-                            EnsuresViewsAreVisible(backView, frontView);
+                            // If it is a 3D animation then hide views
+                            if (this is Transition3D) { EnsuresViewsAreHidden(backView, frontView); }
+                            else { EnsuresViewsAreVisible(backView, frontView); }
 
                             storyboard.FillBehavior = FillBehavior.Stop;
                             storyboard.Completed += (sender, args) => storyboardCompletedAction();
-                        storyboard.Begin(scene);
-        }
+                            storyboard.Begin(scene);
+                        }
 
                     }), DispatcherPriority.Loaded);
 
@@ -102,6 +104,12 @@ namespace GasyTek.Lakana.Navigation.Transitions
         {
             if (backView != null) backView.Visibility = Visibility.Visible;
             if (frontView != null) frontView.Visibility = Visibility.Visible;
+        }
+
+        private void EnsuresViewsAreHidden(HostControl backView, HostControl frontView)
+        {
+            if (backView != null) backView.Visibility = Visibility.Hidden;
+            if (frontView != null) frontView.Visibility = Visibility.Hidden;
         }
 
         #region Overridable methods
@@ -117,38 +125,5 @@ namespace GasyTek.Lakana.Navigation.Transitions
         protected abstract Storyboard CreateAnimation(TransitionInfo transitionInfo);
 
         #endregion
-    }
-
-    /// <summary>
-    /// Used to share the transition animation necessary infos.
-    /// </summary>
-    public class TransitionInfo
-    {
-        public Panel Scene { get; set; }
-        public INameScope SceneNameScope { get; set; }
-        public HostControl BackView { get; set; }
-        public HostControl FrontView { get; set; }
-        public AnimationType AnimationType { get; set; }
-
-        public double SceneWidth
-        {
-            get { return Scene != null ? Scene.ActualWidth : 0; }
-        }
-    }
-
-    /// <summary>
-    /// Type of animation to execute. 
-    /// </summary>
-    public enum AnimationType
-    {
-        /// <summary>
-        /// Show the front view and animate this process. 
-        /// </summary>
-        ShowFrontView,
-
-        /// <summary>
-        /// Hide the front view and animate this process.
-        /// </summary>
-        HideFrontView
     }
 }

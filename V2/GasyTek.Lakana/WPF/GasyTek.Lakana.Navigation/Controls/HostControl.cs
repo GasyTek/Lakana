@@ -7,7 +7,7 @@ namespace GasyTek.Lakana.Navigation.Controls
     /// <summary>
     /// Base class for classes used to host views.
     /// </summary>
-    public abstract class HostControl : FrameworkElement
+    public class HostControl : FrameworkElement
     {
         #region Public methods
 
