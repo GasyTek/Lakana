@@ -11,7 +11,7 @@ namespace GasyTek.Lakana.Navigation.Transitions.Anim2D
     {
         public FadeTransition()
         {
-            Duration = new Duration(TimeSpan.FromSeconds(1));
+            Duration = new Duration(TimeSpan.FromMilliseconds(200));
         }
 
         protected override Storyboard CreateAnimation(TransitionInfo transitionInfo)

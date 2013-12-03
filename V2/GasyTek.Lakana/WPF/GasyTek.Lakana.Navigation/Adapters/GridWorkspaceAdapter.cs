@@ -22,13 +22,21 @@ namespace GasyTek.Lakana.Navigation.Adapters
             _groupMappings = new Dictionary<ViewGroup, ViewGroupHostControl>();
         }
 
-        protected override void OnBeforePerformTransition(ViewGroupNode activatedNode, ViewGroupNode deactivatedNode)
+        protected override void OnBeforePerformTransition(ViewGroupNode nodeToDeactivate, ViewGroupNode nodeToActivate)
         {
-            if (activatedNode != null)
+            if (nodeToDeactivate != null)
             {
-                var activatedViewGroupHost = new ViewGroupHostControl();
-                var activatedViewGroup = activatedNode.List;
-                var activatedView = activatedNode.Value.InternalViewInstance;
+                // set the zindex of the node to deactivate at the lowest zindex
+                var deactivatedViewGroup = nodeToDeactivate.List;
+                var deactivatedViewGroupHost = GroupMappings[deactivatedViewGroup];
+                Panel.SetZIndex(deactivatedViewGroupHost, 0);
+            }
+
+            if (nodeToActivate != null)
+            {
+                var activatedViewGroupHost = new ViewGroupHostControl() { Visibility = Visibility.Hidden };
+                var activatedViewGroup = nodeToActivate.List;
+                var activatedView = nodeToActivate.Value.InternalViewInstance;
 
                 if (GroupMappings.ContainsKey(activatedViewGroup))
                 {
@@ -41,27 +49,31 @@ namespace GasyTek.Lakana.Navigation.Adapters
                     GroupMappings.Add(activatedViewGroup, activatedViewGroupHost);
                 }
 
+                // adds the view to the group host
                 if (!activatedViewGroupHost.Views.Contains(activatedView))
                     activatedViewGroupHost.Views.Add(activatedView);
+
+                // set the zindex of the node to activate at the hightest zindex
+                Panel.SetZIndex(activatedViewGroupHost, 100);
             }
         }
 
-        protected override void OnAfterPerformTransition(ViewGroupNode activatedNode, ViewGroupNode deactivatedNode)
+        protected override void OnAfterPerformTransition(ViewGroupNode nodeToDeactivate, ViewGroupNode nodeToActivate)
         {
-            if (deactivatedNode != null)
+            if (nodeToDeactivate != null)
             {
                 // deactivating a view (different of closing a view) means deactivate its view group
-                var deactivatedViewGroup = deactivatedNode.List;
+                var deactivatedViewGroup = nodeToDeactivate.List;
                 var deactivatedViewGroupHost = GroupMappings[deactivatedViewGroup];
                 deactivatedViewGroupHost.Visibility = Visibility.Hidden;
             }
 
-            if (activatedNode != null)
+            if (nodeToActivate != null)
             {
                 var zIndex = 1;
-                var activatedViewGroup = activatedNode.List;
+                var activatedViewGroup = nodeToActivate.List;
                 var activatedViewGroupHost = GroupMappings[activatedViewGroup];
-                var activatedView = activatedNode.Value.InternalViewInstance;
+                var activatedView = nodeToActivate.Value.InternalViewInstance;
 
                 // updates visibility and z-index
 
@@ -72,7 +84,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
                 {
                     Panel.SetZIndex(view.InternalViewInstance, zIndex);
 
-                    if (activatedNode.Value.IsModal)
+                    if (nodeToActivate.Value.IsModal)
                     {
                         view.InternalViewInstance.Visibility = Visibility.Visible;
                     }

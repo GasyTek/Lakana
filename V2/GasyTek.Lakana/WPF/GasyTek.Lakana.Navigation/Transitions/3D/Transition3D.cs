@@ -43,7 +43,7 @@ namespace GasyTek.Lakana.Navigation.Transitions.Anim3D
 
         private void Setup3DScene(TransitionInfo transitionInfo)
         {
-            // The viewport that will host the 3D animation
+            // Create the viewport that will host the 3D animation
             Viewport3D = new Viewport3D { IsHitTestVisible = false, ClipToBounds = false };
 
             // Set up the camera

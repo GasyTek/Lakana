@@ -273,7 +273,7 @@ namespace GasyTek.Lakana.Navigation.Services
             var viewInfo = new View(viewInstanceKey)
                        {
                            UIMetadata = GetUIMetadata(viewInstance, viewModel),
-                           InternalViewInstance = new ViewHostControl { View = internalViewInstance, Visibility = Visibility.Hidden },
+                           InternalViewInstance = new ViewHostControl { View = internalViewInstance },
                            ViewInstance = viewInstance,
                            ViewModelInstance = viewModel,
                            IsModal = isModal,

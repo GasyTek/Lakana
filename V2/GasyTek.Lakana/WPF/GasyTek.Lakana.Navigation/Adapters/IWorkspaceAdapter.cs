@@ -16,11 +16,13 @@ namespace GasyTek.Lakana.Navigation.Adapters
         /// </summary>
         /// <param name="workspace">The workspace.</param>
         void SetMainWorkspace(Panel workspace);
+
         /// <summary>
         /// Sets the view stack collection.
         /// </summary>
         /// <param name="viewGroupCollection">The view stack collection.</param>
         void SetViewGroupCollection(ViewGroupCollection viewGroupCollection);
+
         /// <summary>
         /// Sets the transition animation provider.
         /// </summary>

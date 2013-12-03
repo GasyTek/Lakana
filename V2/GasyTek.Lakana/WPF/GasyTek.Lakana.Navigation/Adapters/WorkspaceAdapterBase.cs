@@ -51,13 +51,12 @@ namespace GasyTek.Lakana.Navigation.Adapters
             // deactivates all inputs and event listeners
             Workspace.IsHitTestVisible = false;
 
+            OnBeforePerformTransition(nodeToDeactivate, nodeToActivate);
 
-            OnBeforePerformTransition(nodeToActivate, nodeToDeactivate);
-
-            var task = PerformTransitionAnimation(nodeToActivate, nodeToDeactivate);
+            var task = PerformTransitionAnimation(nodeToDeactivate, nodeToActivate);
             return task.ContinueWith(r =>
                 {
-                    OnAfterPerformTransition(nodeToActivate, nodeToDeactivate);
+                    OnAfterPerformTransition(nodeToDeactivate, nodeToActivate);
 
                     // activates all inputs and event listeners
                     Workspace.IsHitTestVisible = true;
@@ -78,7 +77,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
             return OnPerformClose(nodeToClose, nodeToActivate);
         }
 
-        private Task PerformTransitionAnimation(ViewGroupNode activatedNode, ViewGroupNode deactivatedNode)
+        private Task PerformTransitionAnimation(ViewGroupNode nodeToDeactivate, ViewGroupNode nodeToActivate)
         {
             var tcs = new TaskCompletionSource<bool>();
 
@@ -88,11 +87,11 @@ namespace GasyTek.Lakana.Navigation.Adapters
                 var transitionAnimation = TransitionAnimationProvider();
                 if (transitionAnimation != null)
                 {
-                    var activatedViewGroupHost = activatedNode != null
-                                                ? OnGetViewGroupMapping(activatedNode.List)
+                    var activatedViewGroupHost = nodeToActivate != null
+                                                ? OnGetViewGroupMapping(nodeToActivate.List)
                                                 : null;
-                    var deactivatedViewGroupHost = deactivatedNode != null
-                                                   ? OnGetViewGroupMapping(deactivatedNode.List)
+                    var deactivatedViewGroupHost = nodeToDeactivate != null
+                                                   ? OnGetViewGroupMapping(nodeToDeactivate.List)
                                                    : null;
 
                     if (!Equals(activatedViewGroupHost, deactivatedViewGroupHost))
@@ -106,8 +105,8 @@ namespace GasyTek.Lakana.Navigation.Adapters
                     else
                     {
                         // case 2 : if transition from one view to another
-                        var activatedView = activatedNode != null ? activatedNode.Value.InternalViewInstance : null;
-                        var deactivatedView = deactivatedNode != null ? deactivatedNode.Value.InternalViewInstance : null;
+                        var activatedView = nodeToActivate != null ? nodeToActivate.Value.InternalViewInstance : null;
+                        var deactivatedView = nodeToDeactivate != null ? nodeToDeactivate.Value.InternalViewInstance : null;
 
                         // if transition from view to another view from the same group
                         if (transitionAnimation.TransitionViewAnimation != null)
@@ -127,16 +126,16 @@ namespace GasyTek.Lakana.Navigation.Adapters
         /// <summary>
         /// Executed just before the animation of views transition take place.
         /// </summary>
-        /// <param name="activatedNode"></param>
-        /// <param name="deactivatedNode"></param>
-        protected abstract void OnBeforePerformTransition(ViewGroupNode activatedNode, ViewGroupNode deactivatedNode);
+        /// <param name="nodeToDeactivate"> </param>
+        /// <param name="nodeToActivate"> </param>
+        protected abstract void OnBeforePerformTransition(ViewGroupNode nodeToDeactivate, ViewGroupNode nodeToActivate);
 
         /// <summary>
         /// Executed just after the animation of views transition take place.
         /// </summary>
-        /// <param name="activatedNode"></param>
-        /// <param name="deactivatedNode"></param>
-        protected abstract void OnAfterPerformTransition(ViewGroupNode activatedNode, ViewGroupNode deactivatedNode);
+        /// <param name="nodeToDeactivate"></param>
+        /// <param name="nodeToActivate"></param>
+        protected abstract void OnAfterPerformTransition(ViewGroupNode nodeToDeactivate, ViewGroupNode nodeToActivate);
 
         /// <summary>
         /// Perform the actual closing of a view.
