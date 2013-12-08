@@ -54,6 +54,8 @@ namespace Samples.GasyTek.Lakana.Navigation
                     MenuNoTransition.IsChecked = true;
                     MenuTransition1.IsChecked = false;
                     MenuTransition2.IsChecked = false;
+                    MenuTransition3.IsChecked = false;
+
                     NavigationManager.ChangeTransitionAnimation(TransitionsFactory.NoTransition());
                     break;
 
@@ -61,6 +63,8 @@ namespace Samples.GasyTek.Lakana.Navigation
                     MenuNoTransition.IsChecked = false;
                     MenuTransition1.IsChecked = true;
                     MenuTransition2.IsChecked = false;
+                    MenuTransition3.IsChecked = false;
+
                     NavigationManager.ChangeTransitionAnimation(TransitionsFactory.SlideTransition());
                     break;
 
@@ -68,7 +72,18 @@ namespace Samples.GasyTek.Lakana.Navigation
                     MenuNoTransition.IsChecked = false;
                     MenuTransition1.IsChecked = false;
                     MenuTransition2.IsChecked = true;
+                    MenuTransition3.IsChecked = false;
+
                     NavigationManager.ChangeTransitionAnimation(TransitionsFactory.FadeTransition());
+                    break;
+
+                case "MenuTransition3":
+                    MenuNoTransition.IsChecked = false;
+                    MenuTransition1.IsChecked = false;
+                    MenuTransition2.IsChecked = false;
+                    MenuTransition3.IsChecked = true;
+
+                    NavigationManager.ChangeTransitionAnimation(TransitionsFactory.Cube3DAnimation());
                     break;
             }
         }

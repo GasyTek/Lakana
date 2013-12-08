@@ -101,6 +101,7 @@
     <Compile Include="Services\ModalResult.cs" />
     <Compile Include="Services\NavigationManager.cs" />
     <Compile Include="Services\NavigationManagerImpl.cs" />
+    <Compile Include="Services\NavigationResult.cs" />
     <Compile Include="Transitions\2D\FadeTransition.cs" />
     <Compile Include="Transitions\2D\NoTranstion.cs" />
     <Compile Include="Transitions\2D\SlideTransition.cs" />

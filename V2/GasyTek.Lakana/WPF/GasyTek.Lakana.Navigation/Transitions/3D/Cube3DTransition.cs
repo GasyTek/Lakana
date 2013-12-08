@@ -22,8 +22,8 @@ namespace GasyTek.Lakana.Navigation.Transitions.Anim3D
 
         public Cube3DTransition()
         {
-            Duration = new Duration(TimeSpan.FromSeconds(2));
-            EasingFunction = new BounceEase();
+            Duration = new Duration(TimeSpan.FromSeconds(1));
+            EasingFunction = new CircleEase();
         }
 
         #endregion

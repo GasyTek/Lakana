@@ -28,11 +28,15 @@
                 <MenuItem x:Name="MenuTransition1"
                           Header="Slide"
                           IsCheckable="True" 
-                          IsChecked="True" />
+                          IsChecked="False" />
                 <MenuItem x:Name="MenuTransition2"
                           Header="Fade"
                           IsCheckable="True" 
                           IsChecked="False" />
+                <MenuItem x:Name="MenuTransition3"
+                          Header="Cube 3D"
+                          IsCheckable="True" 
+                          IsChecked="True" />
             </MenuItem>
             <MenuItem Header="Current Views"
                       ItemsSource="{Binding Views}" 

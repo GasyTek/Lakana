@@ -29,9 +29,9 @@ namespace GasyTek.Lakana.Navigation.Services
 
         /// <summary>
         /// Used by the infrastructure. 
-        /// It can contain either the actual or the container view (for modal views for example). 
+        /// Contains the instance of the view host control that hosts the actual view.. 
         /// </summary>
-        internal ViewHostControl InternalViewInstance { get; set; }
+        internal ViewHostControl ViewHostInstance { get; set; }
 
         /// <summary>
         /// Gets the view model.
