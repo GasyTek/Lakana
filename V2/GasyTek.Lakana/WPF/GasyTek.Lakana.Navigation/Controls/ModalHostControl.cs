@@ -22,7 +22,7 @@ namespace GasyTek.Lakana.Navigation.Controls
 
         #region Component Keys
 
-        public static ComponentResourceKey BackgroundBrushKey = new ComponentResourceKey(typeof(MessageBoxControl), "BackgroundBrush");
+        public static ComponentResourceKey BackgroundBrushKey = new ComponentResourceKey(typeof(ModalHostControl), "BackgroundBrush");
 
         #endregion
 

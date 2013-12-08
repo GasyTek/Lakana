@@ -57,6 +57,7 @@
     <Compile Include="Fakes\FakeViewLocator.cs" />
     <Compile Include="Fakes\FakeViewModel.cs" />
     <Compile Include="GridWorkspaceAdapterFixture.cs" />
+    <Compile Include="Helper\UITestHelper.cs" />
     <Compile Include="NavigationManagerFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

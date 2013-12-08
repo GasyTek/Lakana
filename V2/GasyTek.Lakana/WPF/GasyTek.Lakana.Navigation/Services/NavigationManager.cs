@@ -93,7 +93,7 @@ namespace GasyTek.Lakana.Navigation.Services
         /// </summary>
         /// <param name="navigationKey">The navigation key. It must be of the form : [ parentViewKey [ # instanceID ] / ] viewKey [ # instanceID ] where fields between [..] are optionals.</param>
         /// <returns></returns>
-        public static View NavigateTo(string navigationKey)
+        public static NavigationResult NavigateTo(string navigationKey)
         {
             return NavigationManagerImpl.NavigateTo(navigationKey);
         }
@@ -104,7 +104,7 @@ namespace GasyTek.Lakana.Navigation.Services
         /// <param name="navigationKey">The navigation key. It must be of the form : [ parentViewKey [ # instanceID ] / ] viewKey [ # instanceID ] where fields between [..] are optionals.</param>
         /// <param name="viewModel">The view model.</param>
         /// <returns></returns>
-        public static View NavigateTo(string navigationKey, object viewModel)
+        public static NavigationResult NavigateTo(string navigationKey, object viewModel)
         {
             return NavigationManagerImpl.NavigateTo(navigationKey, viewModel);
         }
@@ -151,9 +151,9 @@ namespace GasyTek.Lakana.Navigation.Services
         /// <param name="viewInstanceKey">The view key.</param>
         /// <param name="modalResult">The modal result.</param>
         /// <returns></returns>
-        public static View Close(string viewInstanceKey, object modalResult = null)
+        public static NavigationResult Close(string viewInstanceKey, object modalResult = null)
         {
-            return NavigationManagerImpl.Close(viewInstanceKey, modalResult);
+            return NavigationManagerImpl.Close(viewInstanceKey, modalResult: modalResult);
         }
 
         /// <summary>

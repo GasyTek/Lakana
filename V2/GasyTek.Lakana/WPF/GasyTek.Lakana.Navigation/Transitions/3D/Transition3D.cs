@@ -22,8 +22,10 @@ namespace GasyTek.Lakana.Navigation.Transitions.Anim3D
         protected sealed override void OnRunTransitionStarted(TransitionInfo transitionInfo)
         {
             // save original visibility states
-            OriginalBackViewVisibility = transitionInfo.BackView.Visibility;
-            OriginalFrontViewVisibility = transitionInfo.FrontView.Visibility;
+            if (transitionInfo.BackView != null)
+                OriginalBackViewVisibility = transitionInfo.BackView.Visibility;
+            if (transitionInfo.FrontView != null)
+                OriginalFrontViewVisibility = transitionInfo.FrontView.Visibility;
 
             OnRunTransitionStartExt(transitionInfo);
             Setup3DScene(transitionInfo);
@@ -32,8 +34,10 @@ namespace GasyTek.Lakana.Navigation.Transitions.Anim3D
         protected sealed override void OnRunTransitionCompleted(TransitionInfo transitionInfo)
         {
             // restores original visibility states
-            transitionInfo.BackView.Visibility = OriginalBackViewVisibility;
-            transitionInfo.FrontView.Visibility = OriginalFrontViewVisibility;
+            if (transitionInfo.BackView != null)
+                transitionInfo.BackView.Visibility = OriginalBackViewVisibility;
+            if (transitionInfo.FrontView != null)
+                transitionInfo.FrontView.Visibility = OriginalFrontViewVisibility;
 
             // removes the 3D scene
             transitionInfo.Scene.Children.Remove(Viewport3D);

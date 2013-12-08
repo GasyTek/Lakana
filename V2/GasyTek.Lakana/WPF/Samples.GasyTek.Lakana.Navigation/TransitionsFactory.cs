@@ -21,12 +21,12 @@ namespace Samples.GasyTek.Lakana.Navigation
 
         public static TransitionAnimation FadeTransition()
         {
-            return TransitionAnimation.Create(new Cube3DTransition(), new FadeTransition());
+            return TransitionAnimation.Create(new FadeTransition(), new FadeTransition());
         }
 
         public static TransitionAnimation Cube3DAnimation()
         {
-            return TransitionAnimation.Create(new Cube3DTransition(), new FadeTransition());
+            return TransitionAnimation.CreateViewGroupTransition(new Cube3DTransition());
         }
     }
 }

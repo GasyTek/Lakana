@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Threading;
 using GasyTek.Lakana.Common.UI;
 using GasyTek.Lakana.Navigation.Adapters;
 using GasyTek.Lakana.Navigation.Controls;
@@ -62,12 +63,12 @@ namespace GasyTek.Lakana.Navigation.Services
 
         #region Public methods
 
-        public View NavigateTo(string navigationKey, object viewModel)
+        public NavigationResult NavigateTo(string navigationKey, object viewModel)
         {
             return NavigateToInternal(navigationKey, viewModel, false, false);
         }
 
-        public View NavigateTo(string navigationKey)
+        public NavigationResult NavigateTo(string navigationKey)
         {
             return NavigateTo(navigationKey, null);
         }
@@ -76,10 +77,11 @@ namespace GasyTek.Lakana.Navigation.Services
         {
             NavigationKey.EnsuresNavigationKeyHasParent(navigationKey);
 
-            var viewInfo = NavigateToInternal(navigationKey, viewModel, true, false);
-            var modalHostControl = (ModalHostControl)viewInfo.InternalViewInstance.View;
+            var nResult = NavigateToInternal(navigationKey, viewModel, true, false);
+            var viewInfo = nResult.View;
+            var modalHostControl = (ModalHostControl)viewInfo.ViewHostInstance.View;
 
-            return new ModalResult<TResult>(modalHostControl.ResultCompletionSource.Task) { View = viewInfo };
+            return new ModalResult<TResult>(modalHostControl.ResultCompletionSource.Task, viewInfo);
         }
 
         public ModalResult<TResult> ShowModal<TResult>(string navigationKey)
@@ -91,7 +93,9 @@ namespace GasyTek.Lakana.Navigation.Services
         {
             var modalViewInstanceKey = Guid.NewGuid().ToString("N");
             var navigationKey = string.Format("{0}/{1}", ownerViewKey, modalViewInstanceKey);
-            var viewInfo = NavigateToInternal(navigationKey, null, true, true);
+            var nResult = NavigateToInternal(navigationKey, null, true, true);
+
+            var viewInfo = nResult.View;
 
             // initialize messagebox informations
             var messageBoxControl = (MessageBoxControl)viewInfo.ViewInstance;
@@ -101,31 +105,31 @@ namespace GasyTek.Lakana.Navigation.Services
             messageBoxControl.MessageBoxImage = messageBoxImage;
             messageBoxControl.MessageBoxButton = messageBoxButton;
 
-            var modalHostControl = (ModalHostControl)viewInfo.InternalViewInstance.View;
-            var modalResult = new ModalResult<MessageBoxResult>(modalHostControl.ResultCompletionSource.Task);
-
-            return modalResult.AsyncResult;
+            var modalHostControl = (ModalHostControl)viewInfo.ViewHostInstance.View;
+            return modalHostControl.ResultCompletionSource.Task
+                .ContinueWith(t => (MessageBoxResult)t.Result);
         }
 
-        public View Close(string viewKey, object modalResult = null)
+        public NavigationResult Close(string viewKey, object modalResult = null)
         {
             if (!_viewGroupCollectionManager.IsTopMostView(viewKey))
                 throw new CannotCloseNotTopMostViewException(viewKey);
 
             var closedNode = _viewGroupCollectionManager.RemoveViewNode(viewKey);
 
-            if (closedNode.Value.IsModal)
-            {
-                var modalHostControl = (ModalHostControl)closedNode.Value.InternalViewInstance.View;
-                modalHostControl.ResultCompletionSource.SetResult(modalResult);
-            }
-
             // perform update of the UI
             var newNode = _viewGroupCollectionManager.GetActiveNode();
             var oldNode = closedNode;
-            _workspaceAdapter.PerformClose(oldNode, newNode);
 
-            return closedNode.Value;
+            if (closedNode.Value.IsModal)
+            {
+                var modalHostControl = (ModalHostControl)closedNode.Value.ViewHostInstance.View;
+                modalHostControl.ResultCompletionSource.SetResult(modalResult);
+            }
+
+            var asyncTransition = _workspaceAdapter.PerformUIClose(oldNode, newNode);
+
+            return new NavigationResult(asyncTransition, closedNode.Value);
         }
 
         public bool CloseApplication(bool forceClose = false)
@@ -158,7 +162,7 @@ namespace GasyTek.Lakana.Navigation.Services
             return dialogResult != null && dialogResult.Value;
         }
 
-        private View NavigateToInternal(string navigationKey, object viewModel, bool isModal, bool isMessageBox)
+        private NavigationResult NavigateToInternal(string navigationKey, object viewModel, bool isModal, bool isMessageBox)
         {
             var navigationKeyInstance = NavigationKey.Parse(navigationKey);
             var parentViewInstanceKey = navigationKeyInstance.ParentViewInstanceKey;
@@ -192,9 +196,9 @@ namespace GasyTek.Lakana.Navigation.Services
                 }
 
                 // perform update of the UI
-                _workspaceAdapter.PerformActivation(oldNode, newNode);
+                var asyncTransition1 = _workspaceAdapter.PerformUIActivation(oldNode, newNode);
 
-                return newNode.Value;
+                return new NavigationResult(asyncTransition1, newNode.Value);
             }
 
             // if the navigation key has a simple form e.g : "view"
@@ -213,9 +217,9 @@ namespace GasyTek.Lakana.Navigation.Services
             }
 
             // perform update of the UI
-            _workspaceAdapter.PerformActivation(oldNode, newNode);
+            var asyncTransition2 = _workspaceAdapter.PerformUIActivation(oldNode, newNode);
 
-            return newNode.Value;
+            return new NavigationResult(asyncTransition2, newNode.Value);
         }
 
         #endregion
@@ -273,7 +277,7 @@ namespace GasyTek.Lakana.Navigation.Services
             var viewInfo = new View(viewInstanceKey)
                        {
                            UIMetadata = GetUIMetadata(viewInstance, viewModel),
-                           InternalViewInstance = new ViewHostControl { View = internalViewInstance },
+                           ViewHostInstance = new ViewHostControl { View = internalViewInstance },
                            ViewInstance = viewInstance,
                            ViewModelInstance = viewModel,
                            IsModal = isModal,

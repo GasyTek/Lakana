@@ -34,13 +34,13 @@ namespace GasyTek.Lakana.Navigation.Adapters
         /// </summary>
         /// <param name="nodeToDeactivate">The node being deactivated.</param>
         /// <param name="nodeToActivate">The node being activated.</param>
-        Task PerformActivation(ViewGroupNode nodeToDeactivate, ViewGroupNode nodeToActivate);
+        Task PerformUIActivation(ViewGroupNode nodeToDeactivate, ViewGroupNode nodeToActivate);
 
         /// <summary>
         /// Performs the close.
         /// </summary>
         /// <param name="nodeToClose">The closed node.</param>
         /// <param name="nodeToActivate">The activated node.</param>
-        Task PerformClose(ViewGroupNode nodeToClose, ViewGroupNode nodeToActivate);
+        Task PerformUIClose(ViewGroupNode nodeToClose, ViewGroupNode nodeToActivate);
     }
 }

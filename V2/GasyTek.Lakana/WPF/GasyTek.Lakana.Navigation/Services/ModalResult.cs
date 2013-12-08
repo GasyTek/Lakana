@@ -18,16 +18,18 @@ namespace GasyTek.Lakana.Navigation.Services
         /// <summary>
         /// Gets the view info that corresponds to the modal view.
         /// </summary>
-        public View View { get; internal set; }
+        public View View { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ModalResult{TResult}" /> class.
         /// </summary>
         /// <param name="firstTask">The first task.</param>
-        internal ModalResult(Task<object> firstTask)
+        /// <param name="view">The modal view.</param>
+        internal ModalResult(Task<object> firstTask, View view)
         {
             _taskCompletionSource = new TaskCompletionSource<TResult>();
             firstTask.ContinueWith(tr => _taskCompletionSource.SetResult((TResult)tr.Result));
+            View = view;
         }
     }
 }
