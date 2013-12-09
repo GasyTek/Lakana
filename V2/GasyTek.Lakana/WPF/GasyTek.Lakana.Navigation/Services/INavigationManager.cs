@@ -55,7 +55,7 @@ namespace GasyTek.Lakana.Navigation.Services
         /// <summary>
         /// Closes the specified view.
         /// </summary>
-        /// <param name="viewKey">The view key.</param>
+        /// <param name="viewKey">The key associated to the view to be closed.</param>
         /// <param name="modalResult">The modal result.</param>
         /// <returns></returns>
         NavigationResult Close(string viewKey, object modalResult = null);

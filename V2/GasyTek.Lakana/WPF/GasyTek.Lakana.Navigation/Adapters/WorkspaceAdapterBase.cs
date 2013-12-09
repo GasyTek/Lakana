@@ -109,6 +109,12 @@ namespace GasyTek.Lakana.Navigation.Adapters
 
         #region Private methods
 
+        /// <summary>
+        /// Plays activation animation.
+        /// </summary>
+        /// <param name="nodeToDeactivate"></param>
+        /// <param name="nodeToActivate"></param>
+        /// <returns></returns>
         private Task AnimateActivation(ViewGroupNode nodeToDeactivate, ViewGroupNode nodeToActivate)
         {
             var tcs = new TaskCompletionSource<bool>();
@@ -154,10 +160,16 @@ namespace GasyTek.Lakana.Navigation.Adapters
                 }
             }
 
-            tcs.SetCanceled();
+            tcs.SetResult(true);
             return tcs.Task;
         }
 
+        /// <summary>
+        /// Plays close animation.
+        /// </summary>
+        /// <param name="nodeToClose"></param>
+        /// <param name="nodeToActivate"></param>
+        /// <returns></returns>
         private Task AnimateClose(ViewGroupNode nodeToClose, ViewGroupNode nodeToActivate)
         {
             var tcs = new TaskCompletionSource<bool>();
@@ -192,9 +204,11 @@ namespace GasyTek.Lakana.Navigation.Adapters
                         if (transitionAnimation.TransitionViewAnimation != null)
                         {
                             var viewHostToActivate = nodeToActivate != null
-                                                         ? nodeToActivate.Value.ViewHostInstance
-                                                         : null;
-                            var viewHostToClose = nodeToClose.Value.ViewHostInstance;
+                                                        ? nodeToActivate.Value.ViewHostInstance
+                                                        : null;
+                            var viewHostToClose = nodeToClose != null
+                                                        ? nodeToClose.Value.ViewHostInstance
+                                                        : null;
 
                             return transitionAnimation.TransitionViewAnimation.Run(Workspace,
                                                                                    viewHostToActivate,
@@ -205,7 +219,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
                 }
             }
 
-            tcs.SetCanceled();
+            tcs.SetResult(true);
             return tcs.Task;
         }
 
@@ -264,6 +278,9 @@ namespace GasyTek.Lakana.Navigation.Adapters
             }
         }
 
+        /// <summary>
+        /// Applies the correct initial visibility states for all the concerned view before animating them.
+        /// </summary>
         private void ApplyInitialVisibilityBeforeClose(ViewGroupNode nodeToClose, ViewGroupNode nodeToActivate)
         {
             var viewHostToClose = nodeToClose != null ? nodeToClose.Value.ViewHostInstance : null;
@@ -289,6 +306,9 @@ namespace GasyTek.Lakana.Navigation.Adapters
             }
         }
 
+        /// <summary>
+        /// Applies the correct final visibility states for all the concerned view after they were animated.
+        /// </summary>
         private void ApplyFinalVisibilityAfterClose(ViewGroupNode nodeToClose, ViewGroupNode nodeToActivate)
         {
             var viewHostToClose = nodeToClose != null ? nodeToClose.Value.ViewHostInstance : null;
@@ -391,7 +411,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="viewModel">The view model.</param>
-        protected void EnforceOnActivating(FrameworkElement view, object viewModel)
+        protected void EnforceOnActivating(object view, object viewModel)
         {
             // Notifies activation on the view 
             var activeAwareView = view as IActiveAware;
@@ -407,7 +427,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="viewModel">The view model.</param>
-        protected void EnforceOnActivated(FrameworkElement view, object viewModel)
+        protected void EnforceOnActivated(object view, object viewModel)
         {
             // Notifies activation on the view 
             var activeAwareView = view as IActiveAware;
@@ -423,7 +443,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="viewModel">The view model.</param>
-        protected void EnforceOnDeactivating(FrameworkElement view, object viewModel)
+        protected void EnforceOnDeactivating(object view, object viewModel)
         {
             // Notifies deactivation on the view 
             var activeAwareView = view as IActiveAware;
@@ -439,7 +459,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
         /// </summary>
         /// <param name="view">The view.</param>
         /// <param name="viewModel">The view model.</param>
-        protected void EnforceOnDeactivated(FrameworkElement view, object viewModel)
+        protected void EnforceOnDeactivated(object view, object viewModel)
         {
             // Notifies deactivation on the view 
             var activeAwareView = view as IActiveAware;

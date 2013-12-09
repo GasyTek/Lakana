@@ -18,6 +18,10 @@ namespace GasyTek.Lakana.Navigation.Transitions
 
         public Duration Duration { get; set; }
 
+        /// <summary>
+        /// Specifies if an animation is already in progress.
+        /// Only one animation can be played at a time.
+        /// </summary>
         public static bool IsRunning { get; private set; }
 
         #endregion

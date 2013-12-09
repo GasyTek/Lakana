@@ -8,7 +8,7 @@ namespace GasyTek.Lakana.Navigation.Services
     public class NavigationResult
     {
         /// <summary>
-        /// Gets a task that represents the async transition operation. 
+        /// Gets a task that represents the async transition operation that may be in progress. 
         /// </summary>
         public Task AsyncTransition { get; private set; }
 

@@ -29,7 +29,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
 
         protected override void OnBeforeAnimatingActivation(ViewGroupNode nodeToDeactivate, ViewGroupNode nodeToActivate)
         {
-            AddViewToActivateIfNotFound(nodeToActivate);
+            AddViewToActivateIfNotExist(nodeToActivate);
             FixZIndex(nodeToDeactivate, nodeToActivate);
         }
 
@@ -83,7 +83,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
 
         #region Private methods
 
-        private void AddViewToActivateIfNotFound(ViewGroupNode nodeToActivate)
+        private void AddViewToActivateIfNotExist(ViewGroupNode nodeToActivate)
         {
             var viewGroupHostToActivate = new ViewGroupHostControl();
             var viewGroupToActivate = nodeToActivate.List;

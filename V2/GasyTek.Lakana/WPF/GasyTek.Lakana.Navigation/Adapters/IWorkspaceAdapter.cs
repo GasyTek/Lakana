@@ -30,14 +30,14 @@ namespace GasyTek.Lakana.Navigation.Adapters
         void SetTransitionAnimationProvider(Func<TransitionAnimation> transitionAnimationProvider);
 
         /// <summary>
-        /// Performs activation and deactivation of the new and old views.
+        /// Performs asynchronous activation and deactivation of the new and old views.
         /// </summary>
         /// <param name="nodeToDeactivate">The node being deactivated.</param>
         /// <param name="nodeToActivate">The node being activated.</param>
         Task PerformUIActivation(ViewGroupNode nodeToDeactivate, ViewGroupNode nodeToActivate);
 
         /// <summary>
-        /// Performs the close.
+        /// Performs asynchronous close.
         /// </summary>
         /// <param name="nodeToClose">The closed node.</param>
         /// <param name="nodeToActivate">The activated node.</param>
