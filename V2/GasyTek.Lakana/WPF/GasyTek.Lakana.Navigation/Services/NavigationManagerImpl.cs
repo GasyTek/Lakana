@@ -164,6 +164,7 @@ namespace GasyTek.Lakana.Navigation.Services
 
         private View NavigateToInternal(string navigationKey, object viewModel, bool isModal, bool isMessageBox)
         {
+            var performAnimation = true;
             var navigationKeyInstance = NavigationKey.Parse(navigationKey);
             var parentViewInstanceKey = navigationKeyInstance.ParentViewInstanceKey;
             var viewInstanceKey = navigationKeyInstance.ViewInstanceKey;
@@ -182,6 +183,9 @@ namespace GasyTek.Lakana.Navigation.Services
                     // activates an existing node
                     EnsuresViewHasParentAndMatch(newNode, parentViewInstanceKey);
                     _viewGroupCollectionManager.ActivateExistingNode(newNode);
+
+                    // if the node already exists and the old and new nodes belong to the same group, do not animate
+                    performAnimation = oldNode.List != newNode.List;
                 }
                 else
                 {
@@ -196,7 +200,12 @@ namespace GasyTek.Lakana.Navigation.Services
                 }
 
                 // perform asynchronous update of the UI
-                _taskInvoker.Enqueue(new Func<ViewGroupNode, ViewGroupNode, Task>(_workspaceAdapter.PerformUIActivation), oldNode, newNode);
+                if (performAnimation)
+                {
+                    _taskInvoker.Enqueue(
+                        new Func<ViewGroupNode, ViewGroupNode, Task>(_workspaceAdapter.PerformUIActivation), oldNode,
+                        newNode);
+                }
 
                 return newNode.Value;
             }
@@ -208,6 +217,9 @@ namespace GasyTek.Lakana.Navigation.Services
                 // activates an existing node
                 newNode = _viewGroupCollectionManager.IsTopMostView(viewInstanceKey) ? newNode : newNode.List.Peek();
                 _viewGroupCollectionManager.ActivateExistingNode(newNode);
+
+                // if the node already exists and the old and new nodes belong to the same group, do not animate
+                performAnimation = oldNode.List != newNode.List;
             }
             else
             {
@@ -217,7 +229,12 @@ namespace GasyTek.Lakana.Navigation.Services
             }
 
             // perform asynchronous update of the UI
-            _taskInvoker.Enqueue(new Func<ViewGroupNode, ViewGroupNode, Task>(_workspaceAdapter.PerformUIActivation), oldNode, newNode);
+            if (performAnimation)
+            {
+                _taskInvoker.Enqueue(
+                    new Func<ViewGroupNode, ViewGroupNode, Task>(_workspaceAdapter.PerformUIActivation), oldNode,
+                    newNode);
+            }
 
             return newNode.Value;
         }
