@@ -13,7 +13,7 @@ namespace GasyTek.Lakana.Navigation.Services
         /// </summary>
         /// <param name="navigationKey">The navigation key. It must be of the form : [ parentViewKey [ # instanceID ] / ] viewKey [ # instanceID ] where fields between [..] are optionals.</param>
         /// <returns></returns>
-        NavigationResult NavigateTo(string navigationKey);
+        View NavigateTo(string navigationKey);
 
         /// <summary>
         /// Navigates to the specified navigation key.
@@ -21,7 +21,7 @@ namespace GasyTek.Lakana.Navigation.Services
         /// <param name="navigationKey">The navigation key. It must be of the form : [ parentViewKey [ # instanceID ] / ] viewKey [ # instanceID ] where fields between [..] are optionals.</param>
         /// <param name="viewModel">The view model.</param>
         /// <returns></returns>
-        NavigationResult NavigateTo(string navigationKey, object viewModel);
+        View NavigateTo(string navigationKey, object viewModel);
 
         /// <summary>
         /// Display the specified view as modal.
@@ -58,7 +58,7 @@ namespace GasyTek.Lakana.Navigation.Services
         /// <param name="viewKey">The key associated to the view to be closed.</param>
         /// <param name="modalResult">The modal result.</param>
         /// <returns></returns>
-        NavigationResult Close(string viewKey, object modalResult = null);
+        View Close(string viewKey, object modalResult = null);
 
         /// <summary>
         /// Closes the application.

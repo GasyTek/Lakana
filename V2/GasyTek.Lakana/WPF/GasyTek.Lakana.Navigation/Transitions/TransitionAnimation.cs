@@ -1,4 +1,3 @@
-using GasyTek.Lakana.Navigation.Controls;
 using GasyTek.Lakana.Navigation.Transitions.Anim2D;
 
 namespace GasyTek.Lakana.Navigation.Transitions

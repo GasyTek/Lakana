@@ -43,7 +43,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                     // Prepare
 
                     // Act
-                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1").View;
+                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1");
 
                     // Verify
                     Assert.AreSame(expectedViewInfo.ViewInstance,
@@ -61,7 +61,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                     // Prepare
 
                     // Act
-                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1#1").View;
+                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1#1");
 
                     // Verify
                     Assert.AreSame(expectedViewInfo.ViewInstance,
@@ -80,7 +80,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                     _navigationManagerImpl.NavigateTo("view1");
 
                     // Act
-                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1").View;
+                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1");
 
                     // Verify
                     Assert.AreSame(expectedViewInfo.ViewInstance, _navigationManagerImpl.ActiveView.ViewInstance);
@@ -98,7 +98,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                     _navigationManagerImpl.NavigateTo("view1#1");
 
                     // Act
-                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1#1").View;
+                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1#1");
 
                     // Verify
                     Assert.AreSame(expectedViewInfo.ViewInstance, _navigationManagerImpl.ActiveView.ViewInstance);
@@ -117,7 +117,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                     _navigationManagerImpl.NavigateTo("view2");
 
                     // Act
-                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1").View;
+                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1");
 
                     // Verify
                     Assert.AreSame(expectedViewInfo.ViewInstance, _navigationManagerImpl.ActiveView.ViewInstance);
@@ -132,10 +132,10 @@ namespace GasyTek.Lakana.Navigation.Tests
                 _uiTestHelper.ExecuteOnUIThread(() =>
                 {
                     // Prepare
-                    var parentViewInfo = _navigationManagerImpl.NavigateTo("parentView1").View;
+                    var parentViewInfo = _navigationManagerImpl.NavigateTo("parentView1");
 
                     // Act
-                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("parentView1/view1").View;
+                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("parentView1/view1");
 
                     // Verify
                     Assert.AreSame(expectedViewInfo.ViewInstance, _navigationManagerImpl.ActiveView.ViewInstance);
@@ -156,7 +156,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                     _navigationManagerImpl.NavigateTo("view2");
 
                     // Act
-                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("parentView1/view1").View;
+                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("parentView1/view1");
 
                     // Verify
                     Assert.AreSame(expectedViewInfo.ViewInstance, _navigationManagerImpl.ActiveView.ViewInstance);
@@ -204,10 +204,10 @@ namespace GasyTek.Lakana.Navigation.Tests
                 _uiTestHelper.ExecuteOnUIThread(() =>
                 {
                     // Prepare
-                    var parentViewInfo = _navigationManagerImpl.NavigateTo("parentView1").View;
+                    var parentViewInfo = _navigationManagerImpl.NavigateTo("parentView1");
 
                     // Act
-                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("parentView1/view1#1").View;
+                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("parentView1/view1#1");
 
                     // Verify
                     Assert.AreSame(expectedViewInfo.ViewInstance, _navigationManagerImpl.ActiveView.ViewInstance);
@@ -227,7 +227,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                     _navigationManagerImpl.NavigateTo("view1");
 
                     // Act
-                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1").View;
+                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1");
 
                     // Verify
                     Assert.AreSame(expectedViewInfo.ViewInstance, _navigationManagerImpl.ActiveView.ViewInstance);
@@ -241,12 +241,12 @@ namespace GasyTek.Lakana.Navigation.Tests
                 _uiTestHelper.ExecuteOnUIThread(() =>
                 {
                     // Prepare
-                    var parentViewInfo = _navigationManagerImpl.NavigateTo("parentView1").View;
+                    var parentViewInfo = _navigationManagerImpl.NavigateTo("parentView1");
                     _navigationManagerImpl.NavigateTo("parentView1/view1");
                     _navigationManagerImpl.NavigateTo("parentView1/view1");
 
                     // Act
-                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("parentView1/view1").View;
+                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("parentView1/view1");
 
                     // Verify
                     Assert.AreSame(expectedViewInfo.ViewInstance, _navigationManagerImpl.ActiveView.ViewInstance);
@@ -280,7 +280,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                 {
                     // Prepare
                     _navigationManagerImpl.NavigateTo("parentView1");
-                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("parentView1/view1").View;
+                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("parentView1/view1");
                     _navigationManagerImpl.NavigateTo("view2");
 
                     // Act
@@ -301,7 +301,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                     var fakeViewModel = new FakeViewModel();
 
                     // Act
-                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1", fakeViewModel).View;
+                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1", fakeViewModel);
 
                     // Verify
                     Assert.AreSame(expectedViewInfo.ViewInstance.DataContext, fakeViewModel);
@@ -334,7 +334,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                     // Prepare
 
                     // Act
-                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1").View;
+                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1");
 
                     // Verify
                     Assert.IsNotNull(expectedViewInfo.UIMetadata);
@@ -368,7 +368,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                     _navigationManagerImpl.NavigateTo("parentView1");
 
                     // Act
-                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("parentView1/view1").View;
+                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("parentView1/view1");
 
                     // Verify
                     Assert.IsNotNull(expectedViewInfo.UIMetadata);
@@ -389,7 +389,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                     var fakePresentableViewModel = new FakeViewModel();
 
                     // Act
-                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1", fakePresentableViewModel).View;
+                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1", fakePresentableViewModel);
 
                     // Verify
                     Assert.IsNotNull(expectedViewInfo.UIMetadata);
@@ -405,7 +405,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                     // Prepare
 
                     // Act
-                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1").View;
+                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1");
 
                     // Verify
                     Assert.IsNotNull(expectedViewInfo.UIMetadata);
@@ -425,7 +425,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                 _uiTestHelper.ExecuteOnUIThread(() =>
                 {
                     // Prepare
-                    var parentViewInfo = _navigationManagerImpl.NavigateTo("parentView1").View;
+                    var parentViewInfo = _navigationManagerImpl.NavigateTo("parentView1");
 
                     // Act
                     var expectedResult = _navigationManagerImpl.ShowModal<object>("parentView1/view1");
@@ -482,7 +482,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                 _uiTestHelper.ExecuteOnUIThread(() =>
                 {
                     // Prepare
-                    var parentViewInfo = _navigationManagerImpl.NavigateTo("view1").View;
+                    var parentViewInfo = _navigationManagerImpl.NavigateTo("view1");
 
                     // Act
                     _navigationManagerImpl.ShowMessageBox("view1", "Lorem ipsum", MessageBoxImage.Warning, MessageBoxButton.OKCancel);
@@ -507,10 +507,10 @@ namespace GasyTek.Lakana.Navigation.Tests
                 _uiTestHelper.ExecuteOnUIThread(() =>
                 {
                     // Prepare
-                    var viewInfo = _navigationManagerImpl.NavigateTo("view1").View;
+                    var viewInfo = _navigationManagerImpl.NavigateTo("view1");
 
                     // Act
-                    var closedViewInfo = _navigationManagerImpl.Close("view1").View;
+                    var closedViewInfo = _navigationManagerImpl.Close("view1");
 
                     // Verify
                     Assert.IsTrue(_navigationManagerImpl.NbViews == 0);
@@ -542,7 +542,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                 {
                     // Prepare
                     _navigationManagerImpl.NavigateTo("view2");
-                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1").View;
+                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("view1");
                     _navigationManagerImpl.NavigateTo("view3");
 
                     // Act
@@ -562,7 +562,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                     // Prepare
                     _navigationManagerImpl.NavigateTo("view2");
                     _navigationManagerImpl.NavigateTo("view1");
-                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("view3").View;
+                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("view3");
 
                     // Act
                     _navigationManagerImpl.Close("view2");
@@ -578,7 +578,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                 _uiTestHelper.ExecuteOnUIThread(() =>
                 {
                     // Prepare
-                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("parentView1").View;
+                    var expectedViewInfo = _navigationManagerImpl.NavigateTo("parentView1");
                     _navigationManagerImpl.NavigateTo("parentView1/view1");
 
                     // Act

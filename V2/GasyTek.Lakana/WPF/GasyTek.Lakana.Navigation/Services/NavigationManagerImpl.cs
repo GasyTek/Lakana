@@ -19,6 +19,7 @@ namespace GasyTek.Lakana.Navigation.Services
 
         private readonly IViewLocator _viewLocator;
         private readonly ViewGroupCollectionManager _viewGroupCollectionManager;
+        private readonly TaskInvoker _taskInvoker;
         private IWorkspaceAdapter _workspaceAdapter;
 
         #endregion
@@ -57,18 +58,19 @@ namespace GasyTek.Lakana.Navigation.Services
         {
             _viewLocator = viewLocator;
             _viewGroupCollectionManager = new ViewGroupCollectionManager();
+            _taskInvoker = new TaskInvoker(Dispatcher.CurrentDispatcher);
         }
 
         #endregion
 
         #region Public methods
 
-        public NavigationResult NavigateTo(string navigationKey, object viewModel)
+        public View NavigateTo(string navigationKey, object viewModel)
         {
             return NavigateToInternal(navigationKey, viewModel, false, false);
         }
 
-        public NavigationResult NavigateTo(string navigationKey)
+        public View NavigateTo(string navigationKey)
         {
             return NavigateTo(navigationKey, null);
         }
@@ -77,8 +79,7 @@ namespace GasyTek.Lakana.Navigation.Services
         {
             NavigationKey.EnsuresNavigationKeyHasParent(navigationKey);
 
-            var nResult = NavigateToInternal(navigationKey, viewModel, true, false);
-            var viewInfo = nResult.View;
+            var viewInfo = NavigateToInternal(navigationKey, viewModel, true, false);
             var modalHostControl = (ModalHostControl)viewInfo.ViewHostInstance.View;
 
             return new ModalResult<TResult>(modalHostControl.ResultCompletionSource.Task, viewInfo);
@@ -93,9 +94,7 @@ namespace GasyTek.Lakana.Navigation.Services
         {
             var modalViewInstanceKey = Guid.NewGuid().ToString("N");
             var navigationKey = string.Format("{0}/{1}", ownerViewKey, modalViewInstanceKey);
-            var nResult = NavigateToInternal(navigationKey, null, true, true);
-
-            var viewInfo = nResult.View;
+            var viewInfo = NavigateToInternal(navigationKey, null, true, true);
 
             // initialize messagebox informations
             var messageBoxControl = (MessageBoxControl)viewInfo.ViewInstance;
@@ -107,10 +106,10 @@ namespace GasyTek.Lakana.Navigation.Services
 
             var modalHostControl = (ModalHostControl)viewInfo.ViewHostInstance.View;
             return modalHostControl.ResultCompletionSource.Task
-                .ContinueWith(t => (MessageBoxResult)t.Result);
+                        .ContinueWith(t => (MessageBoxResult)t.Result);
         }
 
-        public NavigationResult Close(string viewKey, object modalResult = null)
+        public View Close(string viewKey, object modalResult = null)
         {
             if (!_viewGroupCollectionManager.IsTopMostView(viewKey))
                 throw new CannotCloseNotTopMostViewException(viewKey);
@@ -127,9 +126,10 @@ namespace GasyTek.Lakana.Navigation.Services
                 modalHostControl.ResultCompletionSource.SetResult(modalResult);
             }
 
-            var asyncTransition = _workspaceAdapter.PerformUIClose(oldNode, newNode);
-
-            return new NavigationResult(asyncTransition, closedNode.Value);
+            // perform asynchronous update of the UI
+            _taskInvoker.Enqueue(new Func<ViewGroupNode, ViewGroupNode, Task>(_workspaceAdapter.PerformUIClose), oldNode, newNode);
+            
+            return closedNode.Value;
         }
 
         public bool CloseApplication(bool forceClose = false)
@@ -162,7 +162,7 @@ namespace GasyTek.Lakana.Navigation.Services
             return dialogResult != null && dialogResult.Value;
         }
 
-        private NavigationResult NavigateToInternal(string navigationKey, object viewModel, bool isModal, bool isMessageBox)
+        private View NavigateToInternal(string navigationKey, object viewModel, bool isModal, bool isMessageBox)
         {
             var navigationKeyInstance = NavigationKey.Parse(navigationKey);
             var parentViewInstanceKey = navigationKeyInstance.ParentViewInstanceKey;
@@ -195,10 +195,10 @@ namespace GasyTek.Lakana.Navigation.Services
                     _viewGroupCollectionManager.ActivateNewNode(newNode, parentNode.List);
                 }
 
-                // perform update of the UI
-                var asyncTransition1 = _workspaceAdapter.PerformUIActivation(oldNode, newNode);
+                // perform asynchronous update of the UI
+                _taskInvoker.Enqueue(new Func<ViewGroupNode, ViewGroupNode, Task>(_workspaceAdapter.PerformUIActivation), oldNode, newNode);
 
-                return new NavigationResult(asyncTransition1, newNode.Value);
+                return newNode.Value;
             }
 
             // if the navigation key has a simple form e.g : "view"
@@ -216,10 +216,10 @@ namespace GasyTek.Lakana.Navigation.Services
                 _viewGroupCollectionManager.ActivateNewNode(newNode);
             }
 
-            // perform update of the UI
-            var asyncTransition2 = _workspaceAdapter.PerformUIActivation(oldNode, newNode);
+            // perform asynchronous update of the UI
+            _taskInvoker.Enqueue(new Func<ViewGroupNode, ViewGroupNode, Task>(_workspaceAdapter.PerformUIActivation), oldNode, newNode);
 
-            return new NavigationResult(asyncTransition2, newNode.Value);
+            return newNode.Value;
         }
 
         #endregion

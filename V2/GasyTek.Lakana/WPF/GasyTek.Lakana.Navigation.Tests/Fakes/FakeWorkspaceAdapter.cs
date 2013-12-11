@@ -16,7 +16,7 @@ namespace GasyTek.Lakana.Navigation.Tests.Fakes
 
         public void SetMainWorkspace(Panel workspace)
         {
-            
+
         }
 
         public void SetViewGroupCollection(ViewGroupCollection viewGroupCollection)
@@ -25,7 +25,7 @@ namespace GasyTek.Lakana.Navigation.Tests.Fakes
 
         public void SetTransitionAnimationProvider(Func<TransitionAnimation> transitionAnimationProvider)
         {
-            
+
         }
 
         public Task PerformUIActivation(ViewGroupNode nodeToDeactivate, ViewGroupNode nodeToActivate)
