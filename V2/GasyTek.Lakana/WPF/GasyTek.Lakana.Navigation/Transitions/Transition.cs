@@ -94,7 +94,7 @@ namespace GasyTek.Lakana.Navigation.Transitions
                             if (this is Transition3D) { EnsuresViewsAreHidden(backView, frontView); }
                             else { EnsuresViewsAreVisible(backView, frontView); }
 
-                            storyboard.FillBehavior = FillBehavior.Stop;
+                            storyboard.FillBehavior = FillBehavior.HoldEnd;
                             storyboard.Completed += (sender, args) => storyboardCompletedAction();
                             storyboard.Begin(scene);
                         }

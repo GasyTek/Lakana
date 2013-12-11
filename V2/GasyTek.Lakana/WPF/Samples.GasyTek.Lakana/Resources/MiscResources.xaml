@@ -39,7 +39,8 @@
             <Setter.Value>
                 <ControlTemplate TargetType="UserControl">
                     <Border Padding="{TemplateBinding Padding}"
-                            Margin="{TemplateBinding Margin}">
+                            Margin="{TemplateBinding Margin}"
+                            Background="{TemplateBinding Background}">
                         <AdornerDecorator>
                             <ContentPresenter Content="{TemplateBinding Content}"
                                               ContentTemplate="{TemplateBinding ContentTemplate}"
