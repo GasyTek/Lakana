@@ -65,8 +65,10 @@ namespace GasyTek.Lakana.Navigation.Transitions.Anim3D
             transitionInfo.Scene.Children.Add(Viewport3D);
 
             // Hides views
-            transitionInfo.BackView.Visibility = Visibility.Hidden;
-            transitionInfo.FrontView.Visibility = Visibility.Hidden;
+            if (transitionInfo.BackView != null)
+                transitionInfo.BackView.Visibility = Visibility.Hidden;
+            if (transitionInfo.FrontView != null)
+                transitionInfo.FrontView.Visibility = Visibility.Hidden;
         }
 
         protected virtual Camera CreateCamera(TransitionInfo transitionInfo)

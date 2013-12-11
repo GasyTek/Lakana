@@ -133,19 +133,22 @@ namespace GasyTek.Lakana.Navigation.Transitions.Anim3D
                 TriangleIndices = new Int32Collection(new[] { 0, 1, 2, 1, 3, 2 })
             };
 
+            var actualWidth = view != null ? view.ActualWidth : 1;
+            var actualHeight = view != null ? view.ActualHeight : 1;
+
             geometry.Positions =
                 new Point3DCollection(
                     geometry.Positions.Select(
                         p =>
-                        new Point3D(p.X * (view.ActualWidth / 2d), p.Y * (view.ActualHeight / 2d),
-                                    p.Z * (view.ActualWidth / 2d))));
+                        new Point3D(p.X * (actualWidth / 2d), p.Y * (actualHeight / 2d),
+                                    p.Z * (actualWidth / 2d))));
 
             return geometry;
         }
 
         private Material CreateInitiallyVisibleFaceMaterial(HostControl view)
         {
-            return new DiffuseMaterial(view.TakeSnapshot());
+            return view != null ? new DiffuseMaterial(view.TakeSnapshot()) : new DiffuseMaterial(Brushes.Transparent);
         }
 
         private MeshGeometry3D CreateInitiallyInvisibleFaceMesh(HostControl view)
@@ -171,19 +174,22 @@ namespace GasyTek.Lakana.Navigation.Transitions.Anim3D
                 TriangleIndices = new Int32Collection(new[] { 0, 1, 2, 1, 3, 2 })
             };
 
+            var actualWidth = view != null ? view.ActualWidth : 1;
+            var actualHeight = view != null ? view.ActualHeight : 1;
+
             geometry.Positions =
                 new Point3DCollection(
                     geometry.Positions.Select(
                         p =>
-                        new Point3D(p.X * (view.ActualWidth / 2d), p.Y * (view.ActualHeight / 2d),
-                                    p.Z * (view.ActualWidth / 2d))));
+                        new Point3D(p.X * (actualWidth / 2d), p.Y * (actualHeight / 2d),
+                                    p.Z * (actualWidth / 2d))));
 
             return geometry;
         }
 
         private Material CreateInitiallyInvisibleFaceMaterial(HostControl view)
         {
-            return new DiffuseMaterial(view.TakeSnapshot());
+            return view != null ? new DiffuseMaterial(view.TakeSnapshot()) : new DiffuseMaterial(Brushes.Transparent);
         }
 
         #endregion

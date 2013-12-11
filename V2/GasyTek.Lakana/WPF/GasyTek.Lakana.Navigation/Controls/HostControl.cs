@@ -52,5 +52,10 @@ namespace GasyTek.Lakana.Navigation.Controls
         }
 
         #endregion
+
+        protected override void OnRender(DrawingContext drawingContext)
+        {
+            drawingContext.DrawRectangle(Brushes.Transparent, null, new Rect(0.0, 0.0, RenderSize.Width, RenderSize.Height));
+        }
     }
 }

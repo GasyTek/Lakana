@@ -1,4 +1,5 @@
-﻿using GasyTek.Lakana.Common.UI;
+﻿using System.Windows.Media;
+using GasyTek.Lakana.Common.UI;
 using GasyTek.Lakana.Navigation.Attributes;
 using GasyTek.Lakana.Navigation.Services;
 using Samples.GasyTek.Lakana.Utils;
