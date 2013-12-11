@@ -41,7 +41,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
             if (IsTransitionning)
             {
                 var tcs = new TaskCompletionSource<bool>();
-                tcs.SetCanceled();
+                tcs.SetResult(true);
                 return tcs.Task;
             }
 
@@ -55,20 +55,20 @@ namespace GasyTek.Lakana.Navigation.Adapters
 
             ApplyInitialVisibilityBeforeActivation(nodeToDeactivate, nodeToActivate);
 
-            var task = AnimateActivation(nodeToDeactivate, nodeToActivate);
-            return task.ContinueWith(r =>
-                                         {
-                                             ApplyFinalVisibilityAfterActivation(nodeToDeactivate, nodeToActivate);
+            return AnimateActivation(nodeToDeactivate, nodeToActivate)
+                        .ContinueWith(r =>
+                                {
+                                    ApplyFinalVisibilityAfterActivation(nodeToDeactivate, nodeToActivate);
 
-                                             OnAfterAnimatingActivation(nodeToDeactivate, nodeToActivate);
+                                    OnAfterAnimatingActivation(nodeToDeactivate, nodeToActivate);
 
-                                             // activates all inputs and event listeners
-                                             Workspace.IsHitTestVisible = true;
+                                    // activates all inputs and event listeners
+                                    Workspace.IsHitTestVisible = true;
 
-                                             // set that an activation no longer runs
-                                             IsTransitionning = false;
+                                    // set that an activation no longer runs
+                                    IsTransitionning = false;
 
-                                         }, TaskScheduler.FromCurrentSynchronizationContext());
+                                }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         protected internal Task PerformUIClose(ViewGroupNode nodeToClose, ViewGroupNode nodeToActivate)
@@ -77,7 +77,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
             if (IsTransitionning)
             {
                 var tcs = new TaskCompletionSource<bool>();
-                tcs.SetCanceled();
+                tcs.SetResult(true);
                 return tcs.Task;
             }
 
@@ -91,20 +91,20 @@ namespace GasyTek.Lakana.Navigation.Adapters
 
             ApplyInitialVisibilityBeforeClose(nodeToClose, nodeToActivate);
 
-            var task = AnimateClose(nodeToClose, nodeToActivate);
-            return task.ContinueWith(r =>
-                                  {
-                                      ApplyFinalVisibilityAfterClose(nodeToClose, nodeToActivate);
+            return AnimateClose(nodeToClose, nodeToActivate)
+                        .ContinueWith(r =>
+                                {
+                                    ApplyFinalVisibilityAfterClose(nodeToClose, nodeToActivate);
 
-                                      OnAfterAnimatingClose(nodeToClose, nodeToActivate);
+                                    OnAfterAnimatingClose(nodeToClose, nodeToActivate);
 
-                                      // activates all inputs and event listeners
-                                      Workspace.IsHitTestVisible = true;
+                                    // activates all inputs and event listeners
+                                    Workspace.IsHitTestVisible = true;
 
-                                      // set that an activation no longer runs
-                                      IsTransitionning = false;
+                                    // set that an activation no longer runs
+                                    IsTransitionning = false;
 
-                                  }, TaskScheduler.FromCurrentSynchronizationContext());
+                                }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         #region Private methods

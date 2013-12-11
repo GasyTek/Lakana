@@ -4,7 +4,6 @@ using GasyTek.Lakana.Navigation.Adapters;
 using GasyTek.Lakana.Navigation.Controls;
 using GasyTek.Lakana.Navigation.Services;
 using GasyTek.Lakana.Navigation.Tests.Helper;
-using GasyTek.Lakana.Navigation.Transitions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GasyTek.Lakana.Navigation.Tests

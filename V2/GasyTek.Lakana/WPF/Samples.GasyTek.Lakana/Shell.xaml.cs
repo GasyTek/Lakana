@@ -46,6 +46,9 @@ namespace Samples.GasyTek.Lakana
             // Set the invariant culture as the default one
             LocalizationManager.ChangeCulture(CultureInfo.InvariantCulture);
 
+            // Set transition animation
+            NavigationManager.ChangeTransitionAnimation(TransitionFactory.CubeAndFadeTransition());
+
             // Navigate to "Home" screen first
             NavigationManager.NavigateTo(ScreenId.Home);
         }
