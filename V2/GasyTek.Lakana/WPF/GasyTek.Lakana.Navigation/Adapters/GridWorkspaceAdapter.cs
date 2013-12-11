@@ -72,6 +72,12 @@ namespace GasyTek.Lakana.Navigation.Adapters
                 GroupMappings.Remove(viewGroupToClose);
                 Workspace.Children.Remove(viewGroupHostToClose);
             }
+
+            if (nodeToClose.Value.IsModal)
+            {
+                // Enable the parent of the modal window
+                nodeToActivate.Value.ViewHostInstance.IsEnabled = true;
+            }
         }
 
         protected override ViewGroupHostControl OnGetViewGroupHostControl(ViewGroup viewGroup)
