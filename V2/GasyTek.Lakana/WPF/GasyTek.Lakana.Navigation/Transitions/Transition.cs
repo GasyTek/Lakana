@@ -66,9 +66,10 @@ namespace GasyTek.Lakana.Navigation.Transitions
             var localTransitionInfo = transitionInfo;
             var storyboardCompletedAction = new Action(() =>
                                                 {
-                                                    // Reset views
-                                                    if (localBackView != null) localBackView.Reset();
-                                                    if (localFrontView != null) localFrontView.Reset();
+                                                    // Commented out to avoid view flickering
+                                                    //// Reset views
+                                                    //if (localBackView != null) localBackView.Reset();
+                                                    //if (localFrontView != null) localFrontView.Reset();
 
                                                     // Clean
                                                     OnRunTransitionCompleted(localTransitionInfo);
@@ -94,7 +95,6 @@ namespace GasyTek.Lakana.Navigation.Transitions
                             if (this is Transition3D) { EnsuresViewsAreHidden(backView, frontView); }
                             else { EnsuresViewsAreVisible(backView, frontView); }
 
-                            storyboard.FillBehavior = FillBehavior.HoldEnd;
                             storyboard.Completed += (sender, args) => storyboardCompletedAction();
                             storyboard.Begin(scene);
                         }

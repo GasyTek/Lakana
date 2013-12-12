@@ -169,7 +169,7 @@ namespace Samples.GasyTek.Lakana.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Home page.
+        ///   Looks up a localized string similar to This is a sample application that will show you all the features offered by Lakana. Enjoy !.
         /// </summary>
         public static string HomePage {
             get {

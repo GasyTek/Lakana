@@ -18,7 +18,7 @@ namespace Samples.GasyTek.Lakana.Navigation
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
             // set animation transition
-            NavigationManager.ChangeTransitionAnimation(TransitionsFactory.Cube3DAnimation());
+            NavigationManager.ChangeTransitionAnimation(TransitionsFactory.SlideTransition());
 
             // set HomeView as the first view
             NavigationManager.NavigateTo(ViewId.Home);
