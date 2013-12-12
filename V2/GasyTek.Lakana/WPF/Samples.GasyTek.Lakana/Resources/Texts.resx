@@ -154,7 +154,7 @@
     <value>Home</value>
   </data>
   <data name="HomePage" xml:space="preserve">
-    <value>Home page</value>
+    <value>This is a sample application that will show you all the features offered by Lakana. Enjoy !</value>
   </data>
   <data name="Languages" xml:space="preserve">
     <value>Languages</value>
