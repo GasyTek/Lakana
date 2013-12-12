@@ -102,76 +102,6 @@ namespace GasyTek.Lakana.Navigation.Tests
             }
 
             [TestMethod]
-            public void ActivatedViewHasPositiveZIndexInItsGroup()
-            {
-                _uiTestHelper.ExecuteOnUIThread(() =>
-                {
-                    // Prepare
-                    var view = new ViewHostControl { View = new UserControl() };
-                    var viewGroup = new ViewGroup();
-                    viewGroup.Push(new View("view1") { ViewHostInstance = view });
-
-                    // Act
-                    _workspaceAdapter.PerformUIActivation(null, viewGroup.Peek()).Wait();
-
-                    // Verify
-                    Assert.IsTrue(Panel.GetZIndex(view) > 0);
-                });
-            }
-
-            [TestMethod]
-            public void ActivatedViewHasHigherZIndexInItsGroup()
-            {
-                _uiTestHelper.ExecuteOnUIThread(() =>
-                {
-                    // Prepare
-                    var view1 = new ViewHostControl { View = new UserControl() };
-                    var view2 = new ViewHostControl { View = new UserControl() };
-                    var view3 = new ViewHostControl { View = new UserControl() };
-                    var viewGroup = new ViewGroup();
-                    var view1Node = viewGroup.Push(new View("view1") { ViewHostInstance = view1 });
-                    var view2Node = viewGroup.Push(new View("view2") { ViewHostInstance = view2 });
-                    var view3Node = viewGroup.Push(new View("view3") { ViewHostInstance = view3 });
-                    _workspaceAdapter.PerformUIActivation(null, view1Node).Wait();
-                    _workspaceAdapter.PerformUIActivation(null, view2Node).Wait();
-
-                    // Act
-                    _workspaceAdapter.PerformUIActivation(null, view3Node).Wait();
-
-                    // Verify
-                    Assert.IsTrue(Panel.GetZIndex(view1) < Panel.GetZIndex(view3));
-                    Assert.IsTrue(Panel.GetZIndex(view2) < Panel.GetZIndex(view3));
-                });
-
-            }
-
-            [TestMethod]
-            public void ActivatedModalAncestorsHaveAscendingSortedZIndex()
-            {
-                _uiTestHelper.ExecuteOnUIThread(() =>
-                {
-                    // Prepare
-                    var view1 = new ViewHostControl { View = new UserControl() };
-                    var view2 = new ViewHostControl { View = new UserControl() };
-                    var modalView = new ViewHostControl { View = new UserControl() };
-                    var viewGroup = new ViewGroup();
-                    var view1Node = viewGroup.Push(new View("view1") { ViewHostInstance = view1 });
-                    var view2Node = viewGroup.Push(new View("view2") { ViewHostInstance = view2 });
-                    var modalViewNode =
-                        viewGroup.Push(new View("view3") { ViewHostInstance = modalView, IsModal = true });
-                    _workspaceAdapter.PerformUIActivation(null, view1Node).Wait();
-                    _workspaceAdapter.PerformUIActivation(null, view2Node).Wait();
-
-                    // Act
-                    _workspaceAdapter.PerformUIActivation(null, modalViewNode).Wait();
-
-                    // Verify
-                    Assert.IsTrue(Panel.GetZIndex(view1) < Panel.GetZIndex(view2));
-                    Assert.IsTrue(Panel.GetZIndex(view2) < Panel.GetZIndex(modalView));
-                });
-            }
-
-            [TestMethod]
             public void ActivatedModalAncestorsAreVisibleAndDisabled()
             {
                 _uiTestHelper.ExecuteOnUIThread(() =>
@@ -182,7 +112,7 @@ namespace GasyTek.Lakana.Navigation.Tests
                     var modalView = new ViewHostControl { View = new UserControl() };
                     var viewGroup = new ViewGroup();
                     var view1Node = viewGroup.Push(new View("view1") { ViewHostInstance = view1 });
-                    var view2Node = viewGroup.Push(new View("view2") { ViewHostInstance = view2 });
+                    var view2Node = viewGroup.Push(new View("view2") { ViewHostInstance = view2, IsModal = true });
                     var modalViewNode =
                         viewGroup.Push(new View("view3") { ViewHostInstance = modalView, IsModal = true });
                     _workspaceAdapter.PerformUIActivation(null, view1Node).Wait();

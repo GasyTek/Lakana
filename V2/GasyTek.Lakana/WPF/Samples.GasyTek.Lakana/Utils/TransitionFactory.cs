@@ -11,7 +11,7 @@ namespace Samples.GasyTek.Lakana.Utils
     {
         public static TransitionAnimation CubeAndFadeTransition()
         {
-            return TransitionAnimation.Create(new Cube3DTransition(), new SlideTransition());
+            return TransitionAnimation.Create(new CubeTransition3D(), new SlideTransition());
         }
     }
 }

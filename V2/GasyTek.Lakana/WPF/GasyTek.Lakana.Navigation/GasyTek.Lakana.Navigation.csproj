@@ -106,7 +106,7 @@
     <Compile Include="Transitions\2D\FadeTransition.cs" />
     <Compile Include="Transitions\2D\NoTranstion.cs" />
     <Compile Include="Transitions\2D\SlideTransition.cs" />
-    <Compile Include="Transitions\3D\Cube3DTransition.cs" />
+    <Compile Include="Transitions\3D\CubeTransition3D.cs" />
     <Compile Include="Transitions\3D\Transition3D.cs" />
     <Compile Include="Transitions\AnimationType.cs" />
     <Compile Include="Transitions\Transition.cs" />
