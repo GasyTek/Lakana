@@ -61,16 +61,9 @@ namespace GasyTek.Lakana.Navigation.Transitions
             };
 
             // Storyboard completed handler
-            var localBackView = backView;
-            var localFrontView = frontView;
             var localTransitionInfo = transitionInfo;
             var storyboardCompletedAction = new Action(() =>
                                                 {
-                                                    // Commented out to avoid view flickering
-                                                    //// Reset views
-                                                    //if (localBackView != null) localBackView.Reset();
-                                                    //if (localFrontView != null) localFrontView.Reset();
-
                                                     // Clean
                                                     OnRunTransitionCompleted(localTransitionInfo);
 

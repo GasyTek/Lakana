@@ -26,7 +26,7 @@ namespace Samples.GasyTek.Lakana.Navigation
 
         public static TransitionAnimation Cube3DAnimation()
         {
-            return TransitionAnimation.CreateViewGroupTransition(new Cube3DTransition());
+            return TransitionAnimation.CreateViewGroupTransition(new CubeTransition3D());
         }
     }
 }

@@ -39,19 +39,30 @@ namespace GasyTek.Lakana.Navigation.Adapters
             var viewGroupToActivate = nodeToActivate.List;
             var viewHostToActivate = nodeToActivate.Value.ViewHostInstance;
 
-            foreach (var view in viewGroupToActivate)
+            // If the node to activate is a modal one 
+            // then make its parent visible and disable
+            if (nodeToActivate.Value.IsModal)
             {
-                if (nodeToActivate.Value.IsModal)
-                {
-                    view.ViewHostInstance.Visibility = Visibility.Visible;
-                }
-
-                view.ViewHostInstance.IsEnabled = Equals(viewHostToActivate, view.ViewHostInstance);
-
-                // compute z-index
-                Panel.SetZIndex(view.ViewHostInstance, zIndex);
-                zIndex++;
+                var parentView = nodeToActivate.Previous.Value;
+                parentView.ViewHostInstance.Visibility = Visibility.Visible;
+                parentView.ViewHostInstance.IsEnabled = false;
             }
+
+
+            //foreach (var view in viewGroupToActivate)
+            //{
+            //    // if the node to activate is a modal one then show
+            //    if (nodeToActivate.Value.IsModal)
+            //    {
+            //        view.ViewHostInstance.Visibility = Visibility.Visible;
+            //    }
+
+            //    view.ViewHostInstance.IsEnabled = Equals(viewHostToActivate, view.ViewHostInstance);
+
+            //    // compute z-index
+            //    Panel.SetZIndex(view.ViewHostInstance, zIndex);
+            //    zIndex++;
+            //}
         }
 
         protected override void OnBeforeAnimatingClose(ViewGroupNode nodeToClose, ViewGroupNode nodeToActivate)
@@ -75,7 +86,7 @@ namespace GasyTek.Lakana.Navigation.Adapters
 
             if (nodeToClose.Value.IsModal)
             {
-                // Enable the parent of the modal window
+                // Enable the parent of the modal view
                 nodeToActivate.Value.ViewHostInstance.IsEnabled = true;
             }
         }

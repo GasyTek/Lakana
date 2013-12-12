@@ -12,7 +12,7 @@ namespace GasyTek.Lakana.Navigation.Transitions.Anim3D
     /// <summary>
     /// 
     /// </summary>
-    public class Cube3DTransition : Transition3D
+    public class CubeTransition3D : Transition3D
     {
         private const string AnimatedObjectName = "AF50FE302444D8A7EF51E944534D41";
 
@@ -20,9 +20,9 @@ namespace GasyTek.Lakana.Navigation.Transitions.Anim3D
 
         #region Constructor
 
-        public Cube3DTransition()
+        public CubeTransition3D()
         {
-            Duration = new Duration(TimeSpan.FromSeconds(1));
+            Duration = new Duration(TimeSpan.FromMilliseconds(600));
             EasingFunction = new CircleEase();
         }
 
