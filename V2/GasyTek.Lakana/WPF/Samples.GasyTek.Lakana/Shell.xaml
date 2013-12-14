@@ -9,7 +9,6 @@
         Width="800"
         MinWidth="544"
         MinHeight="98"
-        Background="{DynamicResource WindowBackgorundBrush}"
         Loaded="WindowLoaded"
         Style="{DynamicResource FancyWindowStyle}"
         WindowStartupLocation="CenterScreen">
@@ -71,8 +70,7 @@
                 DockPanel.Dock="Bottom"
                 Height="55" />
         <Grid x:Name="Workspace"
-              lakana:NavigationManager.IsMainWorkspace="True"
-              Background="{DynamicResource WorkspaceBackgroundBrush}" />
+              lakana:NavigationManager.IsMainWorkspace="True" />
 
     </DockPanel>
 </Window>

@@ -47,7 +47,7 @@ namespace Samples.GasyTek.Lakana
             LocalizationManager.ChangeCulture(CultureInfo.InvariantCulture);
 
             // Set transition animation
-            NavigationManager.ChangeTransitionAnimation(TransitionFactory.CubeAndFadeTransition());
+            NavigationManager.ChangeTransitionAnimation(TransitionFactory.FlipTransition());
 
             // Navigate to "Home" screen first
             NavigationManager.NavigateTo(ScreenId.Home);

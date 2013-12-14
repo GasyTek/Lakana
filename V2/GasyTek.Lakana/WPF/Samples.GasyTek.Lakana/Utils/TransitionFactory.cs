@@ -9,9 +9,17 @@ namespace Samples.GasyTek.Lakana.Utils
     /// </summary>
     public static class TransitionFactory
     {
-        public static TransitionAnimation CubeAndFadeTransition()
+        public static TransitionAnimation CubeAndSlideTransition()
         {
             return TransitionAnimation.Create(new CubeTransition3D(), new SlideTransition());
+        }
+
+        public static TransitionAnimation FlipTransition()
+        {
+            return TransitionAnimation.Create(
+                    new FlipTransition3D { Direction = FlipTransition3D.FlipDirection.RightToLeft},
+                    new FlipTransition3D());
+            
         }
     }
 }
