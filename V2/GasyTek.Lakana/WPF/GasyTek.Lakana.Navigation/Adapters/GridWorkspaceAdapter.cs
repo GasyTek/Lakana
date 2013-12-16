@@ -8,14 +8,22 @@ namespace GasyTek.Lakana.Navigation.Adapters
 {
     internal class GridWorkspaceAdapter : WorkspaceAdapterBase<Grid>
     {
+        #region Fields
+
         // Maps view groups to their actual framework element equivalent
         private readonly Dictionary<ViewGroup, ViewGroupHostControl> _groupMappings;
+
+        #endregion
+        
+        #region Public properties
 
         public Dictionary<ViewGroup, ViewGroupHostControl> GroupMappings
         {
             get { return _groupMappings; }
         }
 
+        #endregion
+        
         #region Constructor
 
         public GridWorkspaceAdapter()
@@ -35,10 +43,6 @@ namespace GasyTek.Lakana.Navigation.Adapters
 
         protected override void OnAfterAnimatingActivation(ViewGroupNode nodeToDeactivate, ViewGroupNode nodeToActivate)
         {
-            var zIndex = 1;
-            var viewGroupToActivate = nodeToActivate.List;
-            var viewHostToActivate = nodeToActivate.Value.ViewHostInstance;
-
             // If the node to activate is a modal one 
             // then make its parent visible and disable
             if (nodeToActivate.Value.IsModal)
@@ -48,21 +52,6 @@ namespace GasyTek.Lakana.Navigation.Adapters
                 parentView.ViewHostInstance.IsEnabled = false;
             }
 
-
-            //foreach (var view in viewGroupToActivate)
-            //{
-            //    // if the node to activate is a modal one then show
-            //    if (nodeToActivate.Value.IsModal)
-            //    {
-            //        view.ViewHostInstance.Visibility = Visibility.Visible;
-            //    }
-
-            //    view.ViewHostInstance.IsEnabled = Equals(viewHostToActivate, view.ViewHostInstance);
-
-            //    // compute z-index
-            //    Panel.SetZIndex(view.ViewHostInstance, zIndex);
-            //    zIndex++;
-            //}
         }
 
         protected override void OnBeforeAnimatingClose(ViewGroupNode nodeToClose, ViewGroupNode nodeToActivate)
