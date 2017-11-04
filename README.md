@@ -1,8 +1,6 @@
 # Lakana - WPF Framework    
 
-[![N|Solid](https://cldup.com/dTxpPi9lDf.thumb.png)](https://nodesource.com/products/nsolid)
-
-Lakana is a set of lightweight frameworks which main goal is to tackle some tricky problems that Windows Presentation Foundation developers can encounter very often, especially when they use the Model View View-Model design pattern. 
+**Lakana** is a set of lightweight frameworks which main goal is to tackle some tricky problems that Windows Presentation Foundation developers can encounter very often, especially when they use the Model View View-Model design pattern. 
 
 It is currently composed of two independent yet compatible frameworks :
 
